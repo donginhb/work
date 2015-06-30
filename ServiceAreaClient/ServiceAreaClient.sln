@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientGUI", "ServiceAreaClientGUI\ServiceAreaClientGUI.csproj", "{C1669763-10CB-4868-9C28-C227A78BA053}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE} = {8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientLib", "ServiceAreaClientLib\ServiceAreaClientLib.csproj", "{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}"
 EndProject

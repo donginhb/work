@@ -9,7 +9,7 @@ namespace ServiceAreaClientLib
     /// <summary>
     /// 电表情报
     /// </summary>
-    class ElectricMeterInfo
+    public class ElectricMeterInfo
     {
         int _deviceNum;             // 设备编号(地址编号)
 

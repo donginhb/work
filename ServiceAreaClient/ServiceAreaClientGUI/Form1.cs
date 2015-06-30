@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
+using ServiceAreaClientLib;
 
 namespace UIManager
 {
@@ -268,10 +269,17 @@ namespace UIManager
 
         private void btnTest_Click(object sender, EventArgs e)
         {
+            /*
             DBConnectMySQL mysql_object = new DBConnectMySQL();
 //          string insertStr = "INSERT INTO electric_meter VALUES(null,2,3,4,5,6,7,8,9)";
             string deleteStr = "DELETE FROM electric_meter";
             mysql_object.ExecuteMySqlCommand(deleteStr);
+             */
+            byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
+            UInt16 crcVal = ServiceAreaClientLib.ElectricMeterInquirer.CRC16(sendBytes, 6);
+            byte crcLow = (byte)(crcVal & 0x00FF);
+            byte crcHigh = (byte)((crcVal & 0xFF00) >> 8);
+            MessageBox.Show(crcVal.ToString() + crcLow.ToString() + crcHigh.ToString());
         }
     }
 }
