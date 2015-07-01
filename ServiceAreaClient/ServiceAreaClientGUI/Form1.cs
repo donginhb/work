@@ -276,10 +276,11 @@ namespace UIManager
             mysql_object.ExecuteMySqlCommand(deleteStr);
              */
             byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
-            UInt16 crcVal = ServiceAreaClientLib.ElectricMeterInquirer.CRC16(sendBytes, 6);
-            byte crcLow = (byte)(crcVal & 0x00FF);
-            byte crcHigh = (byte)((crcVal & 0xFF00) >> 8);
-            MessageBox.Show(crcVal.ToString() + crcLow.ToString() + crcHigh.ToString());
+			InquiryResult ir = new InquiryResult();
+			ir.RcvBytes = sendBytes;
+			ir.RcvLen = 8;
+			string str = ElectricMeterInquirer.GetReportString(ir);
+			MessageBox.Show(str);
         }
     }
 }

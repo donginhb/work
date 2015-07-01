@@ -11,8 +11,6 @@ namespace ServiceAreaClientLib
 {
     class TcpSocketCommunicator
     {
-        string _host = "";
-        int _port = -1;
         Socket _socket;
 
         public Socket Socket
@@ -21,30 +19,13 @@ namespace ServiceAreaClientLib
             set { _socket = value; }
         }
 
-        public int Port
+        public void Connect(string host, int port, int rcvTimeout)
         {
-            get { return _port; }
-            set { _port = value; }
-        }
-
-        public string Host
-        {
-            get { return _host; }
-            set { _host = value; }
-        }
-
-        public TcpSocketCommunicator(string hostName, int portNum)
-        {
-            Host = hostName;
-            Port = portNum;
-        }
-
-        public void Connect()
-        {
-            IPAddress ip = IPAddress.Parse(_host);
-            IPEndPoint ipe = new IPEndPoint(ip, _port);
+            IPAddress ip = IPAddress.Parse(host);
+            IPEndPoint ipe = new IPEndPoint(ip, port);
 
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.ReceiveTimeout = rcvTimeout;
             _socket.Connect(ipe);
         }
 
