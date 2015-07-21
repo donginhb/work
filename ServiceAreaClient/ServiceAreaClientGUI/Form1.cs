@@ -69,10 +69,12 @@ namespace UIManager
 			tbxPassword.Text = "Huachang2015!";
 			cbxPassword.Checked = true;
 
-			listView1.Columns.Add("名称", 100);
-			listView1.Columns.Add("设备号");
-			listView1.Columns.Add("IP", 120);
-			listView1.Columns.Add("端口号");
+			listView1.Columns.Add("Name", 90);
+			listView1.Columns.Add("Device");
+			listView1.Columns.Add("IP", 80);
+			listView1.Columns.Add("Port");
+			listView1.Columns.Add("Addr");
+			listView1.Columns.Add("Offset");
 
 			// TODO
 			ListViewItem item = new ListViewItem("电表1");

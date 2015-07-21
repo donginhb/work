@@ -9,17 +9,17 @@ using MySql.Data.MySqlClient;
 
 namespace ServiceAreaClientLib
 {
-    public class ElectricMeterInquirer
+    public class ModbusDeviceInquirer
     {
-        List<ElectricMeterInfo> _eMeterList;
+        List<ModbusDeviceInfo> _eMeterList;
 
-        internal List<ElectricMeterInfo> EMeterList
+        internal List<ModbusDeviceInfo> EMeterList
         {
             get { return _eMeterList; }
             set { _eMeterList = value; }
         }
 
-        public ElectricMeterInquirer(List<ElectricMeterInfo> meterInfoList)
+        public ModbusDeviceInquirer(List<ModbusDeviceInfo> meterInfoList)
         {
             EMeterList = meterInfoList;
         }
@@ -44,7 +44,7 @@ namespace ServiceAreaClientLib
 		/// 单个电表查询线程的执行过程
 		/// </summary>
 		/// <param name="meterInfo"></param>
-        void InquiryTask(ElectricMeterInfo meterInfo)
+        void InquiryTask(ModbusDeviceInfo meterInfo)
         {
             TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 

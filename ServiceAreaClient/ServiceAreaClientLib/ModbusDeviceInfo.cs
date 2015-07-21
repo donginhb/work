@@ -9,7 +9,7 @@ namespace ServiceAreaClientLib
     /// <summary>
     /// 电表情报
     /// </summary>
-    public class ElectricMeterInfo
+    public class ModbusDeviceInfo
     {
         int _deviceNum;             // 设备编号(地址编号)
 
@@ -34,5 +34,28 @@ namespace ServiceAreaClientLib
             get { return _portNum; }
             set { _portNum = value; }
         }
+
+		int _readAddr;				// 读操作的起始地址
+
+		public int ReadAddr
+		{
+			get { return _readAddr; }
+			set { _readAddr = value; }
+		}
+		int _readLength;			// 读操作的长度
+
+		public int ReadLength
+		{
+			get { return _readLength; }
+			set { _readLength = value; }
+		}
+
+		string _tableName;			// 数据库中的表名
+
+		public string TableName
+		{
+			get { return _tableName; }
+			set { _tableName = value; }
+		}
     }
 }

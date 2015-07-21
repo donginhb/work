@@ -44,9 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBConnectMySQL.cs" />
-    <Compile Include="ElectricMeterInquirer.cs" />
+    <Compile Include="ModbusDeviceInquirer.cs" />
     <Compile Include="ElectricMeterDataSetting.cs" />
-    <Compile Include="ElectricMeterInfo.cs" />
+    <Compile Include="ModbusDeviceInfo.cs" />
     <Compile Include="ErrorLog.cs" />
     <Compile Include="InquiryResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

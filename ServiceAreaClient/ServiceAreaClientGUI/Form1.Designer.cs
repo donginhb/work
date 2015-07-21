@@ -53,12 +53,12 @@
 			this.btnTest = new System.Windows.Forms.Button();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnEdit = new System.Windows.Forms.Button();
 			this.btnDel = new System.Windows.Forms.Button();
 			this.tbxUpdatePeriod = new System.Windows.Forms.TextBox();
 			this.btnAdd = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.btnEdit = new System.Windows.Forms.Button();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -110,7 +110,7 @@
 			this.groupBox2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox2.Location = new System.Drawing.Point(394, 12);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(438, 132);
+			this.groupBox2.Size = new System.Drawing.Size(498, 132);
 			this.groupBox2.TabIndex = 4;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "服务器端";
@@ -135,7 +135,7 @@
 			// 
 			// tbxUsrName
 			// 
-			this.tbxUsrName.Location = new System.Drawing.Point(152, 88);
+			this.tbxUsrName.Location = new System.Drawing.Point(147, 88);
 			this.tbxUsrName.Name = "tbxUsrName";
 			this.tbxUsrName.Size = new System.Drawing.Size(98, 21);
 			this.tbxUsrName.TabIndex = 2;
@@ -159,7 +159,7 @@
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(150, 70);
+			this.label13.Location = new System.Drawing.Point(145, 70);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(47, 12);
 			this.label13.TabIndex = 3;
@@ -260,7 +260,7 @@
 			// 
 			// btnTest
 			// 
-			this.btnTest.Location = new System.Drawing.Point(731, 476);
+			this.btnTest.Location = new System.Drawing.Point(779, 476);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(101, 54);
 			this.btnTest.TabIndex = 5;
@@ -274,7 +274,7 @@
 			this.listView1.FullRowSelect = true;
 			this.listView1.Location = new System.Drawing.Point(6, 18);
 			this.listView1.Name = "listView1";
-			this.listView1.Size = new System.Drawing.Size(364, 234);
+			this.listView1.Size = new System.Drawing.Size(409, 234);
 			this.listView1.TabIndex = 6;
 			this.listView1.UseCompatibleStateImageBehavior = false;
 			this.listView1.View = System.Windows.Forms.View.Details;
@@ -290,16 +290,26 @@
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Location = new System.Drawing.Point(394, 163);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(438, 307);
+			this.groupBox1.Size = new System.Drawing.Size(498, 307);
 			this.groupBox1.TabIndex = 7;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "设备列表";
 			// 
+			// btnEdit
+			// 
+			this.btnEdit.Location = new System.Drawing.Point(423, 146);
+			this.btnEdit.Name = "btnEdit";
+			this.btnEdit.Size = new System.Drawing.Size(65, 37);
+			this.btnEdit.TabIndex = 7;
+			this.btnEdit.Text = "编辑";
+			this.btnEdit.UseVisualStyleBackColor = true;
+			this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+			// 
 			// btnDel
 			// 
-			this.btnDel.Location = new System.Drawing.Point(376, 81);
+			this.btnDel.Location = new System.Drawing.Point(423, 81);
 			this.btnDel.Name = "btnDel";
-			this.btnDel.Size = new System.Drawing.Size(56, 29);
+			this.btnDel.Size = new System.Drawing.Size(65, 37);
 			this.btnDel.TabIndex = 7;
 			this.btnDel.Text = "删除";
 			this.btnDel.UseVisualStyleBackColor = true;
@@ -315,9 +325,9 @@
 			// 
 			// btnAdd
 			// 
-			this.btnAdd.Location = new System.Drawing.Point(376, 18);
+			this.btnAdd.Location = new System.Drawing.Point(423, 18);
 			this.btnAdd.Name = "btnAdd";
-			this.btnAdd.Size = new System.Drawing.Size(56, 29);
+			this.btnAdd.Size = new System.Drawing.Size(65, 37);
 			this.btnAdd.TabIndex = 7;
 			this.btnAdd.Text = "增加";
 			this.btnAdd.UseVisualStyleBackColor = true;
@@ -341,21 +351,11 @@
 			this.label1.TabIndex = 3;
 			this.label1.Text = "更新周期:";
 			// 
-			// btnEdit
-			// 
-			this.btnEdit.Location = new System.Drawing.Point(376, 146);
-			this.btnEdit.Name = "btnEdit";
-			this.btnEdit.Size = new System.Drawing.Size(56, 29);
-			this.btnEdit.TabIndex = 7;
-			this.btnEdit.Text = "编辑";
-			this.btnEdit.UseVisualStyleBackColor = true;
-			this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(847, 546);
+			this.ClientSize = new System.Drawing.Size(904, 546);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.groupBox2);
