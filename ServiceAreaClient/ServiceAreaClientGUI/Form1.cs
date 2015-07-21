@@ -77,9 +77,23 @@ namespace UIManager
 			// TODO
 			ListViewItem item = new ListViewItem("电表1");
 			item.SubItems.Add("3");
-			item.SubItems.Add("192.168.1.101");
+			item.SubItems.Add("192.168.0.7");
+			item.SubItems.Add("23");
+			listView1.Items.Add(item);
+
+			item = new ListViewItem("电表2");
+			item.SubItems.Add("4");
+			item.SubItems.Add("192.168.1.102");
 			item.SubItems.Add("10001");
 			listView1.Items.Add(item);
+
+			item = new ListViewItem("电表3");
+			item.SubItems.Add("5");
+			item.SubItems.Add("192.168.1.103");
+			item.SubItems.Add("10001");
+			listView1.Items.Add(item);
+
+			tbxUpdatePeriod.Text = "10";
         }
 
         void UIEnable(bool enable)
@@ -189,6 +203,11 @@ namespace UIManager
 		}
 
 		private void btnDel_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnEdit_Click(object sender, EventArgs e)
 		{
 
 		}

@@ -54,10 +54,11 @@
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.btnDel = new System.Windows.Forms.Button();
+			this.tbxUpdatePeriod = new System.Windows.Forms.TextBox();
 			this.btnAdd = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.textBox5 = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.btnEdit = new System.Windows.Forms.Button();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -269,6 +270,8 @@
 			// 
 			// listView1
 			// 
+			this.listView1.CheckBoxes = true;
+			this.listView1.FullRowSelect = true;
 			this.listView1.Location = new System.Drawing.Point(6, 18);
 			this.listView1.Name = "listView1";
 			this.listView1.Size = new System.Drawing.Size(364, 234);
@@ -278,8 +281,9 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.btnEdit);
 			this.groupBox1.Controls.Add(this.btnDel);
-			this.groupBox1.Controls.Add(this.textBox5);
+			this.groupBox1.Controls.Add(this.tbxUpdatePeriod);
 			this.groupBox1.Controls.Add(this.btnAdd);
 			this.groupBox1.Controls.Add(this.listView1);
 			this.groupBox1.Controls.Add(this.label2);
@@ -301,6 +305,14 @@
 			this.btnDel.UseVisualStyleBackColor = true;
 			this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
 			// 
+			// tbxUpdatePeriod
+			// 
+			this.tbxUpdatePeriod.Location = new System.Drawing.Point(65, 272);
+			this.tbxUpdatePeriod.Name = "tbxUpdatePeriod";
+			this.tbxUpdatePeriod.Size = new System.Drawing.Size(67, 19);
+			this.tbxUpdatePeriod.TabIndex = 2;
+			this.tbxUpdatePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
 			// btnAdd
 			// 
 			this.btnAdd.Location = new System.Drawing.Point(376, 18);
@@ -311,6 +323,15 @@
 			this.btnAdd.UseVisualStyleBackColor = true;
 			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(138, 275);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(17, 12);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "分";
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
@@ -320,23 +341,15 @@
 			this.label1.TabIndex = 3;
 			this.label1.Text = "更新周期:";
 			// 
-			// textBox5
+			// btnEdit
 			// 
-			this.textBox5.Location = new System.Drawing.Point(65, 272);
-			this.textBox5.Name = "textBox5";
-			this.textBox5.PasswordChar = '*';
-			this.textBox5.Size = new System.Drawing.Size(67, 19);
-			this.textBox5.TabIndex = 2;
-			this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(138, 275);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(17, 12);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "分";
+			this.btnEdit.Location = new System.Drawing.Point(376, 146);
+			this.btnEdit.Name = "btnEdit";
+			this.btnEdit.Size = new System.Drawing.Size(56, 29);
+			this.btnEdit.TabIndex = 7;
+			this.btnEdit.Text = "编辑";
+			this.btnEdit.UseVisualStyleBackColor = true;
+			this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
 			// 
 			// Form1
 			// 
@@ -389,9 +402,10 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button btnDel;
 		private System.Windows.Forms.Button btnAdd;
-		private System.Windows.Forms.TextBox textBox5;
+		private System.Windows.Forms.TextBox tbxUpdatePeriod;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button btnEdit;
     }
 }
 
