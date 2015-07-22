@@ -37,6 +37,12 @@ namespace UIManager
 //              InquiryStart(host, port, circlePeriod, serverHost, serverPort);
                 btnStart.Text = "Stop";
                 UIEnable(false);
+
+				// 1.生成查询设备列表
+				CreateInquiryDeviceList();
+
+				// 2.查询开始
+				StartQuiry();
             }
             else
             {
@@ -78,21 +84,30 @@ namespace UIManager
 
 			// TODO
 			ListViewItem item = new ListViewItem("电表1");
-			item.SubItems.Add("3");
+			item.SubItems.Add("1");
 			item.SubItems.Add("192.168.0.7");
 			item.SubItems.Add("23");
+			item.SubItems.Add("0");
+			item.SubItems.Add("76");
+			item.Checked = true;
 			listView1.Items.Add(item);
 
 			item = new ListViewItem("电表2");
-			item.SubItems.Add("4");
-			item.SubItems.Add("192.168.1.102");
-			item.SubItems.Add("10001");
+			item.SubItems.Add("2");
+			item.SubItems.Add("192.168.0.7");
+			item.SubItems.Add("23");
+			item.SubItems.Add("0");
+			item.SubItems.Add("76");
+			item.Checked = true;
 			listView1.Items.Add(item);
 
 			item = new ListViewItem("电表3");
-			item.SubItems.Add("5");
-			item.SubItems.Add("192.168.1.103");
-			item.SubItems.Add("10001");
+			item.SubItems.Add("3");
+			item.SubItems.Add("192.168.0.7");
+			item.SubItems.Add("23");
+			item.SubItems.Add("0");
+			item.SubItems.Add("76");
+			item.Checked = true;
 			listView1.Items.Add(item);
 
 			tbxUpdatePeriod.Text = "10";
@@ -195,7 +210,7 @@ namespace UIManager
 			InquiryResult ir = new InquiryResult();
 			ir.RcvBytes = sendBytes;
 			ir.RcvLen = 8;
-			string str = ElectricMeterInquirer.GetReportString(ir);
+			string str = ModbusDeviceInquirer.GetReportString(ir);
 			MessageBox.Show(str);
         }
 
@@ -212,6 +227,64 @@ namespace UIManager
 		private void btnEdit_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		/// <summary>
+		/// 生成查询设备列表
+		/// </summary>
+		private List<ModbusDeviceInfo> CreateInquiryDeviceList()
+		{
+			List<ModbusDeviceInfo> inquiryDeviceList = new List<ModbusDeviceInfo>();
+			// 遍历ListView控件取得各个查询设备的参数情报
+			foreach (ListViewItem item in listView1.Items)
+			{
+				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
+				string[] paraArr = new string[10];
+				int idx = 0;
+				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
+				{
+					paraArr[idx] = subitems.Text.Trim();
+					idx++;
+				}
+				// 设备名称
+				deviceInfo.DeviceName = paraArr[0];
+				// 设备编号
+				int value;
+				if (int.TryParse(paraArr[1], out value))
+				{
+					deviceInfo.DeviceNum = value;
+				}
+				// Host IP
+				deviceInfo.HostName = paraArr[2];
+				// 端口号
+				if (int.TryParse(paraArr[3], out value))
+				{
+					deviceInfo.PortNum = value;
+				}
+				// 读数据起始地址
+				if (int.TryParse(paraArr[4], out value))
+				{
+					deviceInfo.ReadAddr = value;
+				}
+				// 读数据长度
+				if (int.TryParse(paraArr[5], out value))
+				{
+					deviceInfo.ReadLength = value;
+				}
+
+				// 加入到查询设备列表中
+				inquiryDeviceList.Add(deviceInfo);
+			}
+
+			return inquiryDeviceList;
+		}
+
+		/// <summary>
+		/// 开始查询
+		/// </summary>
+		private void StartQuiry()
+		{
+			;
 		}
 
     }

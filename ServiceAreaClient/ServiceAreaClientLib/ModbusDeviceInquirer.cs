@@ -13,6 +13,15 @@ namespace ServiceAreaClientLib
     {
         List<ModbusDeviceInfo> _eMeterList;
 
+		// 循环查询周期(单位为分钟)
+		int _cyclePeriod = 10;
+
+		public int CyclePeriod
+		{
+			get { return _cyclePeriod; }
+			set { _cyclePeriod = value; }
+		}
+
         internal List<ModbusDeviceInfo> EMeterList
         {
             get { return _eMeterList; }
@@ -24,10 +33,26 @@ namespace ServiceAreaClientLib
             EMeterList = meterInfoList;
         }
 
+		/// <summary>
+		/// 查询开始
+		/// </summary>
+		public void StartInquiry()
+		{
+			// 启动timer
+			System.Timers.Timer timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
+			timer.AutoReset = false;
+			timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
+		}
+
+		void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			DoInquiry();
+		}
+
         /// <summary>
         /// 电表查询执行
         /// </summary>
-        public void DoRun()
+        public void DoInquiry()
         {
             if (null != _eMeterList)
             {

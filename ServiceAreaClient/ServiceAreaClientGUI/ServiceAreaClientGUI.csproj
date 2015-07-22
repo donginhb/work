@@ -52,7 +52,7 @@
       <HintPath>C:\Program Files\MySQL\MySQL Connector Net 6.9.6\Assemblies\v4.5\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="ServiceAreaClientLib">
-      <HintPath>..\ServiceAreaClientLib\bin\Release\ServiceAreaClientLib.dll</HintPath>
+      <HintPath>..\ServiceAreaClientLib\bin\Debug\ServiceAreaClientLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -11,6 +11,14 @@ namespace ServiceAreaClientLib
     /// </summary>
     public class ModbusDeviceInfo
     {
+		string _deviceName;			// 设备名称
+
+		public string DeviceName
+		{
+			get { return _deviceName; }
+			set { _deviceName = value; }
+		}
+
         int _deviceNum;             // 设备编号(地址编号)
 
         public int DeviceNum
