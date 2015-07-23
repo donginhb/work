@@ -6,12 +6,23 @@ using System.Threading.Tasks;
 
 using System.Threading;
 using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 namespace ServiceAreaClientLib
 {
     public class ModbusDeviceInquirer
     {
+		// 要查询的设备(电表, 水表等)的列表
         List<ModbusDeviceInfo> _eMeterList;
+
+		// 要更新的UI textBox控件
+		System.Windows.Forms.TextBox _tbxControl = null;
+
+		public System.Windows.Forms.TextBox TbxControl
+		{
+			get { return _tbxControl; }
+			set { _tbxControl = value; }
+		}
 
 		// 循环查询周期(单位为分钟)
 		int _cyclePeriod = 10;
@@ -33,19 +44,35 @@ namespace ServiceAreaClientLib
             EMeterList = meterInfoList;
         }
 
+		System.Timers.Timer _timer;
+
 		/// <summary>
 		/// 查询开始
 		/// </summary>
 		public void StartInquiry()
 		{
 			// 启动timer
-			System.Timers.Timer timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
-			timer.AutoReset = false;
-			timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
+			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
+			_timer.AutoReset = false;
+			_timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
+			_timer.Start();
+			// 开始第一次查询
+			DoInquiry();
+		}
+
+		public void StopInquiry()
+		{
+			if (null != _timer)
+			{
+				_timer.Stop();
+				_eMeterList.Clear();
+				_tbxControl = null;
+			}
 		}
 
 		void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
+			_timer.Start();
 			DoInquiry();
 		}
 
@@ -54,13 +81,18 @@ namespace ServiceAreaClientLib
         /// </summary>
         public void DoInquiry()
         {
+			AppendUITextBox("\r\n>------------------------------->");
+			AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
             if (null != _eMeterList)
             {
                 // 对列表中的各个电表, 逐一进行查询
                 for (int i = 0; i < _eMeterList.Count; i++)
                 {
-                    Thread inquiryThread = new Thread(delegate() { InquiryTask(_eMeterList[i]); });
-                    inquiryThread.Start();
+					ModbusDeviceInfo di = _eMeterList[i];
+					AppendUITextBox("开始查询 " + di.DeviceName);
+					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
+					inquiryThread.Start();
+					System.Threading.Thread.Sleep(300);
                 }
             }
         }
@@ -77,8 +109,10 @@ namespace ServiceAreaClientLib
             {
                 // 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
+				AppendUITextBox("	开始连接: " + meterInfo.DeviceName);
                 inquirer.Connect(meterInfo.HostName, meterInfo.PortNum, 3000);
-
+				AppendUITextBox("	" + meterInfo.DeviceName + "连接成功!");
+				System.Threading.Thread.Sleep(100);
                 // 向设备模块发送查询指令(Modbus协议)
                 //  第一个字节是通信地址(设备号)
                 //  第二个字节是功能码0x03(读数据)
@@ -94,13 +128,15 @@ namespace ServiceAreaClientLib
                 byte[] sendBytes = { (byte)meterInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
+				AppendUITextBox("	查询 " + meterInfo.DeviceName + " 指令发送!");
                 inquirer.Send(sendBytes);
 
                 // 接收设备模块返回的读数查询结果
                 InquiryResult ir = inquirer.Receive();
+				AppendUITextBox("	接收到 " + meterInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 
                 // 上报给服务器
-                Report2Server(ir);
+                //Report2Server(ir);
 
 				// 保存到本地
 
@@ -108,8 +144,13 @@ namespace ServiceAreaClientLib
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
+				AppendUITextBox("	连接失败: " + meterInfo.DeviceName);
+			//	AppendUITextBox("	" + ex.ToString());
             }
+			finally
+			{
+				AppendUITextBox("");
+			}
         }
 
         void Report2Server(InquiryResult inquiryResult)
@@ -169,6 +210,28 @@ namespace ServiceAreaClientLib
             }
             return (UInt16)(crc);
         }
+
+		public delegate void UiUpdateDelegate(string txtStr);
+
+		/// <summary>
+		/// 更新UI TextBox控件内容
+		/// </summary>
+		void AppendUITextBox(string txtStr)
+		{
+			if (null == _tbxControl)
+			{
+				return;
+			}
+			if (_tbxControl.InvokeRequired)
+			{
+				UiUpdateDelegate updateDel = new UiUpdateDelegate(AppendUITextBox);
+				_tbxControl.BeginInvoke(updateDel, new object[] { txtStr });
+			}
+			else
+			{
+				_tbxControl.AppendText(txtStr + "\r\n");
+			}
+		}
 
     }
 }

@@ -40,6 +40,7 @@ namespace ServiceAreaClientLib
             byte[] rcvBytes = new byte[1024];
             int bytes = _socket.Receive(rcvBytes, rcvBytes.Length, 0);
             ir.RcvBytes = rcvBytes;
+			ir.RcvLen = bytes;
             ir.TimeStamp = GetTimeStamp();
             return ir;
         }

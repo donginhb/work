@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using ServiceAreaClientLib;
+using System.Net;
 
 namespace UIManager
 {
@@ -22,6 +23,7 @@ namespace UIManager
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+			ModbusDeviceInquirer inqurier = null;
             if ("Start" == btnStart.Text)
             {
                 if (!CheckUIValue())
@@ -39,14 +41,14 @@ namespace UIManager
                 UIEnable(false);
 
 				// 1.生成查询设备列表
-				CreateInquiryDeviceList();
+				List<ModbusDeviceInfo> iqList = CreateInquiryDeviceList();
 
 				// 2.查询开始
-				StartQuiry();
+				inqurier = InquiryStart(iqList);
             }
             else
             {
-//              InquiryStop();
+				InquiryStop(inqurier);
                 btnStart.Text = "Start";
                 UIEnable(true);
             }
@@ -75,6 +77,7 @@ namespace UIManager
 			tbxPassword.Text = "Huachang2015!";
 			cbxPassword.Checked = true;
 
+			// Modbus设备列表
 			listView1.Columns.Add("Name", 90);
 			listView1.Columns.Add("Device");
 			listView1.Columns.Add("IP", 80);
@@ -82,7 +85,6 @@ namespace UIManager
 			listView1.Columns.Add("Addr");
 			listView1.Columns.Add("Offset");
 
-			// TODO
 			ListViewItem item = new ListViewItem("电表1");
 			item.SubItems.Add("1");
 			item.SubItems.Add("192.168.0.7");
@@ -110,7 +112,20 @@ namespace UIManager
 			item.Checked = true;
 			listView1.Items.Add(item);
 
-			tbxUpdatePeriod.Text = "10";
+			// Http设备列表
+			listView2.Columns.Add("Name", 130);
+			listView2.Columns.Add("Request string", 550);
+			item = new ListViewItem("摄像头1, 计数器0");
+			item.SubItems.Add(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count");
+			item.Checked = true;
+			listView2.Items.Add(item);
+
+			item = new ListViewItem("摄像头1, 计数器1");
+			item.SubItems.Add(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
+			item.Checked = true;
+			listView2.Items.Add(item);
+
+			tbxUpdatePeriod.Text = "1";
         }
 
         void UIEnable(bool enable)
@@ -206,25 +221,30 @@ namespace UIManager
             string deleteStr = "DELETE FROM electric_meter";
             mysql_object.ExecuteMySqlCommand(deleteStr);
              */
-            byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
-			InquiryResult ir = new InquiryResult();
-			ir.RcvBytes = sendBytes;
-			ir.RcvLen = 8;
-			string str = ModbusDeviceInquirer.GetReportString(ir);
-			MessageBox.Show(str);
+
+			//byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
+			//InquiryResult ir = new InquiryResult();
+			//ir.RcvBytes = sendBytes;
+			//ir.RcvLen = 8;
+			//string str = ModbusDeviceInquirer.GetReportString(ir);
+			//MessageBox.Show(str);
+
+			WebClient wc = new WebClient();
+			string resultStr = wc.DownloadString(new Uri(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count"));
+			MessageBox.Show(resultStr);
         }
 
-		private void btnAdd_Click(object sender, EventArgs e)
+		private void btnAdd1_Click(object sender, EventArgs e)
 		{
 
 		}
 
-		private void btnDel_Click(object sender, EventArgs e)
+		private void btnDel1_Click(object sender, EventArgs e)
 		{
 
 		}
 
-		private void btnEdit_Click(object sender, EventArgs e)
+		private void btnEdit1_Click(object sender, EventArgs e)
 		{
 
 		}
@@ -238,6 +258,10 @@ namespace UIManager
 			// 遍历ListView控件取得各个查询设备的参数情报
 			foreach (ListViewItem item in listView1.Items)
 			{
+				if (!item.Checked)
+				{
+					continue;
+				}
 				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
 				string[] paraArr = new string[10];
 				int idx = 0;
@@ -282,9 +306,27 @@ namespace UIManager
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-		private void StartQuiry()
+		private ModbusDeviceInquirer InquiryStart(List<ModbusDeviceInfo> inquiryList)
 		{
-			;
+			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(inquiryList);
+			int value;
+			if (int.TryParse(tbxUpdatePeriod.Text, out value))
+			{
+				inquirer.CyclePeriod = value;
+			}
+			inquirer.TbxControl = textBox1;
+			inquirer.StartInquiry();
+
+			return inquirer;
+		}
+
+		void InquiryStop(ModbusDeviceInquirer inqurier)
+		{
+			if (null != inqurier)
+			{
+				inqurier.StopInquiry();
+				inqurier = null;
+			}
 		}
 
     }
