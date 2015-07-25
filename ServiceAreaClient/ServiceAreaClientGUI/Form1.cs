@@ -217,12 +217,10 @@ namespace UIManager
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            /*
-            DBConnectMySQL mysql_object = new DBConnectMySQL();
-//          string insertStr = "INSERT INTO electric_meter VALUES(null,2,3,4,5,6,7,8,9)";
-            string deleteStr = "DELETE FROM electric_meter";
-            mysql_object.ExecuteMySqlCommand(deleteStr);
-             */
+			DBConnectMySQL mysql_object = new DBConnectMySQL("ServiceAreaEnergyManageSystem", "127.0.0.1", "admin", "admin");
+			string insertStr = "INSERT INTO electric_meter VALUES(null,2,3)";
+//			string deleteStr = "DELETE FROM electric_meter";
+			mysql_object.ExecuteMySqlCommand(insertStr);
 
 			//byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
 			//InquiryResult ir = new InquiryResult();
@@ -231,9 +229,9 @@ namespace UIManager
 			//string str = ModbusDeviceInquirer.GetReportString(ir);
 			//MessageBox.Show(str);
 
-			WebClient wc = new WebClient();
-			string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
-			MessageBox.Show(resultStr);
+			//WebClient wc = new WebClient();
+			//string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
+			//MessageBox.Show(resultStr);
         }
 
 		private void btnAdd1_Click(object sender, EventArgs e)

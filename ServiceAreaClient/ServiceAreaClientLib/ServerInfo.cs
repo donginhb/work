@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServiceAreaClientLib
 {
-    class ServerInfo
+    public class ServerInfo
     {
         string _host_name;
         int _port_num;

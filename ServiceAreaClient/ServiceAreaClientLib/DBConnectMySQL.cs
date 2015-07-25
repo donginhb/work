@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 
 namespace ServiceAreaClientLib
 {
-    class DBConnectMySQL
+    public class DBConnectMySQL
     {
         string _db_name;
         string _host_name;
