@@ -28,10 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-			this.components = new System.ComponentModel.Container();
 			this.btnStart = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.cbxPassword = new System.Windows.Forms.CheckBox();
 			this.tbxPassword = new System.Windows.Forms.TextBox();
@@ -90,11 +88,6 @@
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.textBox1.Size = new System.Drawing.Size(305, 680);
 			this.textBox1.TabIndex = 1;
-			// 
-			// timer1
-			// 
-			this.timer1.Interval = 1000;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// groupBox2
 			// 
@@ -472,7 +465,6 @@
 
         private System.Windows.Forms.Button btnStart;
 		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox tbxPortNum2;
         private System.Windows.Forms.TextBox tbxIP5;

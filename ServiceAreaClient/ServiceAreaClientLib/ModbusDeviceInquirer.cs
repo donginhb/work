@@ -13,7 +13,7 @@ namespace ServiceAreaClientLib
     public class ModbusDeviceInquirer
     {
 		// 要查询的设备(电表, 水表等)的列表
-        List<ModbusDeviceInfo> _eMeterList;
+        List<ModbusDeviceInfo> _deviceList;
 
 		// 要更新的UI textBox控件
 		System.Windows.Forms.TextBox _tbxControl = null;
@@ -33,15 +33,15 @@ namespace ServiceAreaClientLib
 			set { _cyclePeriod = value; }
 		}
 
-        internal List<ModbusDeviceInfo> EMeterList
+        internal List<ModbusDeviceInfo> DeviceList
         {
-            get { return _eMeterList; }
-            set { _eMeterList = value; }
+            get { return _deviceList; }
+            set { _deviceList = value; }
         }
 
-        public ModbusDeviceInquirer(List<ModbusDeviceInfo> meterInfoList)
+        public ModbusDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList)
         {
-            EMeterList = meterInfoList;
+            DeviceList = deviceInfoList;
         }
 
 		System.Timers.Timer _timer;
@@ -65,7 +65,7 @@ namespace ServiceAreaClientLib
 			if (null != _timer)
 			{
 				_timer.Stop();
-				_eMeterList.Clear();
+				_deviceList.Clear();
 				_tbxControl = null;
 			}
 		}
@@ -83,12 +83,12 @@ namespace ServiceAreaClientLib
         {
 			AppendUITextBox("\r\n>------------------------------->");
 			AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
-            if (null != _eMeterList)
+            if (null != _deviceList)
             {
                 // 对列表中的各个电表, 逐一进行查询
-                for (int i = 0; i < _eMeterList.Count; i++)
+                for (int i = 0; i < _deviceList.Count; i++)
                 {
-					ModbusDeviceInfo di = _eMeterList[i];
+					ModbusDeviceInfo di = _deviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();

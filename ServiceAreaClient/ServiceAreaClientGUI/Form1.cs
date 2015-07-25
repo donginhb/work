@@ -23,7 +23,8 @@ namespace UIManager
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-			ModbusDeviceInquirer inqurier = null;
+			ModbusDeviceInquirer modbusInqurier = null;
+			HttpDeviceInquirer httpInqurier = null;
             if ("Start" == btnStart.Text)
             {
                 if (!CheckUIValue())
@@ -36,19 +37,24 @@ namespace UIManager
 //              int.TryParse(tbxPortNum1.Text, out port);
 //              int.TryParse(tbxCirclePeriod.Text, out circlePeriod);
                 int.TryParse(tbxPortNum2.Text, out serverPort);
-//              InquiryStart(host, port, circlePeriod, serverHost, serverPort);
+//              ModbusInquiryStart(host, port, circlePeriod, serverHost, serverPort);
                 btnStart.Text = "Stop";
                 UIEnable(false);
 
 				// 1.生成查询设备列表
-				List<ModbusDeviceInfo> iqList = CreateInquiryDeviceList();
+				List<ModbusDeviceInfo> modbusList;
+				List<HttpDeviceInfo> httpList;
+				CreateInquiryDeviceList(out modbusList, out httpList);
 
 				// 2.查询开始
-				inqurier = InquiryStart(iqList);
+				modbusInqurier = ModbusInquiryStart(modbusList);
+				httpInqurier = HttpInquiryStart(httpList);
             }
             else
             {
-				InquiryStop(inqurier);
+				// 停止查询
+				ModbusInquiryStop(modbusInqurier);
+				HttpInquiryStop(httpInqurier);
                 btnStart.Text = "Start";
                 UIEnable(true);
             }
@@ -116,12 +122,12 @@ namespace UIManager
 			listView2.Columns.Add("Name", 130);
 			listView2.Columns.Add("Request string", 550);
 			item = new ListViewItem("摄像头1, 计数器0");
-			item.SubItems.Add(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count");
+			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count");
 			item.Checked = true;
 			listView2.Items.Add(item);
 
 			item = new ListViewItem("摄像头1, 计数器1");
-			item.SubItems.Add(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
+			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
 			item.Checked = true;
 			listView2.Items.Add(item);
 
@@ -205,10 +211,6 @@ namespace UIManager
             return retStr;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
         }
@@ -230,7 +232,7 @@ namespace UIManager
 			//MessageBox.Show(str);
 
 			WebClient wc = new WebClient();
-			string resultStr = wc.DownloadString(new Uri(@"http://192.168.26.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count"));
+			string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
 			MessageBox.Show(resultStr);
         }
 
@@ -252,10 +254,11 @@ namespace UIManager
 		/// <summary>
 		/// 生成查询设备列表
 		/// </summary>
-		private List<ModbusDeviceInfo> CreateInquiryDeviceList()
+		private void CreateInquiryDeviceList(out List<ModbusDeviceInfo> modbusList, out List<HttpDeviceInfo> httpList)
 		{
-			List<ModbusDeviceInfo> inquiryDeviceList = new List<ModbusDeviceInfo>();
+			modbusList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
+			// 首先是Modbus设备
 			foreach (ListViewItem item in listView1.Items)
 			{
 				if (!item.Checked)
@@ -297,18 +300,40 @@ namespace UIManager
 				}
 
 				// 加入到查询设备列表中
-				inquiryDeviceList.Add(deviceInfo);
+				modbusList.Add(deviceInfo);
 			}
 
-			return inquiryDeviceList;
+			httpList = new List<HttpDeviceInfo>();
+			// 然后是Http设备(摄像头)
+			foreach (ListViewItem item in listView2.Items)
+			{
+				if (!item.Checked)
+				{
+					continue;
+				}
+				HttpDeviceInfo deviceInfo = new HttpDeviceInfo();
+				string[] paraArr = new string[10];
+				int idx = 0;
+				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
+				{
+					paraArr[idx] = subitems.Text.Trim();
+					idx++;
+				}
+				// 设备名称
+				deviceInfo.Name = paraArr[0];
+				// Request String
+				deviceInfo.RequestString = paraArr[1];
+
+				httpList.Add(deviceInfo);
+			}
 		}
 
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-		private ModbusDeviceInquirer InquiryStart(List<ModbusDeviceInfo> inquiryList)
+		private ModbusDeviceInquirer ModbusInquiryStart(List<ModbusDeviceInfo> modbusList)
 		{
-			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(inquiryList);
+			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(modbusList);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{
@@ -320,7 +345,30 @@ namespace UIManager
 			return inquirer;
 		}
 
-		void InquiryStop(ModbusDeviceInquirer inqurier)
+		void ModbusInquiryStop(ModbusDeviceInquirer inqurier)
+		{
+			if (null != inqurier)
+			{
+				inqurier.StopInquiry();
+				inqurier = null;
+			}
+		}
+
+		private HttpDeviceInquirer HttpInquiryStart(List<HttpDeviceInfo> httpList)
+		{
+			HttpDeviceInquirer inquirer = new HttpDeviceInquirer(httpList);
+			int value;
+			if (int.TryParse(tbxUpdatePeriod.Text, out value))
+			{
+				inquirer.CyclePeriod = value;
+			}
+			inquirer.TbxControl = textBox1;
+			inquirer.StartInquiry();
+
+			return inquirer;
+		}
+
+		void HttpInquiryStop(HttpDeviceInquirer inqurier)
 		{
 			if (null != inqurier)
 			{
