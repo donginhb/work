@@ -15,6 +15,15 @@ namespace ServiceAreaClientLib
 		// 要查询的设备(电表, 水表等)的列表
         List<ModbusDeviceInfo> _deviceList;
 
+		// 数据库服务区情报
+		ServerInfo _dbServerInfo;
+
+		public ServerInfo DbServerInfo
+		{
+			get { return _dbServerInfo; }
+			set { _dbServerInfo = value; }
+		}
+
 		// 要更新的UI textBox控件
 		System.Windows.Forms.TextBox _tbxControl = null;
 
@@ -39,9 +48,10 @@ namespace ServiceAreaClientLib
             set { _deviceList = value; }
         }
 
-        public ModbusDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList)
+        public ModbusDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
+			DbServerInfo = sInfo;
         }
 
 		System.Timers.Timer _timer;
@@ -100,8 +110,8 @@ namespace ServiceAreaClientLib
 		/// <summary>
 		/// 单个电表查询线程的执行过程
 		/// </summary>
-		/// <param name="meterInfo"></param>
-        void InquiryTask(ModbusDeviceInfo meterInfo)
+		/// <param name="deviceInfo"></param>
+        void InquiryTask(ModbusDeviceInfo deviceInfo)
         {
             TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 
@@ -109,34 +119,37 @@ namespace ServiceAreaClientLib
             {
                 // 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
-				AppendUITextBox("	开始连接: " + meterInfo.DeviceName);
-                inquirer.Connect(meterInfo.HostName, meterInfo.PortNum, 3000);
-				AppendUITextBox("	" + meterInfo.DeviceName + "连接成功!");
+				AppendUITextBox("	开始连接: " + deviceInfo.DeviceName);
+                inquirer.Connect(deviceInfo.HostName, deviceInfo.PortNum, 3000);
+				AppendUITextBox("	" + deviceInfo.DeviceName + "连接成功!");
 				System.Threading.Thread.Sleep(100);
                 // 向设备模块发送查询指令(Modbus协议)
                 //  第一个字节是通信地址(设备号)
                 //  第二个字节是功能码0x03(读数据)
                 //  后面依次是读的起始地址0x0000和读长度0x004C
                 //  最后两个字节是CRC16校验码
-                byte[] tmpBytes = { (byte)meterInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C };
+                byte[] tmpBytes = { (byte)deviceInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C };
 
 				// 计算CRC校验码
                 UInt16 crc16 = CRC16(tmpBytes, 6);
                 byte crcLowByte = (byte)(crc16 & 0x00FF);
                 byte crcHighByte = (byte)((crc16 & 0xFF00) >> 8);
 
-                byte[] sendBytes = { (byte)meterInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
+                byte[] sendBytes = { (byte)deviceInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
-				AppendUITextBox("	查询 " + meterInfo.DeviceName + " 指令发送!");
+				AppendUITextBox("	查询 " + deviceInfo.DeviceName + " 指令发送!");
                 inquirer.Send(sendBytes);
 
                 // 接收设备模块返回的读数查询结果
                 InquiryResult ir = inquirer.Receive();
-				AppendUITextBox("	接收到 " + meterInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 
                 // 上报给服务器
-                //Report2Server(ir);
+                if (!Report2Server(ir, deviceInfo.TableName))
+				{
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
+				}
 
 				// 保存到本地
 
@@ -144,35 +157,43 @@ namespace ServiceAreaClientLib
             }
             catch (Exception ex)
             {
-				AppendUITextBox("	连接失败: " + meterInfo.DeviceName);
-			//	AppendUITextBox("	" + ex.ToString());
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				AppendUITextBox("	" + deviceInfo.DeviceName + " : 连接失败!");
             }
 			finally
 			{
-				AppendUITextBox("");
+				// AppendUITextBox("");
 			}
         }
 
-        void Report2Server(InquiryResult inquiryResult)
+        bool Report2Server(InquiryResult inquiryResult, string dbTableName)
         {
-            DBConnectMySQL mysql_object = new DBConnectMySQL();
+            DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             string reportStr = GetReportString(inquiryResult);
-			string dbTableName = "electric_meter";
 			string insertStr = "INSERT INTO " + dbTableName + " VALUES(null" + reportStr + ")";
-            mysql_object.ExecuteMySqlCommand(insertStr);
+			try
+			{
+				mysql_object.ExecuteMySqlCommand(insertStr);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
+			return true;
         }
 
         public static string GetReportString(InquiryResult inquiryResult)
         {
 			string reportStr = "";
-			ElectricMeterDataSetting dataSets = new ElectricMeterDataSetting();
-			foreach (var data in dataSets.dataArray)
+			List<DataUnitInfo> dataInfoList = ElectricMeterDataSetting.GetElectricMeterDataSetting();
+			foreach (var dataInfo in dataInfoList)
 			{
-				if (data.Offset < inquiryResult.RcvLen - 1)
+				if (dataInfo.Offset < inquiryResult.RcvLen - 1)
 				{
 					string dataStr = "";
-					int idx = data.Offset;
-					for (int i = 0; i < data.Length; i++)
+					int idx = dataInfo.Offset;
+					for (int i = 0; i < dataInfo.Length; i++)
 					{
 						dataStr += string.Format("{0:X}", inquiryResult.RcvBytes[idx]).PadLeft(2, '0');
 						idx++;
@@ -180,7 +201,7 @@ namespace ServiceAreaClientLib
 					ulong val;
 					if (ulong.TryParse(dataStr, out val))
 					{
-						data.Value = val;
+						dataInfo.Value = val;
 						reportStr += "," + val.ToString();
 					}
 				}

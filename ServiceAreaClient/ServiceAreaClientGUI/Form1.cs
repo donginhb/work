@@ -31,13 +31,11 @@ namespace UIManager
                 {
                     return;
                 }
-//              string host = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
-                string serverHost = tbxIP5.Text + "." + tbxIP6.Text + "." + tbxIP7.Text + "." + tbxIP8.Text;
-                int port, circlePeriod, serverPort;
-//              int.TryParse(tbxPortNum1.Text, out port);
-//              int.TryParse(tbxCirclePeriod.Text, out circlePeriod);
-                int.TryParse(tbxPortNum2.Text, out serverPort);
-//              ModbusInquiryStart(host, port, circlePeriod, serverHost, serverPort);
+                string serverHost = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
+                int updatePeriod, serverPort;
+                int.TryParse(tbxUpdatePeriod.Text, out updatePeriod);
+                int.TryParse(tbxPortNum.Text, out serverPort);
+				ServerInfo sInfo = new ServerInfo(serverHost, serverPort, tbxDBName.Text, tbxUsrName.Text, tbxPassword.Text);
                 btnStart.Text = "Stop";
                 UIEnable(false);
 
@@ -47,7 +45,7 @@ namespace UIManager
 				CreateInquiryDeviceList(out modbusList, out httpList);
 
 				// 2.查询开始
-				modbusInqurier = ModbusInquiryStart(modbusList);
+				modbusInqurier = ModbusInquiryStart(modbusList, sInfo);
 				httpInqurier = HttpInquiryStart(httpList);
             }
             else
@@ -67,20 +65,22 @@ namespace UIManager
         /// </summary>
         void UIInit()
         {
-//          tbxIP1.Text = "192";
-//          tbxIP2.Text = "168";
-//          tbxIP3.Text = "1";
-//          tbxIP4.Text = "101";
-//          tbxPortNum1.Text = "10001";
-//          tbxCirclePeriod.Text = "10";
-            tbxIP5.Text = "114";
-            tbxIP6.Text = "215";
-            tbxIP7.Text = "104";
-            tbxIP8.Text = "146";
-            tbxPortNum2.Text = "3306";
-			tbxDBName.Text = "service_area";
-			tbxUsrName.Text = "sarea";
-			tbxPassword.Text = "Huachang2015!";
+			//tbxIP1.Text = "114";
+			//tbxIP2.Text = "215";
+			//tbxIP3.Text = "104";
+			//tbxIP4.Text = "146";
+			//tbxPortNum.Text = "3306";
+			//tbxDBName.Text = "service_area";
+			//tbxUsrName.Text = "sarea";
+			//tbxPassword.Text = "Huachang2015!";
+			tbxIP1.Text = "127";
+			tbxIP2.Text = "0";
+			tbxIP3.Text = "0";
+			tbxIP4.Text = "1";
+			tbxPortNum.Text = "3306";
+			tbxDBName.Text = "saem_db";
+			tbxUsrName.Text = "admin";
+			tbxPassword.Text = "admin";
 			cbxPassword.Checked = true;
 
 			// Modbus设备列表
@@ -136,17 +136,12 @@ namespace UIManager
 
         void UIEnable(bool enable)
         {
-//          tbxIP1.Enabled = enable;
-//          tbxIP2.Enabled = enable;
-//          tbxIP3.Enabled = enable;
-//          tbxIP4.Enabled = enable;
-            tbxIP5.Enabled = enable;
-            tbxIP6.Enabled = enable;
-            tbxIP7.Enabled = enable;
-            tbxIP8.Enabled = enable;
-//          tbxPortNum1.Enabled = enable;
-//          tbxPortNum2.Enabled = enable;
-//          tbxCirclePeriod.Enabled = enable;
+            tbxIP1.Enabled = enable;
+            tbxIP2.Enabled = enable;
+            tbxIP3.Enabled = enable;
+            tbxIP4.Enabled = enable;
+			tbxPortNum.Enabled = enable;
+			tbxUpdatePeriod.Enabled = enable;
         }
 
         /// <summary>
@@ -156,28 +151,22 @@ namespace UIManager
         bool CheckUIValue()
         {
             if (
-				/*
 				!IPValueCheck(tbxIP1.Text)
                 ||  !IPValueCheck(tbxIP2.Text)
                 ||  !IPValueCheck(tbxIP3.Text)
-                ||  !IPValueCheck(tbxIP4.Text)
-                || */
-				!IPValueCheck(tbxIP5.Text)
-                ||  !IPValueCheck(tbxIP6.Text)
-                ||  !IPValueCheck(tbxIP7.Text)
-                ||  !IPValueCheck(tbxIP8.Text))
+                ||  !IPValueCheck(tbxIP4.Text))
             {
                 return false;
             }
             int val;
-            if (!int.TryParse(tbxPortNum2.Text, out val))
+            if (!int.TryParse(tbxPortNum.Text, out val))
             {
                 return false;
             }
-			//if (!int.TryParse(tbxCirclePeriod.Text, out val))
-			//{
-			//	return false;
-			//}
+			if (!int.TryParse(tbxUpdatePeriod.Text, out val))
+			{
+				return false;
+			}
             return true;
         }
 
@@ -215,9 +204,15 @@ namespace UIManager
         {
         }
 
+		/// <summary>
+		/// 测试用
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
         private void btnTest_Click(object sender, EventArgs e)
         {
-			DBConnectMySQL mysql_object = new DBConnectMySQL("ServiceAreaEnergyManageSystem", "127.0.0.1", "admin", "admin");
+			ServerInfo sInfo = new ServerInfo("127.0.0.1", 3306, "saem_db", "admin", "admin");
+			DBConnectMySQL mysql_object = new DBConnectMySQL(sInfo);
 			string insertStr = "INSERT INTO electric_meter VALUES(null,2,3)";
 //			string deleteStr = "DELETE FROM electric_meter";
 			mysql_object.ExecuteMySqlCommand(insertStr);
@@ -296,6 +291,7 @@ namespace UIManager
 				{
 					deviceInfo.ReadLength = value;
 				}
+				deviceInfo.TableName = "electric_meter";
 
 				// 加入到查询设备列表中
 				modbusList.Add(deviceInfo);
@@ -329,9 +325,9 @@ namespace UIManager
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-		private ModbusDeviceInquirer ModbusInquiryStart(List<ModbusDeviceInfo> modbusList)
+		private ModbusDeviceInquirer ModbusInquiryStart(List<ModbusDeviceInfo> modbusList, ServerInfo sInfo)
 		{
-			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(modbusList);
+			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(modbusList, sInfo);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{

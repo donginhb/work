@@ -54,10 +54,9 @@ namespace ServiceAreaClientLib
             }
         }
 
-        public long GetTimeStamp()
+        public string GetTimeStamp()
         {
-            TimeSpan ts = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return Convert.ToInt64(ts.TotalSeconds);
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }
 }

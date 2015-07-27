@@ -97,7 +97,7 @@ namespace ServiceAreaClientLib
 		/// <summary>
 		/// 单个设备查询线程的执行过程
 		/// </summary>
-		/// <param name="meterInfo"></param>
+		/// <param name="deviceInfo"></param>
         void InquiryTask(HttpDeviceInfo deviceInfo)
         {
 			try

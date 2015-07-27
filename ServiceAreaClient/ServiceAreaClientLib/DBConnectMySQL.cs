@@ -11,13 +11,7 @@ namespace ServiceAreaClientLib
 {
     public class DBConnectMySQL
     {
-        string _db_name;
-        string _host_name;
-        string _user_id;
-        string _pass_word;
-        int _port_num;
-
-        ServerInfo _serverInfomation = new ServerInfo();
+        ServerInfo _serverInfomation;
 
         internal ServerInfo ServerInfomation
         {
@@ -25,24 +19,15 @@ namespace ServiceAreaClientLib
             set { _serverInfomation = value; }
         }
 
-        public DBConnectMySQL(string dbName = "service_area", string hostName = "114.215.104.146",
-                              string userId = "sarea", string passWord = "Huachang2015!", int port = 3306)
+        public DBConnectMySQL(ServerInfo sInfo)
         {
-            _db_name = dbName;
-            _host_name = hostName;
-            _user_id = userId;
-            _pass_word = passWord;
-            _port_num = port;
-        }
-
-        public DBConnectMySQL(ServerInfo serverInfo)
-        {
-            ServerInfomation = serverInfo;
+			ServerInfomation = sInfo;
         }
 
         public MySqlConnection GetMySqlConnection()
         {
-            string M_str_sqlcon = "server=" + _host_name + ";user id=" + _user_id + ";password=" + _pass_word + ";database=" + _db_name;
+            string M_str_sqlcon = "server=" + ServerInfomation.Host_name + ";user id=" + ServerInfomation.User_id
+				+ ";password=" + ServerInfomation.Pass_word + ";database=" + ServerInfomation.Db_name;
             MySqlConnection myCon = new MySqlConnection(M_str_sqlcon);
             return myCon;
         }

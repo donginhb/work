@@ -37,15 +37,15 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.tbxDBName = new System.Windows.Forms.TextBox();
 			this.label13 = new System.Windows.Forms.Label();
-			this.tbxPortNum2 = new System.Windows.Forms.TextBox();
+			this.tbxPortNum = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.tbxIP5 = new System.Windows.Forms.TextBox();
+			this.tbxIP1 = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
-			this.tbxIP6 = new System.Windows.Forms.TextBox();
+			this.tbxIP2 = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
-			this.tbxIP7 = new System.Windows.Forms.TextBox();
+			this.tbxIP3 = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
-			this.tbxIP8 = new System.Windows.Forms.TextBox();
+			this.tbxIP4 = new System.Windows.Forms.TextBox();
 			this.label11 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
 			this.btnTest = new System.Windows.Forms.Button();
@@ -97,15 +97,15 @@
 			this.groupBox2.Controls.Add(this.label14);
 			this.groupBox2.Controls.Add(this.tbxDBName);
 			this.groupBox2.Controls.Add(this.label13);
-			this.groupBox2.Controls.Add(this.tbxPortNum2);
+			this.groupBox2.Controls.Add(this.tbxPortNum);
 			this.groupBox2.Controls.Add(this.label7);
-			this.groupBox2.Controls.Add(this.tbxIP5);
+			this.groupBox2.Controls.Add(this.tbxIP1);
 			this.groupBox2.Controls.Add(this.label8);
-			this.groupBox2.Controls.Add(this.tbxIP6);
+			this.groupBox2.Controls.Add(this.tbxIP2);
 			this.groupBox2.Controls.Add(this.label9);
-			this.groupBox2.Controls.Add(this.tbxIP7);
+			this.groupBox2.Controls.Add(this.tbxIP3);
 			this.groupBox2.Controls.Add(this.label10);
-			this.groupBox2.Controls.Add(this.tbxIP8);
+			this.groupBox2.Controls.Add(this.tbxIP4);
 			this.groupBox2.Controls.Add(this.label11);
 			this.groupBox2.Controls.Add(this.label12);
 			this.groupBox2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -172,13 +172,13 @@
 			this.label13.TabIndex = 3;
 			this.label13.Text = "用户名:";
 			// 
-			// tbxPortNum2
+			// tbxPortNum
 			// 
-			this.tbxPortNum2.Location = new System.Drawing.Point(239, 33);
-			this.tbxPortNum2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.tbxPortNum2.Name = "tbxPortNum2";
-			this.tbxPortNum2.Size = new System.Drawing.Size(84, 21);
-			this.tbxPortNum2.TabIndex = 2;
+			this.tbxPortNum.Location = new System.Drawing.Point(239, 33);
+			this.tbxPortNum.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxPortNum.Name = "tbxPortNum";
+			this.tbxPortNum.Size = new System.Drawing.Size(84, 21);
+			this.tbxPortNum.TabIndex = 2;
 			// 
 			// label7
 			// 
@@ -189,14 +189,14 @@
 			this.label7.TabIndex = 3;
 			this.label7.Text = "数据库名:";
 			// 
-			// tbxIP5
+			// tbxIP1
 			// 
-			this.tbxIP5.Location = new System.Drawing.Point(7, 33);
-			this.tbxIP5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.tbxIP5.Name = "tbxIP5";
-			this.tbxIP5.Size = new System.Drawing.Size(32, 21);
-			this.tbxIP5.TabIndex = 2;
-			this.tbxIP5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbxIP1.Location = new System.Drawing.Point(7, 33);
+			this.tbxIP1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxIP1.Name = "tbxIP1";
+			this.tbxIP1.Size = new System.Drawing.Size(32, 21);
+			this.tbxIP1.TabIndex = 2;
+			this.tbxIP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label8
 			// 
@@ -207,14 +207,14 @@
 			this.label8.TabIndex = 3;
 			this.label8.Text = "端口号:";
 			// 
-			// tbxIP6
+			// tbxIP2
 			// 
-			this.tbxIP6.Location = new System.Drawing.Point(56, 33);
-			this.tbxIP6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.tbxIP6.Name = "tbxIP6";
-			this.tbxIP6.Size = new System.Drawing.Size(32, 21);
-			this.tbxIP6.TabIndex = 2;
-			this.tbxIP6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbxIP2.Location = new System.Drawing.Point(56, 33);
+			this.tbxIP2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxIP2.Name = "tbxIP2";
+			this.tbxIP2.Size = new System.Drawing.Size(32, 21);
+			this.tbxIP2.TabIndex = 2;
+			this.tbxIP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label9
 			// 
@@ -225,14 +225,14 @@
 			this.label9.TabIndex = 3;
 			this.label9.Text = ".";
 			// 
-			// tbxIP7
+			// tbxIP3
 			// 
-			this.tbxIP7.Location = new System.Drawing.Point(105, 33);
-			this.tbxIP7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.tbxIP7.Name = "tbxIP7";
-			this.tbxIP7.Size = new System.Drawing.Size(32, 21);
-			this.tbxIP7.TabIndex = 2;
-			this.tbxIP7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbxIP3.Location = new System.Drawing.Point(105, 33);
+			this.tbxIP3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxIP3.Name = "tbxIP3";
+			this.tbxIP3.Size = new System.Drawing.Size(32, 21);
+			this.tbxIP3.TabIndex = 2;
+			this.tbxIP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label10
 			// 
@@ -243,14 +243,14 @@
 			this.label10.TabIndex = 3;
 			this.label10.Text = ".";
 			// 
-			// tbxIP8
+			// tbxIP4
 			// 
-			this.tbxIP8.Location = new System.Drawing.Point(154, 33);
-			this.tbxIP8.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.tbxIP8.Name = "tbxIP8";
-			this.tbxIP8.Size = new System.Drawing.Size(32, 21);
-			this.tbxIP8.TabIndex = 2;
-			this.tbxIP8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbxIP4.Location = new System.Drawing.Point(154, 33);
+			this.tbxIP4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxIP4.Name = "tbxIP4";
+			this.tbxIP4.Size = new System.Drawing.Size(32, 21);
+			this.tbxIP4.TabIndex = 2;
+			this.tbxIP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label11
 			// 
@@ -466,14 +466,14 @@
         private System.Windows.Forms.Button btnStart;
 		private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox tbxPortNum2;
-        private System.Windows.Forms.TextBox tbxIP5;
+        private System.Windows.Forms.TextBox tbxPortNum;
+        private System.Windows.Forms.TextBox tbxIP1;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox tbxIP6;
+        private System.Windows.Forms.TextBox tbxIP2;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbxIP7;
+        private System.Windows.Forms.TextBox tbxIP3;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox tbxIP8;
+        private System.Windows.Forms.TextBox tbxIP4;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnTest;

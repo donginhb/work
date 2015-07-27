@@ -8,9 +8,9 @@ namespace ServiceAreaClientLib
 {
     public class InquiryResult
     {
-        long _timeStamp;
+        string _timeStamp;
 
-        public long TimeStamp                // 时间戳
+        public string TimeStamp                // 时间戳
         {
             get { return _timeStamp; }
             set { _timeStamp = value; }

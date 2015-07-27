@@ -65,5 +65,7 @@ namespace ServiceAreaClientLib
 			get { return _tableName; }
 			set { _tableName = value; }
 		}
+
+		public int _dataSetting;
     }
 }
