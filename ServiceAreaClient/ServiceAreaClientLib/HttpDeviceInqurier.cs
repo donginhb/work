@@ -14,6 +14,15 @@ namespace ServiceAreaClientLib
 		// 要查询的设备列表
         List<HttpDeviceInfo> _deviceList;
 
+		// 数据库服务区情报
+		ServerInfo _dbServerInfo;
+
+		public ServerInfo DbServerInfo
+		{
+			get { return _dbServerInfo; }
+			set { _dbServerInfo = value; }
+		}
+
 		// 要更新的UI textBox控件
 		System.Windows.Forms.TextBox _tbxControl = null;
 
@@ -38,9 +47,10 @@ namespace ServiceAreaClientLib
             set { _deviceList = value; }
         }
 
-		public HttpDeviceInquirer(List<HttpDeviceInfo> deviceInfoList)
+		public HttpDeviceInquirer(List<HttpDeviceInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
+			DbServerInfo = sInfo;
         }
 
 		System.Timers.Timer _timer;
@@ -105,20 +115,47 @@ namespace ServiceAreaClientLib
 				WebClient wc = new WebClient();
 				string resultStr = wc.DownloadString(new Uri(deviceInfo.RequestString));
 				AppendUITextBox("	" + deviceInfo.Name + " 返回应答: " + resultStr);
+				Report2Server(resultStr, deviceInfo.Name, deviceInfo.DbTableName);
 			}
 			catch (Exception ex)
 			{
 				AppendUITextBox("	" + deviceInfo.Name + ": 查询失败!");
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
         }
 
-        void Report2Server(InquiryResult inquiryResult)
+		bool Report2Server(string resultStr, string deviceName, string dbTableName)
         {
+			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			string reportStr = GetReportString(resultStr);
+			string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_name, value01" + @") VALUES('" + dateTimeStr + @"'" + @", " + deviceName + reportStr + @")";
+			try
+			{
+				mysql_object.ExecuteMySqlCommand(insertStr);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
+			return true;
         }
 
-        public static string GetReportString(InquiryResult inquiryResult)
+        public static string GetReportString(string resultStr)
         {
 			string reportStr = "";
+			string findKey = "count=";
+			int idx;
+			if (-1 != (idx = resultStr.LastIndexOf(findKey)) )
+			{
+				int value;
+				string subStr = resultStr.Substring(idx + findKey.Length).Trim();
+				if (int.TryParse(subStr, out value))
+				{
+					reportStr = ", " + subStr;
+				}
+			}
 			return reportStr;
         }
 

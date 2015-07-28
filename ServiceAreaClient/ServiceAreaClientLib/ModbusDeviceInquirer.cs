@@ -146,7 +146,7 @@ namespace ServiceAreaClientLib
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 
                 // 上报给服务器
-                if (!Report2Server(ir, deviceInfo.TableName))
+                if (!Report2Server(ir, deviceInfo.TableName, deviceInfo.DeviceNum.ToString()))
 				{
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
 				}
@@ -170,7 +170,7 @@ namespace ServiceAreaClientLib
 			}
         }
 
-        bool Report2Server(InquiryResult inquiryResult, string dbTableName)
+        bool Report2Server(InquiryResult inquiryResult, string dbTableName, string deviceStr)
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;
@@ -180,7 +180,7 @@ namespace ServiceAreaClientLib
             {
                 argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
             }
-            string insertStr = @"INSERT INTO " + dbTableName + @"(time" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + reportStr + @")";
+            string insertStr = @"INSERT INTO " + dbTableName + @"(time, device" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", " + deviceStr + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

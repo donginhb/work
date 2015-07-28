@@ -46,7 +46,7 @@ namespace UIManager
 
 				// 2.查询开始
 				modbusInqurier = ModbusInquiryStart(modbusList, sInfo);
-				httpInqurier = HttpInquiryStart(httpList);
+				httpInqurier = HttpInquiryStart(httpList, sInfo);
             }
             else
             {
@@ -89,7 +89,8 @@ namespace UIManager
 			listView1.Columns.Add("IP", 80);
 			listView1.Columns.Add("Port");
 			listView1.Columns.Add("Addr");
-			listView1.Columns.Add("Offset");
+			listView1.Columns.Add("ReadLength", 85);
+			listView1.Columns.Add("DBTableName", 160);
 
 			ListViewItem item = new ListViewItem("电表1");
 			item.SubItems.Add("1");
@@ -97,6 +98,7 @@ namespace UIManager
 			item.SubItems.Add("23");
 			item.SubItems.Add("0");
 			item.SubItems.Add("76");
+			item.SubItems.Add("modbus_device_readings");
 			item.Checked = true;
 			listView1.Items.Add(item);
 
@@ -106,6 +108,7 @@ namespace UIManager
 			item.SubItems.Add("23");
 			item.SubItems.Add("0");
 			item.SubItems.Add("76");
+			item.SubItems.Add("modbus_device_readings");
 			item.Checked = true;
 			listView1.Items.Add(item);
 
@@ -115,18 +118,22 @@ namespace UIManager
 			item.SubItems.Add("23");
 			item.SubItems.Add("0");
 			item.SubItems.Add("76");
+			item.SubItems.Add("modbus_device_readings");
 			item.Checked = true;
 			listView1.Items.Add(item);
 
 			// Http设备列表
 			listView2.Columns.Add("Name", 130);
+			listView2.Columns.Add("DBTableName", 140);
 			listView2.Columns.Add("Request string", 550);
 			item = new ListViewItem("摄像头1, 计数器0");
+			item.SubItems.Add(@"http_device_readings");
 			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count");
 			item.Checked = true;
 			listView2.Items.Add(item);
 
 			item = new ListViewItem("摄像头1, 计数器1");
+			item.SubItems.Add(@"http_device_readings");
 			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
 			item.Checked = true;
 			listView2.Items.Add(item);
@@ -267,7 +274,7 @@ namespace UIManager
 					continue;
 				}
 				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
-				string[] paraArr = new string[10];
+				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
 				{
@@ -299,7 +306,7 @@ namespace UIManager
 				{
 					deviceInfo.ReadLength = value;
 				}
-				deviceInfo.TableName = "modbus_device_readings";
+				deviceInfo.TableName = paraArr[6];
 
 				// 加入到查询设备列表中
 				modbusList.Add(deviceInfo);
@@ -314,7 +321,7 @@ namespace UIManager
 					continue;
 				}
 				HttpDeviceInfo deviceInfo = new HttpDeviceInfo();
-				string[] paraArr = new string[10];
+				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
 				{
@@ -323,8 +330,9 @@ namespace UIManager
 				}
 				// 设备名称
 				deviceInfo.Name = paraArr[0];
+				deviceInfo.DbTableName = paraArr[1];
 				// Request String
-				deviceInfo.RequestString = paraArr[1];
+				deviceInfo.RequestString = paraArr[2];
 
 				httpList.Add(deviceInfo);
 			}
@@ -356,9 +364,9 @@ namespace UIManager
 			}
 		}
 
-		private HttpDeviceInquirer HttpInquiryStart(List<HttpDeviceInfo> httpList)
+		private HttpDeviceInquirer HttpInquiryStart(List<HttpDeviceInfo> httpList, ServerInfo sInfo)
 		{
-			HttpDeviceInquirer inquirer = new HttpDeviceInquirer(httpList);
+			HttpDeviceInquirer inquirer = new HttpDeviceInquirer(httpList, sInfo);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{

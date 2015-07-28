@@ -25,5 +25,13 @@ namespace ServiceAreaClientLib
 			get { return _requestString; }
 			set { _requestString = value; }
 		}
+
+		string _dbTableName;
+
+		public string DbTableName
+		{
+			get { return _dbTableName; }
+			set { _dbTableName = value; }
+		}
 	}
 }
