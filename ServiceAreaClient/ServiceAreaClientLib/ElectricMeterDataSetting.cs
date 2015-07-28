@@ -85,9 +85,9 @@ namespace ServiceAreaClientLib
             set { _length = value; }
         }
 
-		ulong _value = 0;
+        UInt32 _value = 0;
 
-		public ulong Value
+        public UInt32 Value
 		{
 			get { return _value; }
 			set { _value = value; }

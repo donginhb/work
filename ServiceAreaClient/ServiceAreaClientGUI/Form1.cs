@@ -212,10 +212,18 @@ namespace UIManager
         private void btnTest_Click(object sender, EventArgs e)
         {
 			ServerInfo sInfo = new ServerInfo("127.0.0.1", 3306, "saem_db", "admin", "admin");
+            string dtStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			DBConnectMySQL mysql_object = new DBConnectMySQL(sInfo);
-			string insertStr = "INSERT INTO electric_meter VALUES(null,2,3)";
+			string insertStr = @"INSERT INTO electric_meter (time) VALUES('" + dtStr + @"')";
 //			string deleteStr = "DELETE FROM electric_meter";
-			mysql_object.ExecuteMySqlCommand(insertStr);
+            try
+            {
+                mysql_object.ExecuteMySqlCommand(insertStr);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
 
 			//byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
 			//InquiryResult ir = new InquiryResult();
@@ -291,7 +299,7 @@ namespace UIManager
 				{
 					deviceInfo.ReadLength = value;
 				}
-				deviceInfo.TableName = "electric_meter";
+				deviceInfo.TableName = "modbus_device_readings";
 
 				// 加入到查询设备列表中
 				modbusList.Add(deviceInfo);

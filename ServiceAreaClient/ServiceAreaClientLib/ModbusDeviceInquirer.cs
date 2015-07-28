@@ -150,6 +150,10 @@ namespace ServiceAreaClientLib
 				{
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
 				}
+                else
+                {
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入成功!");
+                }
 
 				// 保存到本地
 
@@ -169,8 +173,14 @@ namespace ServiceAreaClientLib
         bool Report2Server(InquiryResult inquiryResult, string dbTableName)
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-            string reportStr = GetReportString(inquiryResult);
-			string insertStr = "INSERT INTO " + dbTableName + " VALUES(null" + reportStr + ")";
+            int counter;
+            string reportStr = GetReportString(inquiryResult, out counter);
+            string argStr = "";
+            for (int i = 0; i < counter; i++)
+            {
+                argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
+            }
+            string insertStr = @"INSERT INTO " + dbTableName + @"(time" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
@@ -183,27 +193,36 @@ namespace ServiceAreaClientLib
 			return true;
         }
 
-        public static string GetReportString(InquiryResult inquiryResult)
+        public static string GetReportString(InquiryResult inquiryResult, out int counter)
         {
 			string reportStr = "";
 			List<DataUnitInfo> dataInfoList = ElectricMeterDataSetting.GetElectricMeterDataSetting();
+            counter = 0;
 			foreach (var dataInfo in dataInfoList)
 			{
-				if (dataInfo.Offset < inquiryResult.RcvLen - 1)
+                // -5是因为要去掉前面三个字节(分别是设备码， 操作码03， 和读的长度)和最后两个字节(CRC校验)
+                if (dataInfo.Offset < inquiryResult.RcvLen - 5 - 1)
 				{
-					string dataStr = "";
-					int idx = dataInfo.Offset;
+					string dataStr = "0x";
+                    // 越过前面三个字节
+					int idx = dataInfo.Offset + 3;
 					for (int i = 0; i < dataInfo.Length; i++)
 					{
 						dataStr += string.Format("{0:X}", inquiryResult.RcvBytes[idx]).PadLeft(2, '0');
 						idx++;
 					}
-					ulong val;
-					if (ulong.TryParse(dataStr, out val))
-					{
-						dataInfo.Value = val;
-						reportStr += "," + val.ToString();
-					}
+					UInt32 val;
+                    try
+                    {
+                        val = Convert.ToUInt32(dataStr, 16);
+                        dataInfo.Value = val;
+                        reportStr += ", " + val.ToString();
+                        counter++;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine(ex.ToString());
+                    }
 				}
 			}
 			return reportStr;
