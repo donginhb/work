@@ -75,7 +75,7 @@ namespace ServiceAreaClientLib
 			if (null != _timer)
 			{
 				_timer.Stop();
-				_deviceList.Clear();
+                DeviceList.Clear();
 				_tbxControl = null;
 			}
 		}
@@ -91,14 +91,15 @@ namespace ServiceAreaClientLib
         /// </summary>
         public void DoInquiry()
         {
-			AppendUITextBox("\r\n>------------------------------->");
-			AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
-            if (null != _deviceList)
+            if (    (null != DeviceList)
+                &&  (0 != DeviceList.Count)  )
             {
+                AppendUITextBox("\r\n>------------------------------->");
+                AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
                 // 对列表中的各个电表, 逐一进行查询
-                for (int i = 0; i < _deviceList.Count; i++)
+                for (int i = 0; i < DeviceList.Count; i++)
                 {
-					ModbusDeviceInfo di = _deviceList[i];
+                    ModbusDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();

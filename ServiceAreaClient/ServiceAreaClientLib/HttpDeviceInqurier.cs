@@ -74,7 +74,7 @@ namespace ServiceAreaClientLib
 			if (null != _timer)
 			{
 				_timer.Stop();
-				_deviceList.Clear();
+                DeviceList.Clear();
 				_tbxControl = null;
 			}
 		}
@@ -90,12 +90,15 @@ namespace ServiceAreaClientLib
         /// </summary>
         public void DoInquiry()
         {
-            if (null != _deviceList)
+            if (    (null != DeviceList)
+                &&  (0 != DeviceList.Count) )
             {
+                AppendUITextBox("\r\n>------------------------------->");
+                AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
                 // 对列表中的各个设备, 逐一进行查询
-                for (int i = 0; i < _deviceList.Count; i++)
+                for (int i = 0; i < DeviceList.Count; i++)
                 {
-					HttpDeviceInfo di = _deviceList[i];
+                    HttpDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.Name);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
@@ -129,7 +132,8 @@ namespace ServiceAreaClientLib
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			string reportStr = GetReportString(resultStr);
-			string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_name, value01" + @") VALUES('" + dateTimeStr + @"'" + @", " + deviceName + reportStr + @")";
+			string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_name, value01" + @") VALUES('"
+                                    + dateTimeStr + @"'" + ", \"" + deviceName + "\"" + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
