@@ -70,60 +70,11 @@ namespace UIManager
 			// 读取INI文件
 			LoadIniFile();
 
-			// Modbus设备列表
-			listView1.Columns.Add("Name", 90);
-			listView1.Columns.Add("Device");
-			listView1.Columns.Add("IP", 80);
-			listView1.Columns.Add("Port");
-			listView1.Columns.Add("Addr");
-			listView1.Columns.Add("ReadLength", 85);
-			listView1.Columns.Add("DBTableName", 160);
-
-			ListViewItem item = new ListViewItem("电表1");
-			item.SubItems.Add("1");
-			item.SubItems.Add("192.168.0.7");
-			item.SubItems.Add("23");
-			item.SubItems.Add("0");
-			item.SubItems.Add("76");
-			item.SubItems.Add("modbus_device_readings");
-			item.Checked = true;
-			listView1.Items.Add(item);
-
-			item = new ListViewItem("电表2");
-			item.SubItems.Add("2");
-			item.SubItems.Add("192.168.0.7");
-			item.SubItems.Add("23");
-			item.SubItems.Add("0");
-			item.SubItems.Add("76");
-			item.SubItems.Add("modbus_device_readings");
-			item.Checked = true;
-			listView1.Items.Add(item);
-
-			item = new ListViewItem("电表3");
-			item.SubItems.Add("3");
-			item.SubItems.Add("192.168.0.7");
-			item.SubItems.Add("23");
-			item.SubItems.Add("0");
-			item.SubItems.Add("76");
-			item.SubItems.Add("modbus_device_readings");
-			item.Checked = true;
-			listView1.Items.Add(item);
-
-			// Http设备列表
-			listView2.Columns.Add("Name", 130);
-			listView2.Columns.Add("DBTableName", 140);
-			listView2.Columns.Add("Request string", 550);
-			item = new ListViewItem("摄像头1, 计数器0");
-			item.SubItems.Add(@"http_device_readings");
-			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct0.count");
-			item.Checked = true;
-			listView2.Items.Add(item);
-
-			item = new ListViewItem("摄像头1, 计数器1");
-			item.SubItems.Add(@"http_device_readings");
-			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
-			item.Checked = true;
-			listView2.Items.Add(item);
+			// 读取XML文件初始化ListView
+			List<ListView> ctrlList = new List<ListView>();
+			ctrlList.Add(listView1);
+			ctrlList.Add(listView2);
+			XmlFile.LoadListViewItems(ctrlList);
         }
 
         void UIEnable(bool enable)
@@ -195,6 +146,10 @@ namespace UIManager
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
 			SaveIniFile();
+			List<ListView> ctrlList = new List<ListView>();
+			ctrlList.Add(listView1);
+			ctrlList.Add(listView2);
+			XmlFile.SaveListViewItems(ctrlList);
         }
 
 		/// <summary>
@@ -204,19 +159,19 @@ namespace UIManager
 		/// <param name="e"></param>
         private void btnTest_Click(object sender, EventArgs e)
         {
-			ServerInfo sInfo = new ServerInfo("127.0.0.1", 3306, "saem_db", "admin", "admin");
-            string dtStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-			DBConnectMySQL mysql_object = new DBConnectMySQL(sInfo);
-			string insertStr = @"INSERT INTO electric_meter (time) VALUES('" + dtStr + @"')";
+			//ServerInfo sInfo = new ServerInfo("127.0.0.1", 3306, "saem_db", "admin", "admin");
+			//string dtStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			//DBConnectMySQL mysql_object = new DBConnectMySQL(sInfo);
+			//string insertStr = @"INSERT INTO electric_meter (time) VALUES('" + dtStr + @"')";
 //			string deleteStr = "DELETE FROM electric_meter";
-            try
-            {
-                mysql_object.ExecuteMySqlCommand(insertStr);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+			//try
+			//{
+			//	mysql_object.ExecuteMySqlCommand(insertStr);
+			//}
+			//catch (Exception ex)
+			//{
+			//	MessageBox.Show(ex.ToString());
+			//}
 
 			//byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
 			//InquiryResult ir = new InquiryResult();
@@ -228,6 +183,13 @@ namespace UIManager
 			//WebClient wc = new WebClient();
 			//string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
 			//MessageBox.Show(resultStr);
+
+			List<ListView> ctrlList = new List<ListView>();
+			ctrlList.Add(listView1);
+			ctrlList.Add(listView2);
+			XmlFile.SaveListViewItems(ctrlList);
+
+			XmlFile.LoadListViewItems(ctrlList);
         }
 
 		private void btnAdd1_Click(object sender, EventArgs e)
@@ -391,6 +353,38 @@ namespace UIManager
 
 			tbxServiceAreaNum.Text = IniFile.IniReadValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM");
 			tbxUpdatePeriod.Text = IniFile.IniReadValue("SETTING", "UPDATE_PERIOD");
+
+			string listView1ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_NAME");
+			string listView1ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_WIDTH");
+			AddListViewColumns(listView1, listView1ColNames, listView1ColWidths);
+
+			string listView2ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_2_COLUMN_NAME");
+			string listView2ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_2_COLUMN_WIDTH");
+			AddListViewColumns(listView2, listView2ColNames, listView2ColWidths);
+		}
+
+		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)
+		{
+			string[] namesArr = nameStr.Split(',');
+			string[] widthsArr = widthStr.Split(',');
+			if (namesArr.Length == widthsArr.Length)
+			{
+				for (int i = 0; i < namesArr.Length; i++)
+				{
+					string colName = namesArr[i].Trim();
+					string colWidth = widthsArr[i].Trim();
+					int width;
+					if (int.TryParse(colWidth, out width))
+					{
+						ctrl.Columns.Add(namesArr[i].Trim(), width);
+					}
+					else
+					{
+						ctrl.Columns.Add(namesArr[i].Trim());
+					}
+				}
+			}
+
 		}
 
 		void SaveIniFile()

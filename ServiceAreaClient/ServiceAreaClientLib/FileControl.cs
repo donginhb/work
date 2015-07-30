@@ -3,6 +3,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using System.Xml.Linq;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
 namespace ServiceAreaClientLib
 {
 	public static class IniFile
@@ -30,6 +34,83 @@ namespace ServiceAreaClientLib
 			StringBuilder temp = new StringBuilder(500);
 			int i = GetPrivateProfileString(Section, Key, "", temp, 500, Fullname);
 			return temp.ToString();
+		}
+	}
+
+	public static class XmlFile
+	{
+		private static string _fullname = System.Windows.Forms.Application.StartupPath + "\\data.xml";
+
+		public static string Fullname
+		{
+			get { return XmlFile._fullname; }
+			set { XmlFile._fullname = value; }
+		}
+		public static void SaveListViewItems(List<ListView> listViewCtrlList)
+		{
+			XDocument xdoc = new XDocument();
+			XElement root = new XElement("ListViewContents");
+			foreach (ListView ctrl in listViewCtrlList)
+			{
+				List<string> colNameList = new List<string>();
+				foreach (ColumnHeader col in ctrl.Columns)
+				{
+					colNameList.Add(col.Text);
+				}
+				XElement xElmt = new XElement(ctrl.Name);
+				foreach (ListViewItem item in ctrl.Items)
+				{
+					int idx = 0;
+					XElement xRowElmt = new XElement("Row_" + idx.ToString());
+					XAttribute xAtbChecked = new XAttribute("Checked", item.Checked);
+					xRowElmt.Add(xAtbChecked);
+					foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+					{
+						XElement xColElmt = new XElement(colNameList[idx], subItem.Text);
+						xRowElmt.Add(xColElmt);
+						idx++;
+					}
+					xElmt.Add(xRowElmt);
+				}
+				root.Add(xElmt);
+			}
+			xdoc.Add(root);
+			xdoc.Save(Fullname);
+		}
+
+		public static void LoadListViewItems(List<ListView> listViewCtrlList)
+		{
+			XDocument xdoc = XDocument.Load(Fullname);
+			foreach (ListView ctrl in listViewCtrlList)
+			{
+				foreach (XElement xElmt in xdoc.Elements("ListViewContents").Elements())
+				{
+					if (ctrl.Name == xElmt.Name)
+					{
+						ctrl.Items.Clear();
+						foreach (XElement rowItem in xElmt.Elements())
+						{
+							ListViewItem item = null;
+							foreach (XElement colItem in rowItem.Elements())
+							{
+								if (null == item)
+								{
+									item = new ListViewItem(colItem.Value);
+									if ("true" == rowItem.Attribute("Checked").Value.ToLower())
+									{
+										item.Checked = true;
+									}
+								}
+								else
+								{
+									item.SubItems.Add(colItem.Value);
+								}
+							}
+							ctrl.Items.Add(item);
+						}
+					}
+				}
+			}
 		}
 	}
 
