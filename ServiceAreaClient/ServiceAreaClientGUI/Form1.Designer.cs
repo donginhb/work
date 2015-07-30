@@ -31,7 +31,6 @@
 			this.btnStart = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.cbxPassword = new System.Windows.Forms.CheckBox();
 			this.tbxPassword = new System.Windows.Forms.TextBox();
 			this.tbxUsrName = new System.Windows.Forms.TextBox();
 			this.label14 = new System.Windows.Forms.Label();
@@ -62,6 +61,8 @@
 			this.btnDel2 = new System.Windows.Forms.Button();
 			this.btnAdd2 = new System.Windows.Forms.Button();
 			this.listView2 = new System.Windows.Forms.ListView();
+			this.label2 = new System.Windows.Forms.Label();
+			this.tbxServiceAreaNum = new System.Windows.Forms.TextBox();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -91,7 +92,6 @@
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.cbxPassword);
 			this.groupBox2.Controls.Add(this.tbxPassword);
 			this.groupBox2.Controls.Add(this.tbxUsrName);
 			this.groupBox2.Controls.Add(this.label14);
@@ -117,17 +117,6 @@
 			this.groupBox2.TabIndex = 4;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "服务器端";
-			// 
-			// cbxPassword
-			// 
-			this.cbxPassword.AutoSize = true;
-			this.cbxPassword.Location = new System.Drawing.Point(376, 61);
-			this.cbxPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.cbxPassword.Name = "cbxPassword";
-			this.cbxPassword.Size = new System.Drawing.Size(72, 16);
-			this.cbxPassword.TabIndex = 4;
-			this.cbxPassword.Text = "记住密码";
-			this.cbxPassword.UseVisualStyleBackColor = true;
 			// 
 			// tbxPassword
 			// 
@@ -430,6 +419,23 @@
 			this.listView2.UseCompatibleStateImageBehavior = false;
 			this.listView2.View = System.Windows.Forms.View.Details;
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(820, 32);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(59, 17);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "服务区号:";
+			// 
+			// tbxServiceAreaNum
+			// 
+			this.tbxServiceAreaNum.Location = new System.Drawing.Point(823, 50);
+			this.tbxServiceAreaNum.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.tbxServiceAreaNum.Name = "tbxServiceAreaNum";
+			this.tbxServiceAreaNum.Size = new System.Drawing.Size(76, 23);
+			this.tbxServiceAreaNum.TabIndex = 2;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -440,9 +446,11 @@
 			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.tbxUpdatePeriod);
 			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.tbxServiceAreaNum);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnStart);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -482,8 +490,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox tbxDBName;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox cbxPassword;
+		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.ListView listView1;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button btnDel1;
@@ -497,6 +504,8 @@
 		private System.Windows.Forms.Button btnDel2;
 		private System.Windows.Forms.Button btnAdd2;
 		private System.Windows.Forms.ListView listView2;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox tbxServiceAreaNum;
     }
 }
 

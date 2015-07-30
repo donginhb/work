@@ -47,6 +47,8 @@ namespace UIManager
 				// 2.查询开始
 				modbusInqurier = ModbusInquiryStart(modbusList, sInfo);
 				httpInqurier = HttpInquiryStart(httpList, sInfo);
+
+				SaveIniFile();
             }
             else
             {
@@ -65,23 +67,8 @@ namespace UIManager
         /// </summary>
         void UIInit()
         {
-			//tbxIP1.Text = "114";
-			//tbxIP2.Text = "215";
-			//tbxIP3.Text = "104";
-			//tbxIP4.Text = "146";
-			//tbxPortNum.Text = "3306";
-			//tbxDBName.Text = "service_area";
-			//tbxUsrName.Text = "sarea";
-			//tbxPassword.Text = "Huachang2015!";
-			tbxIP1.Text = "127";
-			tbxIP2.Text = "0";
-			tbxIP3.Text = "0";
-			tbxIP4.Text = "1";
-			tbxPortNum.Text = "3306";
-			tbxDBName.Text = "saem_db";
-			tbxUsrName.Text = "admin";
-			tbxPassword.Text = "admin";
-			cbxPassword.Checked = true;
+			// 读取INI文件
+			LoadIniFile();
 
 			// Modbus设备列表
 			listView1.Columns.Add("Name", 90);
@@ -137,8 +124,6 @@ namespace UIManager
 			item.SubItems.Add(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch0.Ct1.count");
 			item.Checked = true;
 			listView2.Items.Add(item);
-
-			tbxUpdatePeriod.Text = "1";
         }
 
         void UIEnable(bool enable)
@@ -209,6 +194,7 @@ namespace UIManager
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+			SaveIniFile();
         }
 
 		/// <summary>
@@ -385,6 +371,46 @@ namespace UIManager
 				inqurier.StopInquiry();
 				inqurier = null;
 			}
+		}
+
+		void LoadIniFile()
+		{
+			string host = IniFile.IniReadValue("DB_SERVER_INFO", "HOST");
+			string[] arr = host.Split('.');
+			if (4 == arr.Length)
+			{
+				tbxIP1.Text = arr[0];
+				tbxIP2.Text = arr[1];
+				tbxIP3.Text = arr[2];
+				tbxIP4.Text = arr[3];
+			}
+			tbxPortNum.Text = IniFile.IniReadValue("DB_SERVER_INFO", "PORT");
+			tbxDBName.Text = IniFile.IniReadValue("DB_SERVER_INFO", "DB_NAME");
+			tbxUsrName.Text = IniFile.IniReadValue("DB_SERVER_INFO", "USR_NAME");
+			tbxPassword.Text = IniFile.IniReadValue("DB_SERVER_INFO", "PASSWORD");
+
+			tbxServiceAreaNum.Text = IniFile.IniReadValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM");
+			tbxUpdatePeriod.Text = IniFile.IniReadValue("SETTING", "UPDATE_PERIOD");
+		}
+
+		void SaveIniFile()
+		{
+			if (	IPValueCheck(tbxIP1.Text)
+				&&	IPValueCheck(tbxIP2.Text)
+				&&	IPValueCheck(tbxIP3.Text)
+				&&	IPValueCheck(tbxIP4.Text))
+			{
+				string host = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
+				IniFile.IniWriteValue("DB_SERVER_INFO", "HOST", host);
+			}
+
+			IniFile.IniWriteValue("DB_SERVER_INFO", "PORT", tbxPortNum.Text);
+			IniFile.IniWriteValue("DB_SERVER_INFO", "DB_NAME", tbxDBName.Text);
+			IniFile.IniWriteValue("DB_SERVER_INFO", "USR_NAME", tbxUsrName.Text);
+			IniFile.IniWriteValue("DB_SERVER_INFO", "PASSWORD", tbxPassword.Text);
+
+			IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
+			IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
 		}
 
     }
