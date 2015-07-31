@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ListViewContents>
+  <listView1>
+    <Row_0 Checked="false">
+      <Name>电表1</Name>
+      <Device>1</Device>
+      <IP>192.168.0.7</IP>
+      <Port>23</Port>
+      <Addr>0</Addr>
+      <ReadLength>76</ReadLength>
+      <DBTableName>modbus_device_readings</DBTableName>
+    </Row_0>
+    <Row_0 Checked="true">
+      <Name>电表2</Name>
+      <Device>2</Device>
+      <IP>192.168.0.7</IP>
+      <Port>23</Port>
+      <Addr>0</Addr>
+      <ReadLength>76</ReadLength>
+      <DBTableName>modbus_device_readings</DBTableName>
+    </Row_0>
+    <Row_0 Checked="true">
+      <Name>电表3</Name>
+      <Device>3</Device>
+      <IP>192.168.0.7</IP>
+      <Port>23</Port>
+      <Addr>0</Addr>
+      <ReadLength>76</ReadLength>
+      <DBTableName>modbus_device_readings</DBTableName>
+    </Row_0>
+  </listView1>
+  <listView2>
+    <Row_0 Checked="true">
+      <Name>摄像头1, 计数器0</Name>
+      <DBTableName>http_device_readings</DBTableName>
+      <RequestString>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString>
+    </Row_0>
+    <Row_0 Checked="true">
+      <Name>摄像头1, 计数器1</Name>
+      <DBTableName>http_device_readings</DBTableName>
+      <RequestString>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString>
+    </Row_0>
+  </listView2>
+</ListViewContents>

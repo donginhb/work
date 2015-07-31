@@ -1,4 +1,4 @@
-﻿namespace UIManager
+﻿namespace ServiceAreaClient
 {
     partial class Form1
     {
@@ -261,6 +261,7 @@
 			// 
 			// btnTest
 			// 
+			this.btnTest.Enabled = false;
 			this.btnTest.Location = new System.Drawing.Point(801, 650);
 			this.btnTest.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnTest.Name = "btnTest";
@@ -275,8 +276,10 @@
 			this.listView1.CheckBoxes = true;
 			this.listView1.FullRowSelect = true;
 			this.listView1.GridLines = true;
+			this.listView1.HideSelection = false;
 			this.listView1.Location = new System.Drawing.Point(7, 25);
 			this.listView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.listView1.MultiSelect = false;
 			this.listView1.Name = "listView1";
 			this.listView1.Size = new System.Drawing.Size(476, 127);
 			this.listView1.TabIndex = 6;
@@ -411,8 +414,10 @@
 			this.listView2.CheckBoxes = true;
 			this.listView2.FullRowSelect = true;
 			this.listView2.GridLines = true;
+			this.listView2.HideSelection = false;
 			this.listView2.Location = new System.Drawing.Point(7, 25);
 			this.listView2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.listView2.MultiSelect = false;
 			this.listView2.Name = "listView2";
 			this.listView2.Size = new System.Drawing.Size(476, 128);
 			this.listView2.TabIndex = 6;

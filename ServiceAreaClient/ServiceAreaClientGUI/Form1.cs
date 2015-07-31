@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using ServiceAreaClientLib;
 using System.Net;
 
-namespace UIManager
+namespace ServiceAreaClient
 {
     public partial class Form1 : Form
     {
@@ -85,6 +85,13 @@ namespace UIManager
             tbxIP4.Enabled = enable;
 			tbxPortNum.Enabled = enable;
 			tbxUpdatePeriod.Enabled = enable;
+			tbxServiceAreaNum.Enabled = enable;
+			tbxDBName.Enabled = enable;
+			tbxUsrName.Enabled = enable;
+			tbxPassword.Enabled = enable;
+
+			listView1.Enabled = enable;
+			listView2.Enabled = enable;
         }
 
         /// <summary>
@@ -194,17 +201,45 @@ namespace UIManager
 
 		private void btnAdd1_Click(object sender, EventArgs e)
 		{
-
+			DeviceEditForm editForm = new DeviceEditForm(listView1.Columns.Count);
+			if (DialogResult.OK == editForm.ShowDialog())
+			{
+				ListViewItem item = new ListViewItem(editForm.ParaList[0]);
+				for (int i = 1; i < editForm.ParaList.Count; i++)
+				{
+					item.SubItems.Add(editForm.ParaList[i]);
+				}
+				listView1.Items.Add(item);
+			}
 		}
 
 		private void btnDel1_Click(object sender, EventArgs e)
 		{
-
+			if (0 == listView1.SelectedItems.Count)
+			{
+				return;
+			}
+			foreach (ListViewItem item in listView1.SelectedItems)
+			{
+				listView1.Items.Remove(item);
+			}
 		}
 
 		private void btnEdit1_Click(object sender, EventArgs e)
 		{
-
+			if (0 == listView1.SelectedItems.Count)
+			{
+				return;
+			}
+			ListViewItem selectedItem = listView1.SelectedItems[0];
+			foreach (ListViewItem.ListViewSubItem item in selectedItem.SubItems)
+			{
+				DeviceEditForm editForm = new DeviceEditForm(listView1.Columns.Count);
+				if (DialogResult.OK == editForm.ShowDialog())
+				{
+					
+				}
+			}
 		}
 
 		/// <summary>
