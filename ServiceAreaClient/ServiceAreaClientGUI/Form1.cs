@@ -21,10 +21,24 @@ namespace ServiceAreaClient
             UIInit();
         }
 
+        ModbusDeviceInquirer _modbusInqurier = null;
+
+        public ModbusDeviceInquirer ModbusInqurier
+        {
+            get { return _modbusInqurier; }
+            set { _modbusInqurier = value; }
+        }
+
+        HttpDeviceInquirer _httpInqurier = null;
+
+        public HttpDeviceInquirer HttpInqurier
+        {
+            get { return _httpInqurier; }
+            set { _httpInqurier = value; }
+        }
+
         private void btnStart_Click(object sender, EventArgs e)
         {
-			ModbusDeviceInquirer modbusInqurier = null;
-			HttpDeviceInquirer httpInqurier = null;
             if ("Start" == btnStart.Text)
             {
                 if (!CheckUIValue())
@@ -45,16 +59,16 @@ namespace ServiceAreaClient
 				CreateInquiryDeviceList(out modbusList, out httpList);
 
 				// 2.查询开始
-				modbusInqurier = ModbusInquiryStart(modbusList, sInfo);
-				httpInqurier = HttpInquiryStart(httpList, sInfo);
+				ModbusInqurier = ModbusInquiryStart(modbusList, sInfo);
+				HttpInqurier = HttpInquiryStart(httpList, sInfo);
 
 				SaveIniFile();
             }
             else
             {
 				// 停止查询
-				ModbusInquiryStop(modbusInqurier);
-				HttpInquiryStop(httpInqurier);
+				ModbusInquiryStop(ModbusInqurier);
+				HttpInquiryStop(HttpInqurier);
                 btnStart.Text = "Start";
                 UIEnable(true);
             }
@@ -79,6 +93,7 @@ namespace ServiceAreaClient
 
         void UIEnable(bool enable)
         {
+            // 文本框
             tbxIP1.Enabled = enable;
             tbxIP2.Enabled = enable;
             tbxIP3.Enabled = enable;
@@ -90,8 +105,17 @@ namespace ServiceAreaClient
 			tbxUsrName.Enabled = enable;
 			tbxPassword.Enabled = enable;
 
+            // 列表
 			listView1.Enabled = enable;
 			listView2.Enabled = enable;
+
+            // 按钮
+            btnAdd1.Enabled = enable;
+            btnDel1.Enabled = enable;
+            btnEdit1.Enabled = enable;
+            btnAdd2.Enabled = enable;
+            btnDel2.Enabled = enable;
+            btnEdit2.Enabled = enable;
         }
 
         /// <summary>

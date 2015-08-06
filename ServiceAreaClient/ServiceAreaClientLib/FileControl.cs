@@ -80,37 +80,44 @@ namespace ServiceAreaClientLib
 
 		public static void LoadListViewItems(List<ListView> listViewCtrlList)
 		{
-			XDocument xdoc = XDocument.Load(Fullname);
-			foreach (ListView ctrl in listViewCtrlList)
-			{
-				foreach (XElement xElmt in xdoc.Elements("ListViewContents").Elements())
-				{
-					if (ctrl.Name == xElmt.Name)
-					{
-						ctrl.Items.Clear();
-						foreach (XElement rowItem in xElmt.Elements())
-						{
-							ListViewItem item = null;
-							foreach (XElement colItem in rowItem.Elements())
-							{
-								if (null == item)
-								{
-									item = new ListViewItem(colItem.Value);
-									if ("true" == rowItem.Attribute("Checked").Value.ToLower())
-									{
-										item.Checked = true;
-									}
-								}
-								else
-								{
-									item.SubItems.Add(colItem.Value);
-								}
-							}
-							ctrl.Items.Add(item);
-						}
-					}
-				}
-			}
+            try
+            {
+                XDocument xdoc = XDocument.Load(Fullname);
+                foreach (ListView ctrl in listViewCtrlList)
+                {
+                    foreach (XElement xElmt in xdoc.Elements("ListViewContents").Elements())
+                    {
+                        if (ctrl.Name == xElmt.Name)
+                        {
+                            ctrl.Items.Clear();
+                            foreach (XElement rowItem in xElmt.Elements())
+                            {
+                                ListViewItem item = null;
+                                foreach (XElement colItem in rowItem.Elements())
+                                {
+                                    if (null == item)
+                                    {
+                                        item = new ListViewItem(colItem.Value);
+                                        if ("true" == rowItem.Attribute("Checked").Value.ToLower())
+                                        {
+                                            item.Checked = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        item.SubItems.Add(colItem.Value);
+                                    }
+                                }
+                                ctrl.Items.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.ToString());
+            }
 		}
 	}
 
