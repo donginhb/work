@@ -12,11 +12,19 @@ namespace ServiceAreaClient
 {
 	public partial class DeviceEditForm : Form
 	{
-		public DeviceEditForm(int p_count)
+		public DeviceEditForm(int p_count, List<string> p_list = null)
 		{
 			InitializeComponent();
 
 			ParaCount = p_count;
+			if (null != p_list)
+			{
+				ParaList = p_list;
+			}
+			foreach (string pStr in ParaList)
+			{
+				textBox1.AppendText(pStr + "\r\n");
+			}
 		}
 
 		// 编辑参数的个数

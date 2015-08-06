@@ -285,6 +285,7 @@
 			this.listView1.TabIndex = 6;
 			this.listView1.UseCompatibleStateImageBehavior = false;
 			this.listView1.View = System.Windows.Forms.View.Details;
+			this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
 			// 
 			// groupBox1
 			// 
@@ -385,7 +386,7 @@
 			this.btnEdit2.TabIndex = 7;
 			this.btnEdit2.Text = "编辑";
 			this.btnEdit2.UseVisualStyleBackColor = true;
-			this.btnEdit2.Click += new System.EventHandler(this.btnEdit1_Click);
+			this.btnEdit2.Click += new System.EventHandler(this.btnEdit2_Click);
 			// 
 			// btnDel2
 			// 
@@ -396,7 +397,7 @@
 			this.btnDel2.TabIndex = 7;
 			this.btnDel2.Text = "删除";
 			this.btnDel2.UseVisualStyleBackColor = true;
-			this.btnDel2.Click += new System.EventHandler(this.btnDel1_Click);
+			this.btnDel2.Click += new System.EventHandler(this.btnDel2_Click);
 			// 
 			// btnAdd2
 			// 
@@ -407,7 +408,7 @@
 			this.btnAdd2.TabIndex = 7;
 			this.btnAdd2.Text = "增加";
 			this.btnAdd2.UseVisualStyleBackColor = true;
-			this.btnAdd2.Click += new System.EventHandler(this.btnAdd1_Click);
+			this.btnAdd2.Click += new System.EventHandler(this.btnAdd2_Click);
 			// 
 			// listView2
 			// 
@@ -423,6 +424,7 @@
 			this.listView2.TabIndex = 6;
 			this.listView2.UseCompatibleStateImageBehavior = false;
 			this.listView2.View = System.Windows.Forms.View.Details;
+			this.listView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView2_MouseDoubleClick);
 			// 
 			// label2
 			// 

@@ -201,7 +201,37 @@ namespace ServiceAreaClient
 
 		private void btnAdd1_Click(object sender, EventArgs e)
 		{
-			DeviceEditForm editForm = new DeviceEditForm(listView1.Columns.Count);
+			ButtonAddClick(listView1);
+		}
+
+		private void btnDel1_Click(object sender, EventArgs e)
+		{
+			ButtonDelClick(listView1);
+		}
+
+		private void btnEdit1_Click(object sender, EventArgs e)
+		{
+			ButtonEditClick(listView1);
+		}
+
+		private void btnAdd2_Click(object sender, EventArgs e)
+		{
+			ButtonAddClick(listView2);
+		}
+
+		private void btnDel2_Click(object sender, EventArgs e)
+		{
+			ButtonDelClick(listView2);
+		}
+
+		private void btnEdit2_Click(object sender, EventArgs e)
+		{
+			ButtonEditClick(listView2);
+		}
+
+		void ButtonAddClick(ListView list_view_ctrl)
+		{
+			DeviceEditForm editForm = new DeviceEditForm(list_view_ctrl.Columns.Count);
 			if (DialogResult.OK == editForm.ShowDialog())
 			{
 				ListViewItem item = new ListViewItem(editForm.ParaList[0]);
@@ -209,35 +239,43 @@ namespace ServiceAreaClient
 				{
 					item.SubItems.Add(editForm.ParaList[i]);
 				}
-				listView1.Items.Add(item);
+				list_view_ctrl.Items.Add(item);
 			}
 		}
 
-		private void btnDel1_Click(object sender, EventArgs e)
+		void ButtonDelClick(ListView list_view_ctrl)
 		{
-			if (0 == listView1.SelectedItems.Count)
+			foreach (ListViewItem item in list_view_ctrl.SelectedItems)
 			{
-				return;
-			}
-			foreach (ListViewItem item in listView1.SelectedItems)
-			{
-				listView1.Items.Remove(item);
+				list_view_ctrl.Items.Remove(item);
 			}
 		}
 
-		private void btnEdit1_Click(object sender, EventArgs e)
+		void ButtonEditClick(ListView list_view_ctrl)
 		{
-			if (0 == listView1.SelectedItems.Count)
+			if (0 == list_view_ctrl.SelectedItems.Count)
 			{
 				return;
 			}
-			ListViewItem selectedItem = listView1.SelectedItems[0];
+			ListViewItem selectedItem = list_view_ctrl.SelectedItems[0];
+			List<string> pList = new List<string>();
 			foreach (ListViewItem.ListViewSubItem item in selectedItem.SubItems)
 			{
-				DeviceEditForm editForm = new DeviceEditForm(listView1.Columns.Count);
-				if (DialogResult.OK == editForm.ShowDialog())
+				pList.Add(item.Text);
+			}
+
+			DeviceEditForm editForm = new DeviceEditForm(list_view_ctrl.Columns.Count, pList);
+			if (DialogResult.OK == editForm.ShowDialog())
+			{
+				if (0 == editForm.ParaList.Count)
 				{
-					
+					return;
+				}
+				selectedItem.SubItems.Clear();
+				selectedItem.Text = editForm.ParaList[0];
+				for (int i = 1; i < editForm.ParaList.Count; i++)
+				{
+					selectedItem.SubItems.Add(editForm.ParaList[i]);
 				}
 			}
 		}
@@ -440,6 +478,16 @@ namespace ServiceAreaClient
 
 			IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
 			IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
+		}
+
+		private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit1_Click(sender, e);
+		}
+
+		private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit2_Click(sender, e);
 		}
 
     }
