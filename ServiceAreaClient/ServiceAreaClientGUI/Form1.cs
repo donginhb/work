@@ -328,30 +328,32 @@ namespace ServiceAreaClient
 				}
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
+                // DeviceSN
+
 				// 设备编号
 				int value;
-				if (int.TryParse(paraArr[1], out value))
+				if (int.TryParse(paraArr[2], out value))
 				{
 					deviceInfo.DeviceNum = value;
 				}
 				// Host IP
-				deviceInfo.HostName = paraArr[2];
+				deviceInfo.HostName = paraArr[3];
 				// 端口号
-				if (int.TryParse(paraArr[3], out value))
+				if (int.TryParse(paraArr[4], out value))
 				{
 					deviceInfo.PortNum = value;
 				}
 				// 读数据起始地址
-				if (int.TryParse(paraArr[4], out value))
+				if (int.TryParse(paraArr[5], out value))
 				{
 					deviceInfo.ReadAddr = value;
 				}
 				// 读数据长度
-				if (int.TryParse(paraArr[5], out value))
+				if (int.TryParse(paraArr[6], out value))
 				{
 					deviceInfo.ReadLength = value;
 				}
-				deviceInfo.TableName = paraArr[6];
+				deviceInfo.TableName = paraArr[7];
 
 				// 加入到查询设备列表中
 				modbusList.Add(deviceInfo);
@@ -375,9 +377,11 @@ namespace ServiceAreaClient
 				}
 				// 设备名称
 				deviceInfo.Name = paraArr[0];
-				deviceInfo.DbTableName = paraArr[1];
+                // DeviceSN
+                // 数据库中对应的表名
+                deviceInfo.DbTableName = paraArr[2];
 				// Request String
-				deviceInfo.RequestString = paraArr[2];
+				deviceInfo.RequestString = paraArr[3];
 
 				httpList.Add(deviceInfo);
 			}

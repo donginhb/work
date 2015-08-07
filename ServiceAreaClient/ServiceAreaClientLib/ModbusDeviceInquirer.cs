@@ -181,7 +181,7 @@ namespace ServiceAreaClientLib
             {
                 argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
             }
-            string insertStr = @"INSERT INTO " + dbTableName + @"(time, device" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", " + deviceStr + reportStr + @")";
+            string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", " + deviceStr + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
