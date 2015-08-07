@@ -11,6 +11,14 @@ namespace ServiceAreaClientLib
     /// </summary>
     public class ModbusDeviceInfo
     {
+		int _serviceArea;			// 服务区编号
+
+		public int ServiceArea
+		{
+			get { return _serviceArea; }
+			set { _serviceArea = value; }
+		}
+
 		string _deviceName;			// 设备名称
 
 		public string DeviceName
@@ -19,12 +27,20 @@ namespace ServiceAreaClientLib
 			set { _deviceName = value; }
 		}
 
-        int _deviceNum;             // 设备编号(地址编号)
+		string _deviceSn;
 
-        public int DeviceNum
+		public string DeviceSn		 // 设备编号(区域编号3位 + 设备种别编号3位 + 具体设备编号3位, 共九位, 插入数据库时与前面的三位服务区编号一起构成12位的完整设备序号)
+		{
+			get { return _deviceSn; }
+			set { _deviceSn = value; }
+		}
+
+        int _deviceAddr;             // 设备地址
+
+        public int DeviceAddr
         {
-            get { return _deviceNum; }
-            set { _deviceNum = value; }
+            get { return _deviceAddr; }
+            set { _deviceAddr = value; }
         }
 
         string _hostName;           // ip字符串

@@ -326,15 +326,20 @@ namespace ServiceAreaClient
 					paraArr[idx] = subitems.Text.Trim();
 					idx++;
 				}
+				int value;
+				// 服务区编号
+				if (int.TryParse(tbxServiceAreaNum.Text, out value))
+				{
+					deviceInfo.ServiceArea = value;
+				}
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
                 // DeviceSN
-
+				deviceInfo.DeviceSn = paraArr[1];
 				// 设备编号
-				int value;
 				if (int.TryParse(paraArr[2], out value))
 				{
-					deviceInfo.DeviceNum = value;
+					deviceInfo.DeviceAddr = value;
 				}
 				// Host IP
 				deviceInfo.HostName = paraArr[3];
@@ -375,9 +380,16 @@ namespace ServiceAreaClient
 					paraArr[idx] = subitems.Text.Trim();
 					idx++;
 				}
+				int value;
+				// 服务区编号
+				if (int.TryParse(tbxServiceAreaNum.Text, out value))
+				{
+					deviceInfo.ServiceArea = value;
+				}
 				// 设备名称
 				deviceInfo.Name = paraArr[0];
                 // DeviceSN
+				deviceInfo.DeviceSn = paraArr[1];
                 // 数据库中对应的表名
                 deviceInfo.DbTableName = paraArr[2];
 				// Request String

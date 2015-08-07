@@ -118,7 +118,7 @@ namespace ServiceAreaClientLib
 				WebClient wc = new WebClient();
 				string resultStr = wc.DownloadString(new Uri(deviceInfo.RequestString));
 				AppendUITextBox("	" + deviceInfo.Name + " 返回应答: " + resultStr);
-				Report2Server(resultStr, deviceInfo.Name, deviceInfo.DbTableName);
+				Report2Server(resultStr, deviceInfo);
 			}
 			catch (Exception ex)
 			{
@@ -127,13 +127,14 @@ namespace ServiceAreaClientLib
 			}
         }
 
-		bool Report2Server(string resultStr, string deviceName, string dbTableName)
+		bool Report2Server(string resultStr, HttpDeviceInfo deviceInfo)
         {
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			string reportStr = GetReportString(resultStr);
-			string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_name, value01" + @") VALUES('"
-                                    + dateTimeStr + @"'" + ", \"" + deviceName + "\"" + reportStr + @")";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
+			string insertStr = @"INSERT INTO " + deviceInfo.Name + @"(time, device_sn, device_name, value01" + @") VALUES('"
+									+ dateTimeStr + @"'" + deviceSnStr + @"," + ", \"" + deviceInfo.DbTableName + "\"" + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

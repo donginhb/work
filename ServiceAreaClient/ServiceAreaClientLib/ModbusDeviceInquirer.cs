@@ -129,14 +129,14 @@ namespace ServiceAreaClientLib
                 //  第二个字节是功能码0x03(读数据)
                 //  后面依次是读的起始地址0x0000和读长度0x004C
                 //  最后两个字节是CRC16校验码
-                byte[] tmpBytes = { (byte)deviceInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C };
+                byte[] tmpBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4C };
 
 				// 计算CRC校验码
                 UInt16 crc16 = CRC16(tmpBytes, 6);
                 byte crcLowByte = (byte)(crc16 & 0x00FF);
                 byte crcHighByte = (byte)((crc16 & 0xFF00) >> 8);
 
-                byte[] sendBytes = { (byte)deviceInfo.DeviceNum, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
+                byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
 				AppendUITextBox("	查询 " + deviceInfo.DeviceName + " 指令发送!");
@@ -147,7 +147,7 @@ namespace ServiceAreaClientLib
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 
                 // 上报给服务器
-                if (!Report2Server(ir, deviceInfo.TableName, deviceInfo.DeviceNum.ToString()))
+                if (!Report2Server(ir, deviceInfo))
 				{
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
 				}
@@ -171,7 +171,7 @@ namespace ServiceAreaClientLib
 			}
         }
 
-        bool Report2Server(InquiryResult inquiryResult, string dbTableName, string deviceStr)
+        bool Report2Server(InquiryResult inquiryResult, ModbusDeviceInfo deviceInfo)
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;
@@ -181,7 +181,9 @@ namespace ServiceAreaClientLib
             {
                 argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
             }
-            string insertStr = @"INSERT INTO " + dbTableName + @"(time, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", " + deviceStr + reportStr + @")";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
+			string insertStr = @"INSERT INTO " + deviceInfo.TableName + @"(time, device_sn, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", "
+								+ deviceSnStr + @"," + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
