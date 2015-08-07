@@ -127,6 +127,7 @@ namespace ServiceAreaClientLib
 			}
         }
 
+        // 报告给服务器(写入数据库表)
 		bool Report2Server(string resultStr, HttpDeviceInfo deviceInfo)
         {
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
