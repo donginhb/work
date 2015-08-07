@@ -133,8 +133,8 @@ namespace ServiceAreaClientLib
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			string reportStr = GetReportString(resultStr);
 			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-			string insertStr = @"INSERT INTO " + deviceInfo.Name + @"(time, device_sn, device_name, value01" + @") VALUES('"
-									+ dateTimeStr + @"'" + deviceSnStr + @"," + ", \"" + deviceInfo.DbTableName + "\"" + reportStr + @")";
+            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_name, value01" + @") VALUES('"
+                                    + dateTimeStr + @"'" + @"," + deviceSnStr + ", \"" + deviceInfo.Name + "\"" + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
