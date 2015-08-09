@@ -115,10 +115,12 @@ namespace ServiceAreaClientLib
         {
 			try
 			{
-				WebClient wc = new WebClient();
-				string resultStr = wc.DownloadString(new Uri(deviceInfo.RequestString));
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + resultStr);
-				Report2Server(resultStr, deviceInfo);
+				// 异步执行两个查询
+				Task<string> t0 = GetResultStringAsync(deviceInfo.RequestString1);
+				Task<string> t1 = GetResultStringAsync(deviceInfo.RequestString2);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t0.Result);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
+				Report2Server(t0.Result, t1.Result, deviceInfo);
 			}
 			catch (Exception ex)
 			{
@@ -127,15 +129,24 @@ namespace ServiceAreaClientLib
 			}
         }
 
+		async Task<string> GetResultStringAsync(string requestStr)
+		{
+			WebClient wc = new WebClient();
+			string resultStr = await wc.DownloadStringTaskAsync(new Uri(requestStr));
+
+			return resultStr;
+		}
+
         // 报告给服务器(写入数据库表)
-		bool Report2Server(string resultStr, HttpDeviceInfo deviceInfo)
+		bool Report2Server(string resultStr0, string resultStr1, HttpDeviceInfo deviceInfo)
         {
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-			string reportStr = GetReportString(resultStr);
+			string reportStr0 = GetReportString(resultStr0);
+			string reportStr1 = GetReportString(resultStr1);
 			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_name, value01" + @") VALUES('"
-                                    + dateTimeStr + @"'" + @"," + deviceSnStr + ", \"" + deviceInfo.DeviceName + "\"" + reportStr + @")";
+            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, value01, value02" + @") VALUES('"
+                                    + dateTimeStr + @"'" + @"," + deviceSnStr + ", " + reportStr0 + ", " + reportStr1 + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

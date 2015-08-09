@@ -2,7 +2,7 @@
 <ListViewContents>
   <listView1>
     <Row_0 Checked="true">
-      <Name>电表1</Name>
+      <Name>东区广场灯</Name>
       <SN>001001001</SN>
       <DeviceAddr>1</DeviceAddr>
       <IP>192.168.0.7</IP>
@@ -12,7 +12,7 @@
       <DBTableName>modbus_device_readings</DBTableName>
     </Row_0>
     <Row_0 Checked="true">
-      <Name>电表2</Name>
+      <Name>东区餐厅照明</Name>
       <SN>001001002</SN>
       <DeviceAddr>2</DeviceAddr>
       <IP>192.168.0.7</IP>
@@ -22,7 +22,7 @@
       <DBTableName>modbus_device_readings</DBTableName>
     </Row_0>
     <Row_0 Checked="true">
-      <Name>电表3</Name>
+      <Name>东区中央空调</Name>
       <SN>001001003</SN>
       <DeviceAddr>3</DeviceAddr>
       <IP>192.168.0.7</IP>
@@ -34,16 +34,11 @@
   </listView1>
   <listView2>
     <Row_0 Checked="true">
-      <Name>摄像头1, 计数器0</Name>
+      <Name>东区卫生间人流</Name>
       <SN>001003001</SN>
       <DBTableName>http_device_readings</DBTableName>
-      <RequestString>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString>
-    </Row_0>
-    <Row_0 Checked="true">
-      <Name>摄像头1, 计数器1</Name>
-      <SN>001003002</SN>
-      <DBTableName>http_device_readings</DBTableName>
-      <RequestString>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString>
+      <RequestString1>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
+      <RequestString2>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_0>
   </listView2>
 </ListViewContents>

@@ -393,7 +393,8 @@ namespace ServiceAreaClient
                 // 数据库中对应的表名
                 deviceInfo.DbTableName = paraArr[2];
 				// Request String
-				deviceInfo.RequestString = paraArr[3];
+				deviceInfo.RequestString1 = paraArr[3];
+				deviceInfo.RequestString2 = paraArr[4];
 
 				httpList.Add(deviceInfo);
 			}

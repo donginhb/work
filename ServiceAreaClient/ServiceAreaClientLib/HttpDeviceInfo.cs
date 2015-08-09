@@ -32,14 +32,23 @@ namespace ServiceAreaClientLib
 			set { _deviceSn = value; }
 		}
 
-		string _requestString;
+		string _requestString1;
 
 		// 查询时发送的Http请求字符串
-		public string RequestString
+		public string RequestString1
 		{
-			get { return _requestString; }
-			set { _requestString = value; }
+			get { return _requestString1; }
+			set { _requestString1 = value; }
 		}
+
+		string _requestString2;
+
+		public string RequestString2
+		{
+			get { return _requestString2; }
+			set { _requestString2 = value; }
+		}
+
 
 		string _dbTableName;
 
