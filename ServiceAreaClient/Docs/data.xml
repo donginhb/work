@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ListViewContents>
   <listView1>
-    <Row_0 Checked="false">
+    <Row_0 Checked="true">
       <Name>电表1</Name>
       <SN>001001001</SN>
       <DeviceAddr>1</DeviceAddr>

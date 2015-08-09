@@ -387,7 +387,7 @@ namespace ServiceAreaClient
 					deviceInfo.ServiceArea = value;
 				}
 				// 设备名称
-				deviceInfo.Name = paraArr[0];
+				deviceInfo.DeviceName = paraArr[0];
                 // DeviceSN
 				deviceInfo.DeviceSn = paraArr[1];
                 // 数据库中对应的表名

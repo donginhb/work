@@ -99,7 +99,7 @@ namespace ServiceAreaClientLib
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
                     HttpDeviceInfo di = DeviceList[i];
-					AppendUITextBox("开始查询 " + di.Name);
+					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
 					System.Threading.Thread.Sleep(300);
@@ -117,12 +117,12 @@ namespace ServiceAreaClientLib
 			{
 				WebClient wc = new WebClient();
 				string resultStr = wc.DownloadString(new Uri(deviceInfo.RequestString));
-				AppendUITextBox("	" + deviceInfo.Name + " 返回应答: " + resultStr);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + resultStr);
 				Report2Server(resultStr, deviceInfo);
 			}
 			catch (Exception ex)
 			{
-				AppendUITextBox("	" + deviceInfo.Name + ": 查询失败!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + ": 查询失败!");
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
         }
@@ -135,7 +135,7 @@ namespace ServiceAreaClientLib
 			string reportStr = GetReportString(resultStr);
 			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
             string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_name, value01" + @") VALUES('"
-                                    + dateTimeStr + @"'" + @"," + deviceSnStr + ", \"" + deviceInfo.Name + "\"" + reportStr + @")";
+                                    + dateTimeStr + @"'" + @"," + deviceSnStr + ", \"" + deviceInfo.DeviceName + "\"" + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

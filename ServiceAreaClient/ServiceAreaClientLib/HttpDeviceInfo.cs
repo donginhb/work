@@ -16,12 +16,12 @@ namespace ServiceAreaClientLib
 			set { _serviceArea = value; }
 		}
 
-		string _name;				// 设备名称
+		string _deviceName;			// 设备名称
 
-		public string Name
+		public string DeviceName
 		{
-			get { return _name; }
-			set { _name = value; }
+			get { return _deviceName; }
+			set { _deviceName = value; }
 		}
 
 		string _deviceSn;
