@@ -58,19 +58,21 @@ namespace ServiceAreaClientLib
 					colNameList.Add(col.Text);
 				}
 				XElement xElmt = new XElement(ctrl.Name);
-				foreach (ListViewItem item in ctrl.Items)
+                int rowIdx = 0;
+                foreach (ListViewItem item in ctrl.Items)
 				{
-					int idx = 0;
-					XElement xRowElmt = new XElement("Row_" + idx.ToString());
+					XElement xRowElmt = new XElement("Row_" + rowIdx.ToString());
 					XAttribute xAtbChecked = new XAttribute("Checked", item.Checked);
 					xRowElmt.Add(xAtbChecked);
-					foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+                    int colIdx = 0;
+                    foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
 					{
-						XElement xColElmt = new XElement(colNameList[idx], subItem.Text);
+						XElement xColElmt = new XElement(colNameList[colIdx], subItem.Text);
 						xRowElmt.Add(xColElmt);
-						idx++;
+						colIdx++;
 					}
 					xElmt.Add(xRowElmt);
+                    rowIdx++;
 				}
 				root.Add(xElmt);
 			}

@@ -100,7 +100,7 @@ namespace ServiceAreaClientLib
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
                     ModbusDeviceInfo di = DeviceList[i];
-					AppendUITextBox("开始查询 " + di.DeviceName);
+					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
 					System.Threading.Thread.Sleep(300);
@@ -120,9 +120,9 @@ namespace ServiceAreaClientLib
             {
                 // 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
-				AppendUITextBox("	开始连接: " + deviceInfo.DeviceName);
+                AppendUITextBox("	开始连接: " + deviceInfo.DeviceSn);
                 inquirer.Connect(deviceInfo.HostName, deviceInfo.PortNum, 3000);
-				AppendUITextBox("	" + deviceInfo.DeviceName + "连接成功!");
+                AppendUITextBox("	" + deviceInfo.DeviceSn + "连接成功!");
 				System.Threading.Thread.Sleep(100);
                 // 向设备模块发送查询指令(Modbus协议)
                 //  第一个字节是通信地址(设备号)
@@ -139,21 +139,21 @@ namespace ServiceAreaClientLib
                 byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
-				AppendUITextBox("	查询 " + deviceInfo.DeviceName + " 指令发送!");
+                AppendUITextBox("	查询 " + deviceInfo.DeviceSn + " 指令发送!");
                 inquirer.Send(sendBytes);
 
                 // 接收设备模块返回的读数查询结果
                 InquiryResult ir = inquirer.Receive();
-				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+                AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 
                 // 上报给服务器
                 if (!Report2Server(ir, deviceInfo))
 				{
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
+                    AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库连接失败!");
 				}
                 else
                 {
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入成功!");
+                    AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库写入成功!");
                 }
 
 				// 保存到本地
@@ -163,7 +163,7 @@ namespace ServiceAreaClientLib
             catch (Exception ex)
             {
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
-				AppendUITextBox("	" + deviceInfo.DeviceName + " : 连接失败!");
+                AppendUITextBox("	" + deviceInfo.DeviceSn + " : 连接失败!");
             }
 			finally
 			{

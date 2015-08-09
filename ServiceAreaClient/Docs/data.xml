@@ -11,7 +11,7 @@
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
     </Row_0>
-    <Row_0 Checked="true">
+    <Row_1 Checked="true">
       <Name>东区餐厅照明</Name>
       <SN>001001002</SN>
       <DeviceAddr>2</DeviceAddr>
@@ -20,8 +20,8 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
-    </Row_0>
-    <Row_0 Checked="true">
+    </Row_1>
+    <Row_2 Checked="true">
       <Name>东区中央空调</Name>
       <SN>001001003</SN>
       <DeviceAddr>3</DeviceAddr>
@@ -30,7 +30,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
-    </Row_0>
+    </Row_2>
   </listView1>
   <listView2>
     <Row_0 Checked="true">
