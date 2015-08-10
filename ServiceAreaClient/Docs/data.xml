@@ -41,4 +41,14 @@
       <RequestString2>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_0>
   </listView2>
+  <listView3>
+    <Row_0 Checked="true">
+      <Name>东区服务大厅</Name>
+      <SN>001004001</SN>
+      <DeviceAddr>00000001</DeviceAddr>
+      <IP>192.168.0.7</IP>
+      <Port>26</Port>
+      <DBTableName>xxxx</DBTableName>
+    </Row_0>
+  </listView3>
 </ListViewContents>

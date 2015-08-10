@@ -21,21 +21,29 @@ namespace ServiceAreaClient
             UIInit();
         }
 
-        ModbusDeviceInquirer _modbusInqurier = null;
+        ModbusDeviceInquirer _modbusInquirer = null;
 
-        public ModbusDeviceInquirer ModbusInqurier
+        public ModbusDeviceInquirer ModbusInquirer
         {
-            get { return _modbusInqurier; }
-            set { _modbusInqurier = value; }
+            get { return _modbusInquirer; }
+            set { _modbusInquirer = value; }
         }
 
-        HttpDeviceInquirer _httpInqurier = null;
+        HttpDeviceInquirer _httpInquirer = null;
 
-        public HttpDeviceInquirer HttpInqurier
+        public HttpDeviceInquirer HttpInquirer
         {
-            get { return _httpInqurier; }
-            set { _httpInqurier = value; }
+            get { return _httpInquirer; }
+            set { _httpInquirer = value; }
         }
+
+		ZigbeeDeviceInquirer _zigbeeInquirer = null;
+
+		public ZigbeeDeviceInquirer ZigbeeInquirer
+		{
+			get { return _zigbeeInquirer; }
+			set { _zigbeeInquirer = value; }
+		}
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -56,19 +64,22 @@ namespace ServiceAreaClient
 				// 1.生成查询设备列表
 				List<ModbusDeviceInfo> modbusList;
 				List<HttpDeviceInfo> httpList;
-				CreateInquiryDeviceList(out modbusList, out httpList);
+				List<ZigbeeDeviceInfo> zigbeeList;
+				CreateInquiryDeviceList(out modbusList, out httpList, out zigbeeList);
 
 				// 2.查询开始
-				ModbusInqurier = ModbusInquiryStart(modbusList, sInfo);
-				HttpInqurier = HttpInquiryStart(httpList, sInfo);
+				ModbusInquirer = ModbusInquiryStart(modbusList, sInfo);
+				HttpInquirer = HttpInquiryStart(httpList, sInfo);
+				ZigbeeInquirer = ZigbeeInquiryStart(zigbeeList, sInfo);
 
 				SaveIniFile();
             }
             else
             {
 				// 停止查询
-				ModbusInquiryStop(ModbusInqurier);
-				HttpInquiryStop(HttpInqurier);
+				ModbusInquiryStop(ModbusInquirer);
+				HttpInquiryStop(HttpInquirer);
+				ZigbeeInquiryStop(ZigbeeInquirer);
                 btnStart.Text = "Start";
                 UIEnable(true);
             }
@@ -88,6 +99,7 @@ namespace ServiceAreaClient
 			List<ListView> ctrlList = new List<ListView>();
 			ctrlList.Add(listView1);
 			ctrlList.Add(listView2);
+			ctrlList.Add(listView3);
 			XmlFile.LoadListViewItems(ctrlList);
         }
 
@@ -108,6 +120,7 @@ namespace ServiceAreaClient
             // 列表
 			listView1.Enabled = enable;
 			listView2.Enabled = enable;
+			listView3.Enabled = enable;
 
             // 按钮
             btnAdd1.Enabled = enable;
@@ -116,6 +129,9 @@ namespace ServiceAreaClient
             btnAdd2.Enabled = enable;
             btnDel2.Enabled = enable;
             btnEdit2.Enabled = enable;
+			btnAdd3.Enabled = enable;
+			btnDel3.Enabled = enable;
+			btnEdit3.Enabled = enable;
         }
 
         /// <summary>
@@ -180,6 +196,7 @@ namespace ServiceAreaClient
 			List<ListView> ctrlList = new List<ListView>();
 			ctrlList.Add(listView1);
 			ctrlList.Add(listView2);
+			ctrlList.Add(listView3);
 			XmlFile.SaveListViewItems(ctrlList);
         }
 
@@ -215,12 +232,12 @@ namespace ServiceAreaClient
 			//string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
 			//MessageBox.Show(resultStr);
 
-			List<ListView> ctrlList = new List<ListView>();
-			ctrlList.Add(listView1);
-			ctrlList.Add(listView2);
-			XmlFile.SaveListViewItems(ctrlList);
+			//List<ListView> ctrlList = new List<ListView>();
+			//ctrlList.Add(listView1);
+			//ctrlList.Add(listView2);
+			//XmlFile.SaveListViewItems(ctrlList);
 
-			XmlFile.LoadListViewItems(ctrlList);
+			//XmlFile.LoadListViewItems(ctrlList);
         }
 
 		private void btnAdd1_Click(object sender, EventArgs e)
@@ -251,6 +268,21 @@ namespace ServiceAreaClient
 		private void btnEdit2_Click(object sender, EventArgs e)
 		{
 			ButtonEditClick(listView2);
+		}
+
+		private void btnAdd3_Click(object sender, EventArgs e)
+		{
+			ButtonAddClick(listView3);
+		}
+
+		private void btnDel3_Click(object sender, EventArgs e)
+		{
+			ButtonDelClick(listView3);
+		}
+
+		private void btnEdit3_Click(object sender, EventArgs e)
+		{
+			ButtonEditClick(listView3);
 		}
 
 		void ButtonAddClick(ListView list_view_ctrl)
@@ -307,7 +339,9 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 生成查询设备列表
 		/// </summary>
-		private void CreateInquiryDeviceList(out List<ModbusDeviceInfo> modbusList, out List<HttpDeviceInfo> httpList)
+		private void CreateInquiryDeviceList(	out List<ModbusDeviceInfo> modbusList,
+												out List<HttpDeviceInfo> httpList,
+												out List<ZigbeeDeviceInfo> zigbeeList)
 		{
 			modbusList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
@@ -398,6 +432,47 @@ namespace ServiceAreaClient
 
 				httpList.Add(deviceInfo);
 			}
+
+			// 最后是ZigBee设备(温度传感器)
+			zigbeeList = new List<ZigbeeDeviceInfo>();
+			foreach (ListViewItem item in listView3.Items)
+			{
+				if (!item.Checked)
+				{
+					continue;
+				}
+				ZigbeeDeviceInfo deviceInfo = new ZigbeeDeviceInfo();
+				string[] paraArr = new string[item.SubItems.Count];
+				int idx = 0;
+				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
+				{
+					paraArr[idx] = subitems.Text.Trim();
+					idx++;
+				}
+				int value;
+				// 服务区编号
+				if (int.TryParse(tbxServiceAreaNum.Text, out value))
+				{
+					deviceInfo.ServiceArea = value;
+				}
+				// 设备名称
+				deviceInfo.DeviceName = paraArr[0];
+				// DeviceSN
+				deviceInfo.DeviceSn = paraArr[1];
+				// 目标地址
+				deviceInfo.DeviceAddr = paraArr[2];
+				// IP
+				deviceInfo.HostName = paraArr[3];
+				// 端口号
+				if (int.TryParse(paraArr[4], out value))
+				{
+					deviceInfo.PortNum = value;
+				}
+				// 数据库中对应的表名
+				deviceInfo.DbTableName = paraArr[5];
+
+				zigbeeList.Add(deviceInfo);
+			}
 		}
 
 		/// <summary>
@@ -449,6 +524,29 @@ namespace ServiceAreaClient
 			}
 		}
 
+		private ZigbeeDeviceInquirer ZigbeeInquiryStart(List<ZigbeeDeviceInfo> zigbeeList, ServerInfo sInfo)
+		{
+			ZigbeeDeviceInquirer inquirer = new ZigbeeDeviceInquirer(zigbeeList, sInfo);
+			int value;
+			if (int.TryParse(tbxUpdatePeriod.Text, out value))
+			{
+				inquirer.CyclePeriod = value;
+			}
+			inquirer.TbxControl = textBox1;
+			inquirer.StartInquiry();
+
+			return inquirer;
+		}
+
+		void ZigbeeInquiryStop(ZigbeeDeviceInquirer inqurier)
+		{
+			if (null != inqurier)
+			{
+				inqurier.StopInquiry();
+				inqurier = null;
+			}
+		}
+
 		void LoadIniFile()
 		{
 			string host = IniFile.IniReadValue("DB_SERVER_INFO", "HOST");
@@ -475,6 +573,10 @@ namespace ServiceAreaClient
 			string listView2ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_2_COLUMN_NAME");
 			string listView2ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_2_COLUMN_WIDTH");
 			AddListViewColumns(listView2, listView2ColNames, listView2ColWidths);
+
+			string listView3ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_3_COLUMN_NAME");
+			string listView3ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_3_COLUMN_WIDTH");
+			AddListViewColumns(listView3, listView3ColNames, listView3ColWidths);
 		}
 
 		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)
@@ -529,6 +631,11 @@ namespace ServiceAreaClient
 		private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			btnEdit2_Click(sender, e);
+		}
+
+		private void listView3_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit3_Click(sender, e);
 		}
 
     }

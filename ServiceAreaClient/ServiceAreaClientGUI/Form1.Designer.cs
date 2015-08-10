@@ -63,14 +63,20 @@
 			this.listView2 = new System.Windows.Forms.ListView();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tbxServiceAreaNum = new System.Windows.Forms.TextBox();
+			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.btnEdit3 = new System.Windows.Forms.Button();
+			this.btnDel3 = new System.Windows.Forms.Button();
+			this.btnAdd3 = new System.Windows.Forms.Button();
+			this.listView3 = new System.Windows.Forms.ListView();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
+			this.groupBox4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnStart
 			// 
-			this.btnStart.Location = new System.Drawing.Point(330, 650);
+			this.btnStart.Location = new System.Drawing.Point(330, 701);
 			this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnStart.Name = "btnStart";
 			this.btnStart.Size = new System.Drawing.Size(110, 47);
@@ -87,7 +93,7 @@
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBox1.Size = new System.Drawing.Size(305, 680);
+			this.textBox1.Size = new System.Drawing.Size(305, 731);
 			this.textBox1.TabIndex = 1;
 			// 
 			// groupBox2
@@ -262,7 +268,7 @@
 			// btnTest
 			// 
 			this.btnTest.Enabled = false;
-			this.btnTest.Location = new System.Drawing.Point(801, 650);
+			this.btnTest.Location = new System.Drawing.Point(801, 701);
 			this.btnTest.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(110, 47);
@@ -300,7 +306,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(581, 171);
 			this.groupBox1.TabIndex = 7;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Modbus设备列表";
+			this.groupBox1.Text = "电表";
 			// 
 			// btnEdit1
 			// 
@@ -337,7 +343,7 @@
 			// 
 			// tbxUpdatePeriod
 			// 
-			this.tbxUpdatePeriod.Location = new System.Drawing.Point(539, 662);
+			this.tbxUpdatePeriod.Location = new System.Drawing.Point(535, 713);
 			this.tbxUpdatePeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.tbxUpdatePeriod.Name = "tbxUpdatePeriod";
 			this.tbxUpdatePeriod.Size = new System.Drawing.Size(61, 23);
@@ -347,7 +353,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(468, 666);
+			this.label1.Location = new System.Drawing.Point(470, 716);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(59, 17);
 			this.label1.TabIndex = 3;
@@ -356,7 +362,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(608, 666);
+			this.label3.Location = new System.Drawing.Point(602, 716);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(32, 17);
 			this.label3.TabIndex = 3;
@@ -375,7 +381,7 @@
 			this.groupBox3.Size = new System.Drawing.Size(581, 172);
 			this.groupBox3.TabIndex = 7;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Http设备列表";
+			this.groupBox3.Text = "人流计数器";
 			// 
 			// btnEdit2
 			// 
@@ -443,11 +449,76 @@
 			this.tbxServiceAreaNum.Size = new System.Drawing.Size(76, 23);
 			this.tbxServiceAreaNum.TabIndex = 2;
 			// 
+			// groupBox4
+			// 
+			this.groupBox4.Controls.Add(this.btnEdit3);
+			this.groupBox4.Controls.Add(this.btnDel3);
+			this.groupBox4.Controls.Add(this.btnAdd3);
+			this.groupBox4.Controls.Add(this.listView3);
+			this.groupBox4.Location = new System.Drawing.Point(330, 509);
+			this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.groupBox4.Size = new System.Drawing.Size(581, 172);
+			this.groupBox4.TabIndex = 7;
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = "温度传感器";
+			// 
+			// btnEdit3
+			// 
+			this.btnEdit3.Location = new System.Drawing.Point(493, 116);
+			this.btnEdit3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnEdit3.Name = "btnEdit3";
+			this.btnEdit3.Size = new System.Drawing.Size(76, 37);
+			this.btnEdit3.TabIndex = 7;
+			this.btnEdit3.Text = "编辑";
+			this.btnEdit3.UseVisualStyleBackColor = true;
+			this.btnEdit3.Click += new System.EventHandler(this.btnEdit3_Click);
+			// 
+			// btnDel3
+			// 
+			this.btnDel3.Location = new System.Drawing.Point(493, 71);
+			this.btnDel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnDel3.Name = "btnDel3";
+			this.btnDel3.Size = new System.Drawing.Size(76, 37);
+			this.btnDel3.TabIndex = 7;
+			this.btnDel3.Text = "删除";
+			this.btnDel3.UseVisualStyleBackColor = true;
+			this.btnDel3.Click += new System.EventHandler(this.btnDel3_Click);
+			// 
+			// btnAdd3
+			// 
+			this.btnAdd3.Location = new System.Drawing.Point(493, 25);
+			this.btnAdd3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnAdd3.Name = "btnAdd3";
+			this.btnAdd3.Size = new System.Drawing.Size(76, 37);
+			this.btnAdd3.TabIndex = 7;
+			this.btnAdd3.Text = "增加";
+			this.btnAdd3.UseVisualStyleBackColor = true;
+			this.btnAdd3.Click += new System.EventHandler(this.btnAdd3_Click);
+			// 
+			// listView3
+			// 
+			this.listView3.CheckBoxes = true;
+			this.listView3.FullRowSelect = true;
+			this.listView3.GridLines = true;
+			this.listView3.HideSelection = false;
+			this.listView3.Location = new System.Drawing.Point(7, 25);
+			this.listView3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.listView3.MultiSelect = false;
+			this.listView3.Name = "listView3";
+			this.listView3.Size = new System.Drawing.Size(476, 128);
+			this.listView3.TabIndex = 6;
+			this.listView3.UseCompatibleStateImageBehavior = false;
+			this.listView3.View = System.Windows.Forms.View.Details;
+			this.listView3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView3_MouseDoubleClick);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(932, 712);
+			this.ClientSize = new System.Drawing.Size(932, 758);
+			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btnTest);
@@ -471,6 +542,7 @@
 			this.groupBox2.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
+			this.groupBox4.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -513,6 +585,11 @@
 		private System.Windows.Forms.ListView listView2;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox tbxServiceAreaNum;
+		private System.Windows.Forms.GroupBox groupBox4;
+		private System.Windows.Forms.Button btnEdit3;
+		private System.Windows.Forms.Button btnDel3;
+		private System.Windows.Forms.Button btnAdd3;
+		private System.Windows.Forms.ListView listView3;
     }
 }
 

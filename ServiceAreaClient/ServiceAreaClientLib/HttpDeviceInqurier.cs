@@ -86,7 +86,7 @@ namespace ServiceAreaClientLib
 		}
 
         /// <summary>
-        /// 电表查询执行
+        /// 查询执行
         /// </summary>
         public void DoInquiry()
         {
