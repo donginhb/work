@@ -48,7 +48,7 @@
       <DeviceAddr>00000001</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>26</Port>
-      <DBTableName>xxxx</DBTableName>
+      <DBTableName>temperature_readings</DBTableName>
     </Row_0>
   </listView3>
 </ListViewContents>

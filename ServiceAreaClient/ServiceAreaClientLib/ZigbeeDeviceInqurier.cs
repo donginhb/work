@@ -115,6 +115,8 @@ namespace ServiceAreaClientLib
 		{
 			try
 			{
+                string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
 				TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 
 				// 与设备模块进行连接(Connect)
@@ -147,16 +149,26 @@ namespace ServiceAreaClientLib
 				// 接收设备模块返回的读数查询结果
 				InquiryResult ir = inquirer.Receive();
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
-
+                string outStr = System.Text.Encoding.ASCII.GetString(ir.RcvBytes).Substring(0, ir.RcvLen);
+                int idx = -1;
+                string temperatureStr = "";
+                // 加号表示零上温度，减号表示零下温度
+                if (-1 != (idx = outStr.IndexOf('+')))
+                {
+                    temperatureStr = outStr.Substring(idx).Trim();
+                }
+                else if (-1 != (idx = outStr.IndexOf('-')))
+                {
+                    temperatureStr = outStr.Substring(idx).Trim();
+                }
+                else
+                {
+                    inquirer.Close();
+                    return;
+                }
+                AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回值: " + temperatureStr);
 				// 上报给服务器
-				if (!Report2Server(ir, deviceInfo))
-				{
-					AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库连接失败!");
-				}
-				else
-				{
-					AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库写入成功!");
-				}
+                Report2Server(dateTimeStr, temperatureStr, deviceInfo);
 
 				// 保存到本地
 
@@ -169,8 +181,29 @@ namespace ServiceAreaClientLib
 			}
 		}
 
-		bool Report2Server(InquiryResult inquiryResult, ZigbeeDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, string temperatureStr, ZigbeeDeviceInfo deviceInfo)
 		{
+            DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+            float temperatureVal = 0;
+            if (!float.TryParse(temperatureStr, out temperatureVal))
+            {
+                return false;
+            }
+            string reportStr = ", " + temperatureVal.ToString();
+            string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
+            int deviceAddrVal;
+            int.TryParse(deviceInfo.DeviceAddr, out deviceAddrVal);
+            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
+                                    + dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceAddrVal.ToString() + reportStr + @")";
+            try
+            {
+                mysql_object.ExecuteMySqlCommand(insertStr);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.ToString());
+                return false;
+            }
 			return true;
 		}
 
