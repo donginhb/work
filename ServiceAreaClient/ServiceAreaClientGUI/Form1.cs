@@ -69,9 +69,11 @@ namespace ServiceAreaClient
 
 				// 2.查询开始
 				ModbusInquirer = ModbusInquiryStart(modbusList, sInfo);
+				System.Threading.Thread.Sleep(100);
 				HttpInquirer = HttpInquiryStart(httpList, sInfo);
+				System.Threading.Thread.Sleep(100);
 				ZigbeeInquirer = ZigbeeInquiryStart(zigbeeList, sInfo);
-
+				System.Threading.Thread.Sleep(100);
 				SaveIniFile();
             }
             else
