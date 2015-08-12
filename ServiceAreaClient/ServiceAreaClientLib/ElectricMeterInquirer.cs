@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace ServiceAreaClientLib
 {
-    public class ModbusDeviceInquirer
+    public class ElectricMeterInquirer
     {
 		// 要查询的设备(电表, 水表等)的列表
-        List<ModbusDeviceInfo> _deviceList;
+        List<ElectricMeterInfo> _deviceList;
 
 		// 数据库服务区情报
 		ServerInfo _dbServerInfo;
@@ -42,13 +42,13 @@ namespace ServiceAreaClientLib
 			set { _cyclePeriod = value; }
 		}
 
-        internal List<ModbusDeviceInfo> DeviceList
+        internal List<ElectricMeterInfo> DeviceList
         {
             get { return _deviceList; }
             set { _deviceList = value; }
         }
 
-        public ModbusDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
+        public ElectricMeterInquirer(List<ElectricMeterInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
 			DbServerInfo = sInfo;
@@ -99,7 +99,7 @@ namespace ServiceAreaClientLib
                 // 对列表中的各个电表, 逐一进行查询
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
-                    ModbusDeviceInfo di = DeviceList[i];
+                    ElectricMeterInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
@@ -113,7 +113,7 @@ namespace ServiceAreaClientLib
 		/// 单个电表查询线程的执行过程
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-        void InquiryTask(ModbusDeviceInfo deviceInfo)
+        void InquiryTask(ElectricMeterInfo deviceInfo)
         {
             TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 
@@ -178,7 +178,7 @@ namespace ServiceAreaClientLib
             }
         }
 
-        bool Report2Server(InquiryResult inquiryResult, ModbusDeviceInfo deviceInfo)
+        bool Report2Server(InquiryResult inquiryResult, ElectricMeterInfo deviceInfo)
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;

@@ -9,7 +9,7 @@ namespace ServiceAreaClientLib
     /// <summary>
     /// 电表情报
     /// </summary>
-    public class ModbusDeviceInfo
+    public class ElectricMeterInfo
     {
 		int _serviceArea;			// 服务区编号
 

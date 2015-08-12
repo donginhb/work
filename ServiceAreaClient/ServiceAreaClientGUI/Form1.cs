@@ -21,12 +21,12 @@ namespace ServiceAreaClient
             UIInit();
         }
 
-        ModbusDeviceInquirer _modbusInquirer = null;
+        ElectricMeterInquirer _electricMeterInquirer = null;
 
-        public ModbusDeviceInquirer ModbusInquirer
+        public ElectricMeterInquirer ElectricMeterInquirer
         {
-            get { return _modbusInquirer; }
-            set { _modbusInquirer = value; }
+            get { return _electricMeterInquirer; }
+            set { _electricMeterInquirer = value; }
         }
 
         HttpDeviceInquirer _httpInquirer = null;
@@ -62,13 +62,13 @@ namespace ServiceAreaClient
                 UIEnable(false);
 
 				// 1.生成查询设备列表
-				List<ModbusDeviceInfo> modbusList;
+				List<ElectricMeterInfo> electricMeterList;
 				List<HttpDeviceInfo> httpList;
 				List<ZigbeeDeviceInfo> zigbeeList;
-				CreateInquiryDeviceList(out modbusList, out httpList, out zigbeeList);
+				CreateInquiryDeviceList(out electricMeterList, out httpList, out zigbeeList);
 
 				// 2.查询开始
-				ModbusInquirer = ModbusInquiryStart(modbusList, sInfo);
+				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList, sInfo);
 				System.Threading.Thread.Sleep(100);
 				HttpInquirer = HttpInquiryStart(httpList, sInfo);
 				System.Threading.Thread.Sleep(100);
@@ -79,7 +79,7 @@ namespace ServiceAreaClient
             else
             {
 				// 停止查询
-				ModbusInquiryStop(ModbusInquirer);
+				ElectricMeterInquiryStop(ElectricMeterInquirer);
 				HttpInquiryStop(HttpInquirer);
 				ZigbeeInquiryStop(ZigbeeInquirer);
                 btnStart.Text = "Start";
@@ -235,7 +235,7 @@ namespace ServiceAreaClient
 			//InquiryResult ir = new InquiryResult();
 			//ir.RcvBytes = sendBytes;
 			//ir.RcvLen = 8;
-			//string str = ModbusDeviceInquirer.GetReportString(ir);
+            //string str = ElectricMeterInquirer.GetReportString(ir);
 			//MessageBox.Show(str);
 
 			//WebClient wc = new WebClient();
@@ -349,20 +349,20 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 生成查询设备列表
 		/// </summary>
-		private void CreateInquiryDeviceList(	out List<ModbusDeviceInfo> modbusList,
+        private void CreateInquiryDeviceList(   out List<ElectricMeterInfo> electricMeterList,
 												out List<HttpDeviceInfo> httpList,
 												out List<ZigbeeDeviceInfo> zigbeeList)
 		{
-			modbusList = new List<ModbusDeviceInfo>();
+            electricMeterList = new List<ElectricMeterInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
-			// 首先是Modbus设备
+			// 首先是电表
 			foreach (ListViewItem item in listView1.Items)
 			{
 				if (!item.Checked)
 				{
 					continue;
 				}
-				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
+                ElectricMeterInfo deviceInfo = new ElectricMeterInfo();
 				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
@@ -405,7 +405,7 @@ namespace ServiceAreaClient
 				deviceInfo.TableName = paraArr[7];
 
 				// 加入到查询设备列表中
-				modbusList.Add(deviceInfo);
+				electricMeterList.Add(deviceInfo);
 			}
 
 			httpList = new List<HttpDeviceInfo>();
@@ -488,9 +488,9 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-		private ModbusDeviceInquirer ModbusInquiryStart(List<ModbusDeviceInfo> modbusList, ServerInfo sInfo)
+        private ElectricMeterInquirer ElectricMeterInquiryStart(List<ElectricMeterInfo> electricMeterList, ServerInfo sInfo)
 		{
-			ModbusDeviceInquirer inquirer = new ModbusDeviceInquirer(modbusList, sInfo);
+            ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, sInfo);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{
@@ -502,7 +502,7 @@ namespace ServiceAreaClient
 			return inquirer;
 		}
 
-		void ModbusInquiryStop(ModbusDeviceInquirer inqurier)
+        void ElectricMeterInquiryStop(ElectricMeterInquirer inqurier)
 		{
 			if (null != inqurier)
 			{
