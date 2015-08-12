@@ -123,6 +123,8 @@ namespace ServiceAreaClient
 			listView1.Enabled = enable;
 			listView2.Enabled = enable;
 			listView3.Enabled = enable;
+			listView4.Enabled = enable;
+			listView5.Enabled = enable;
 
             // 按钮
             btnAdd1.Enabled = enable;
@@ -134,6 +136,12 @@ namespace ServiceAreaClient
 			btnAdd3.Enabled = enable;
 			btnDel3.Enabled = enable;
 			btnEdit3.Enabled = enable;
+			btnAdd4.Enabled = enable;
+			btnDel4.Enabled = enable;
+			btnEdit4.Enabled = enable;
+			btnAdd5.Enabled = enable;
+			btnDel5.Enabled = enable;
+			btnEdit5.Enabled = enable;
         }
 
         /// <summary>
