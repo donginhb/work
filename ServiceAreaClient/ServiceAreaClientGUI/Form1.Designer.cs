@@ -71,16 +71,23 @@
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.btnEdit4 = new System.Windows.Forms.Button();
+			this.btnDel4 = new System.Windows.Forms.Button();
+			this.btnAdd4 = new System.Windows.Forms.Button();
 			this.listView4 = new System.Windows.Forms.ListView();
 			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.textBox5 = new System.Windows.Forms.TextBox();
+			this.groupBox6 = new System.Windows.Forms.GroupBox();
+			this.btnEdit5 = new System.Windows.Forms.Button();
+			this.btnDel5 = new System.Windows.Forms.Button();
+			this.btnAdd5 = new System.Windows.Forms.Button();
+			this.listView5 = new System.Windows.Forms.ListView();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox4.SuspendLayout();
 			this.groupBox5.SuspendLayout();
+			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnStart
@@ -96,7 +103,7 @@
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(14, 89);
+			this.textBox1.Location = new System.Drawing.Point(12, 89);
 			this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
@@ -464,7 +471,7 @@
 			this.groupBox4.Controls.Add(this.btnDel3);
 			this.groupBox4.Controls.Add(this.btnAdd3);
 			this.groupBox4.Controls.Add(this.listView3);
-			this.groupBox4.Location = new System.Drawing.Point(330, 440);
+			this.groupBox4.Location = new System.Drawing.Point(330, 437);
 			this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -535,7 +542,7 @@
 			// 
 			// textBox3
 			// 
-			this.textBox3.Location = new System.Drawing.Point(12, 447);
+			this.textBox3.Location = new System.Drawing.Point(12, 444);
 			this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.textBox3.Multiline = true;
 			this.textBox3.Name = "textBox3";
@@ -546,51 +553,51 @@
 			// 
 			// groupBox5
 			// 
-			this.groupBox5.Controls.Add(this.button1);
-			this.groupBox5.Controls.Add(this.button2);
-			this.groupBox5.Controls.Add(this.button3);
+			this.groupBox5.Controls.Add(this.btnEdit4);
+			this.groupBox5.Controls.Add(this.btnDel4);
+			this.groupBox5.Controls.Add(this.btnAdd4);
 			this.groupBox5.Controls.Add(this.listView4);
-			this.groupBox5.Location = new System.Drawing.Point(330, 620);
+			this.groupBox5.Location = new System.Drawing.Point(330, 611);
 			this.groupBox5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.groupBox5.Name = "groupBox5";
 			this.groupBox5.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.groupBox5.Size = new System.Drawing.Size(581, 172);
 			this.groupBox5.TabIndex = 7;
 			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "水温";
+			this.groupBox5.Text = "水表";
 			// 
-			// button1
+			// btnEdit4
 			// 
-			this.button1.Location = new System.Drawing.Point(493, 116);
-			this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(76, 37);
-			this.button1.TabIndex = 7;
-			this.button1.Text = "编辑";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.btnEdit3_Click);
+			this.btnEdit4.Location = new System.Drawing.Point(493, 116);
+			this.btnEdit4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnEdit4.Name = "btnEdit4";
+			this.btnEdit4.Size = new System.Drawing.Size(76, 37);
+			this.btnEdit4.TabIndex = 7;
+			this.btnEdit4.Text = "编辑";
+			this.btnEdit4.UseVisualStyleBackColor = true;
+			this.btnEdit4.Click += new System.EventHandler(this.btnEdit4_Click);
 			// 
-			// button2
+			// btnDel4
 			// 
-			this.button2.Location = new System.Drawing.Point(493, 71);
-			this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(76, 37);
-			this.button2.TabIndex = 7;
-			this.button2.Text = "删除";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.btnDel3_Click);
+			this.btnDel4.Location = new System.Drawing.Point(493, 71);
+			this.btnDel4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnDel4.Name = "btnDel4";
+			this.btnDel4.Size = new System.Drawing.Size(76, 37);
+			this.btnDel4.TabIndex = 7;
+			this.btnDel4.Text = "删除";
+			this.btnDel4.UseVisualStyleBackColor = true;
+			this.btnDel4.Click += new System.EventHandler(this.btnDel4_Click);
 			// 
-			// button3
+			// btnAdd4
 			// 
-			this.button3.Location = new System.Drawing.Point(493, 25);
-			this.button3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(76, 37);
-			this.button3.TabIndex = 7;
-			this.button3.Text = "增加";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.btnAdd3_Click);
+			this.btnAdd4.Location = new System.Drawing.Point(493, 25);
+			this.btnAdd4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnAdd4.Name = "btnAdd4";
+			this.btnAdd4.Size = new System.Drawing.Size(76, 37);
+			this.btnAdd4.TabIndex = 7;
+			this.btnAdd4.Text = "增加";
+			this.btnAdd4.UseVisualStyleBackColor = true;
+			this.btnAdd4.Click += new System.EventHandler(this.btnAdd4_Click);
 			// 
 			// listView4
 			// 
@@ -610,7 +617,7 @@
 			// 
 			// textBox4
 			// 
-			this.textBox4.Location = new System.Drawing.Point(14, 627);
+			this.textBox4.Location = new System.Drawing.Point(14, 618);
 			this.textBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.textBox4.Multiline = true;
 			this.textBox4.Name = "textBox4";
@@ -619,11 +626,87 @@
 			this.textBox4.Size = new System.Drawing.Size(305, 165);
 			this.textBox4.TabIndex = 1;
 			// 
+			// textBox5
+			// 
+			this.textBox5.Location = new System.Drawing.Point(14, 792);
+			this.textBox5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.textBox5.Multiline = true;
+			this.textBox5.Name = "textBox5";
+			this.textBox5.ReadOnly = true;
+			this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.textBox5.Size = new System.Drawing.Size(305, 165);
+			this.textBox5.TabIndex = 1;
+			// 
+			// groupBox6
+			// 
+			this.groupBox6.Controls.Add(this.btnEdit5);
+			this.groupBox6.Controls.Add(this.btnDel5);
+			this.groupBox6.Controls.Add(this.btnAdd5);
+			this.groupBox6.Controls.Add(this.listView5);
+			this.groupBox6.Location = new System.Drawing.Point(330, 785);
+			this.groupBox6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.groupBox6.Name = "groupBox6";
+			this.groupBox6.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.groupBox6.Size = new System.Drawing.Size(581, 172);
+			this.groupBox6.TabIndex = 7;
+			this.groupBox6.TabStop = false;
+			this.groupBox6.Text = "水温";
+			// 
+			// btnEdit5
+			// 
+			this.btnEdit5.Location = new System.Drawing.Point(493, 116);
+			this.btnEdit5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnEdit5.Name = "btnEdit5";
+			this.btnEdit5.Size = new System.Drawing.Size(76, 37);
+			this.btnEdit5.TabIndex = 7;
+			this.btnEdit5.Text = "编辑";
+			this.btnEdit5.UseVisualStyleBackColor = true;
+			this.btnEdit5.Click += new System.EventHandler(this.btnEdit5_Click);
+			// 
+			// btnDel5
+			// 
+			this.btnDel5.Location = new System.Drawing.Point(493, 71);
+			this.btnDel5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnDel5.Name = "btnDel5";
+			this.btnDel5.Size = new System.Drawing.Size(76, 37);
+			this.btnDel5.TabIndex = 7;
+			this.btnDel5.Text = "删除";
+			this.btnDel5.UseVisualStyleBackColor = true;
+			this.btnDel5.Click += new System.EventHandler(this.btnDel5_Click);
+			// 
+			// btnAdd5
+			// 
+			this.btnAdd5.Location = new System.Drawing.Point(493, 25);
+			this.btnAdd5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnAdd5.Name = "btnAdd5";
+			this.btnAdd5.Size = new System.Drawing.Size(76, 37);
+			this.btnAdd5.TabIndex = 7;
+			this.btnAdd5.Text = "增加";
+			this.btnAdd5.UseVisualStyleBackColor = true;
+			this.btnAdd5.Click += new System.EventHandler(this.btnAdd5_Click);
+			// 
+			// listView5
+			// 
+			this.listView5.CheckBoxes = true;
+			this.listView5.FullRowSelect = true;
+			this.listView5.GridLines = true;
+			this.listView5.HideSelection = false;
+			this.listView5.Location = new System.Drawing.Point(7, 25);
+			this.listView5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.listView5.MultiSelect = false;
+			this.listView5.Name = "listView5";
+			this.listView5.Size = new System.Drawing.Size(476, 128);
+			this.listView5.TabIndex = 6;
+			this.listView5.UseCompatibleStateImageBehavior = false;
+			this.listView5.View = System.Windows.Forms.View.Details;
+			this.listView5.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView3_MouseDoubleClick);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(932, 882);
+			this.ClientSize = new System.Drawing.Size(932, 968);
+			this.Controls.Add(this.groupBox6);
 			this.Controls.Add(this.groupBox5);
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
@@ -631,6 +714,7 @@
 			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.tbxUpdatePeriod);
 			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.textBox5);
 			this.Controls.Add(this.tbxServiceAreaNum);
 			this.Controls.Add(this.textBox4);
 			this.Controls.Add(this.textBox3);
@@ -654,6 +738,7 @@
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
+			this.groupBox6.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -704,11 +789,17 @@
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.GroupBox groupBox5;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button btnEdit4;
+		private System.Windows.Forms.Button btnDel4;
+		private System.Windows.Forms.Button btnAdd4;
 		private System.Windows.Forms.ListView listView4;
 		private System.Windows.Forms.TextBox textBox4;
+		private System.Windows.Forms.TextBox textBox5;
+		private System.Windows.Forms.GroupBox groupBox6;
+		private System.Windows.Forms.Button btnEdit5;
+		private System.Windows.Forms.Button btnDel5;
+		private System.Windows.Forms.Button btnAdd5;
+		private System.Windows.Forms.ListView listView5;
     }
 }
 

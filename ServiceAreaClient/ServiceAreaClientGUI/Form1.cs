@@ -607,22 +607,29 @@ namespace ServiceAreaClient
 
 		void SaveIniFile()
 		{
-			if (	IPValueCheck(tbxIP1.Text)
-				&&	IPValueCheck(tbxIP2.Text)
-				&&	IPValueCheck(tbxIP3.Text)
-				&&	IPValueCheck(tbxIP4.Text))
+			try
 			{
-				string host = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
-				IniFile.IniWriteValue("DB_SERVER_INFO", "HOST", host);
+				if (IPValueCheck(tbxIP1.Text)
+					&& IPValueCheck(tbxIP2.Text)
+					&& IPValueCheck(tbxIP3.Text)
+					&& IPValueCheck(tbxIP4.Text))
+				{
+					string host = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
+					IniFile.IniWriteValue("DB_SERVER_INFO", "HOST", host);
+				}
+
+				IniFile.IniWriteValue("DB_SERVER_INFO", "PORT", tbxPortNum.Text);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "DB_NAME", tbxDBName.Text);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "USR_NAME", tbxUsrName.Text);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "PASSWORD", tbxPassword.Text);
+
+				IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
+				IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
 			}
-
-			IniFile.IniWriteValue("DB_SERVER_INFO", "PORT", tbxPortNum.Text);
-			IniFile.IniWriteValue("DB_SERVER_INFO", "DB_NAME", tbxDBName.Text);
-			IniFile.IniWriteValue("DB_SERVER_INFO", "USR_NAME", tbxUsrName.Text);
-			IniFile.IniWriteValue("DB_SERVER_INFO", "PASSWORD", tbxPassword.Text);
-
-			IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
-			IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
 		}
 
 		private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -640,5 +647,35 @@ namespace ServiceAreaClient
 			btnEdit3_Click(sender, e);
 		}
 
-    }
+		private void btnAdd4_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnDel4_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnEdit4_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnAdd5_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnDel5_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnEdit5_Click(object sender, EventArgs e)
+		{
+
+		}
+
+	}
 }

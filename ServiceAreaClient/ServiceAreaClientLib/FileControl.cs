@@ -48,36 +48,43 @@ namespace ServiceAreaClientLib
 		}
 		public static void SaveListViewItems(List<ListView> listViewCtrlList)
 		{
-			XDocument xdoc = new XDocument();
-			XElement root = new XElement("ListViewContents");
-			foreach (ListView ctrl in listViewCtrlList)
+			try
 			{
-				List<string> colNameList = new List<string>();
-				foreach (ColumnHeader col in ctrl.Columns)
+				XDocument xdoc = new XDocument();
+				XElement root = new XElement("ListViewContents");
+				foreach (ListView ctrl in listViewCtrlList)
 				{
-					colNameList.Add(col.Text);
-				}
-				XElement xElmt = new XElement(ctrl.Name);
-                int rowIdx = 0;
-                foreach (ListViewItem item in ctrl.Items)
-				{
-					XElement xRowElmt = new XElement("Row_" + rowIdx.ToString());
-					XAttribute xAtbChecked = new XAttribute("Checked", item.Checked);
-					xRowElmt.Add(xAtbChecked);
-                    int colIdx = 0;
-                    foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+					List<string> colNameList = new List<string>();
+					foreach (ColumnHeader col in ctrl.Columns)
 					{
-						XElement xColElmt = new XElement(colNameList[colIdx], subItem.Text);
-						xRowElmt.Add(xColElmt);
-						colIdx++;
+						colNameList.Add(col.Text);
 					}
-					xElmt.Add(xRowElmt);
-                    rowIdx++;
+					XElement xElmt = new XElement(ctrl.Name);
+					int rowIdx = 0;
+					foreach (ListViewItem item in ctrl.Items)
+					{
+						XElement xRowElmt = new XElement("Row_" + rowIdx.ToString());
+						XAttribute xAtbChecked = new XAttribute("Checked", item.Checked);
+						xRowElmt.Add(xAtbChecked);
+						int colIdx = 0;
+						foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+						{
+							XElement xColElmt = new XElement(colNameList[colIdx], subItem.Text);
+							xRowElmt.Add(xColElmt);
+							colIdx++;
+						}
+						xElmt.Add(xRowElmt);
+						rowIdx++;
+					}
+					root.Add(xElmt);
 				}
-				root.Add(xElmt);
+				xdoc.Add(root);
+				xdoc.Save(Fullname);
 			}
-			xdoc.Add(root);
-			xdoc.Save(Fullname);
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
 		}
 
 		public static void LoadListViewItems(List<ListView> listViewCtrlList)
