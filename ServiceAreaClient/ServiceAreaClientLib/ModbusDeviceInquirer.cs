@@ -103,7 +103,8 @@ namespace ServiceAreaClientLib
 					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
-					System.Threading.Thread.Sleep(300);
+                    // 各个设备查询之间要有一定间隔, 否则可能会出现读数不完整或者不同设备读数"读串"的现象
+					System.Threading.Thread.Sleep(600);
                 }
             }
         }
@@ -127,16 +128,16 @@ namespace ServiceAreaClientLib
                 // 向设备模块发送查询指令(Modbus协议)
                 //  第一个字节是通信地址(设备号)
                 //  第二个字节是功能码0x03(读数据)
-                //  后面依次是读的起始地址0x0000和读长度0x004C
+                //  后面依次是读的起始地址0x0000和读长度0x004E(=78, 读到"正向(吸收)有功电能")
                 //  最后两个字节是CRC16校验码
-                byte[] tmpBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4C };
+                byte[] tmpBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4E };
 
 				// 计算CRC校验码
                 UInt16 crc16 = CRC16(tmpBytes, 6);
                 byte crcLowByte = (byte)(crc16 & 0x00FF);
                 byte crcHighByte = (byte)((crc16 & 0xFF00) >> 8);
 
-                byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4C, crcLowByte, crcHighByte };
+                byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4E, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
                 AppendUITextBox("	查询 " + deviceInfo.DeviceSn + " 指令发送!");
@@ -145,6 +146,13 @@ namespace ServiceAreaClientLib
                 // 接收设备模块返回的读数查询结果
                 InquiryResult ir = inquirer.Receive();
                 AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+                // 对应答数据进行检查, 返回的第一个字节应该跟设备地址号一致
+                if (    (ir.RcvLen >= 1)
+                    &&  (deviceInfo.DeviceAddr != ir.RcvBytes[0])    )
+                {
+                    AppendUITextBox("	" + "收到的应答设备地址不一致: " + ir.RcvBytes[0].ToString());
+                    return;
+                }
 
                 // 上报给服务器
                 if (!Report2Server(ir, deviceInfo))
@@ -156,9 +164,7 @@ namespace ServiceAreaClientLib
                     AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库写入成功!");
                 }
 
-				// 保存到本地
-
-                inquirer.Close();
+				// TODO: 保存到本地
             }
             catch (Exception ex)
             {
@@ -168,7 +174,8 @@ namespace ServiceAreaClientLib
 			finally
 			{
 				// AppendUITextBox("");
-			}
+                inquirer.Close();
+            }
         }
 
         bool Report2Server(InquiryResult inquiryResult, ModbusDeviceInfo deviceInfo)
