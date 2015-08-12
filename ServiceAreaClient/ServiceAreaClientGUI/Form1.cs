@@ -511,7 +511,7 @@ namespace ServiceAreaClient
 			{
 				inquirer.CyclePeriod = value;
 			}
-			inquirer.TbxControl = textBox1;
+			inquirer.TbxControl = textBox2;
 			inquirer.StartInquiry();
 
 			return inquirer;
@@ -534,7 +534,7 @@ namespace ServiceAreaClient
 			{
 				inquirer.CyclePeriod = value;
 			}
-			inquirer.TbxControl = textBox1;
+			inquirer.TbxControl = textBox3;
 			inquirer.StartInquiry();
 
 			return inquirer;
