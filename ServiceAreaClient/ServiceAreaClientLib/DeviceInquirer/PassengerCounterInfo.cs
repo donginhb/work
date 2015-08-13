@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServiceAreaClientLib
 {
-	public class HttpDeviceInfo
+	public class PassengerCounterInfo
 	{
 		int _serviceArea;			// 服务区编号
 

@@ -9,10 +9,10 @@ using System.Net;
 
 namespace ServiceAreaClientLib
 {
-	public class HttpDeviceInquirer
+	public class PassengerCounterInquirer
 	{
 		// 要查询的设备列表
-        List<HttpDeviceInfo> _deviceList;
+        List<PassengerCounterInfo> _deviceList;
 
 		// 数据库服务区情报
 		ServerInfo _dbServerInfo;
@@ -41,13 +41,13 @@ namespace ServiceAreaClientLib
 			set { _cyclePeriod = value; }
 		}
 
-        internal List<HttpDeviceInfo> DeviceList
+        internal List<PassengerCounterInfo> DeviceList
         {
             get { return _deviceList; }
             set { _deviceList = value; }
         }
 
-		public HttpDeviceInquirer(List<HttpDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public PassengerCounterInquirer(List<PassengerCounterInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
 			DbServerInfo = sInfo;
@@ -98,7 +98,7 @@ namespace ServiceAreaClientLib
                 // 对列表中的各个设备, 逐一进行查询
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
-                    HttpDeviceInfo di = DeviceList[i];
+                    PassengerCounterInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
@@ -111,7 +111,7 @@ namespace ServiceAreaClientLib
 		/// 单个设备查询线程的执行过程
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-        void InquiryTask(HttpDeviceInfo deviceInfo)
+        void InquiryTask(PassengerCounterInfo deviceInfo)
         {
 			try
 			{
@@ -140,7 +140,7 @@ namespace ServiceAreaClientLib
 		}
 
         // 报告给服务器(写入数据库表)
-		bool Report2Server(string dateTimeStr, string resultStr0, string resultStr1, HttpDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
         {
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string reportStr0 = GetReportString(resultStr0);

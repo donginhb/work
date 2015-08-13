@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
+using ServiceAreaClientLib.DeviceInquirer;
 
 namespace ServiceAreaClientLib
 {
     public class ElectricMeterInquirer
     {
 		// 要查询的设备(电表, 水表等)的列表
-        List<ElectricMeterInfo> _deviceList;
+		List<ModbusDeviceInfo> _deviceList;
 
 		// 数据库服务区情报
 		ServerInfo _dbServerInfo;
@@ -42,13 +43,13 @@ namespace ServiceAreaClientLib
 			set { _cyclePeriod = value; }
 		}
 
-        internal List<ElectricMeterInfo> DeviceList
+		internal List<ModbusDeviceInfo> DeviceList
         {
             get { return _deviceList; }
             set { _deviceList = value; }
         }
 
-        public ElectricMeterInquirer(List<ElectricMeterInfo> deviceInfoList, ServerInfo sInfo)
+		public ElectricMeterInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
 			DbServerInfo = sInfo;
@@ -99,7 +100,7 @@ namespace ServiceAreaClientLib
                 // 对列表中的各个电表, 逐一进行查询
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
-                    ElectricMeterInfo di = DeviceList[i];
+					ModbusDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
@@ -113,7 +114,7 @@ namespace ServiceAreaClientLib
 		/// 单个电表查询线程的执行过程
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-        void InquiryTask(ElectricMeterInfo deviceInfo)
+		void InquiryTask(ModbusDeviceInfo deviceInfo)
         {
             TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 
@@ -178,7 +179,7 @@ namespace ServiceAreaClientLib
             }
         }
 
-        bool Report2Server(InquiryResult inquiryResult, ElectricMeterInfo deviceInfo)
+		bool Report2Server(InquiryResult inquiryResult, ModbusDeviceInfo deviceInfo)
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;
@@ -189,7 +190,7 @@ namespace ServiceAreaClientLib
                 argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
             }
 			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-			string insertStr = @"INSERT INTO " + deviceInfo.TableName + @"(time, device_sn, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", "
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", "
 								+ deviceSnStr + @"," + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
 			try
 			{

@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using ServiceAreaClientLib;
 using System.Net;
+using ServiceAreaClientLib;
+using ServiceAreaClientLib.DeviceInquirer;
 
 namespace ServiceAreaClient
 {
@@ -29,12 +30,12 @@ namespace ServiceAreaClient
             set { _electricMeterInquirer = value; }
         }
 
-        HttpDeviceInquirer _httpInquirer = null;
+		PassengerCounterInquirer _passengerCounterInquirer = null;
 
-        public HttpDeviceInquirer HttpInquirer
+		public PassengerCounterInquirer PassengerCounterInquirer
         {
-            get { return _httpInquirer; }
-            set { _httpInquirer = value; }
+            get { return _passengerCounterInquirer; }
+            set { _passengerCounterInquirer = value; }
         }
 
 		ZigbeeDeviceInquirer _zigbeeInquirer = null;
@@ -62,15 +63,15 @@ namespace ServiceAreaClient
                 UIEnable(false);
 
 				// 1.生成查询设备列表
-				List<ElectricMeterInfo> electricMeterList;
-				List<HttpDeviceInfo> httpList;
-				List<ZigbeeDeviceInfo> zigbeeList;
-				CreateInquiryDeviceList(out electricMeterList, out httpList, out zigbeeList);
+				List<ModbusDeviceInfo> electricMeterList;
+				List<PassengerCounterInfo> passengerCounterList;
+				List<ModbusDeviceInfo> zigbeeList;
+				CreateInquiryDeviceList(out electricMeterList, out passengerCounterList, out zigbeeList);
 
 				// 2.查询开始
 				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList, sInfo);
 				System.Threading.Thread.Sleep(100);
-				HttpInquirer = HttpInquiryStart(httpList, sInfo);
+				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList, sInfo);
 				System.Threading.Thread.Sleep(100);
 				ZigbeeInquirer = ZigbeeInquiryStart(zigbeeList, sInfo);
 				System.Threading.Thread.Sleep(100);
@@ -80,7 +81,7 @@ namespace ServiceAreaClient
             {
 				// 停止查询
 				ElectricMeterInquiryStop(ElectricMeterInquirer);
-				HttpInquiryStop(HttpInquirer);
+				PassengerCounterInquiryStop(PassengerCounterInquirer);
 				ZigbeeInquiryStop(ZigbeeInquirer);
                 btnStart.Text = "Start";
                 UIEnable(true);
@@ -349,11 +350,11 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 生成查询设备列表
 		/// </summary>
-        private void CreateInquiryDeviceList(   out List<ElectricMeterInfo> electricMeterList,
-												out List<HttpDeviceInfo> httpList,
-												out List<ZigbeeDeviceInfo> zigbeeList)
+		private void CreateInquiryDeviceList(out List<ModbusDeviceInfo> electricMeterList,
+												out List<PassengerCounterInfo> passengerCounterList,
+												out List<ModbusDeviceInfo> zigbeeList)
 		{
-            electricMeterList = new List<ElectricMeterInfo>();
+			electricMeterList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
 			// 首先是电表
 			foreach (ListViewItem item in listView1.Items)
@@ -362,7 +363,7 @@ namespace ServiceAreaClient
 				{
 					continue;
 				}
-                ElectricMeterInfo deviceInfo = new ElectricMeterInfo();
+				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
 				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
@@ -402,21 +403,21 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.ReadLength = value;
 				}
-				deviceInfo.TableName = paraArr[7];
+				deviceInfo.DbTableName = paraArr[7];
 
 				// 加入到查询设备列表中
 				electricMeterList.Add(deviceInfo);
 			}
 
-			httpList = new List<HttpDeviceInfo>();
-			// 然后是Http设备(摄像头)
+			passengerCounterList = new List<PassengerCounterInfo>();
+			// 然后是客流计数设备(摄像头)
 			foreach (ListViewItem item in listView2.Items)
 			{
 				if (!item.Checked)
 				{
 					continue;
 				}
-				HttpDeviceInfo deviceInfo = new HttpDeviceInfo();
+				PassengerCounterInfo deviceInfo = new PassengerCounterInfo();
 				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
@@ -440,18 +441,18 @@ namespace ServiceAreaClient
 				deviceInfo.RequestString1 = paraArr[3];
 				deviceInfo.RequestString2 = paraArr[4];
 
-				httpList.Add(deviceInfo);
+				passengerCounterList.Add(deviceInfo);
 			}
 
 			// 最后是ZigBee设备(温度传感器)
-			zigbeeList = new List<ZigbeeDeviceInfo>();
+			zigbeeList = new List<ModbusDeviceInfo>();
 			foreach (ListViewItem item in listView3.Items)
 			{
 				if (!item.Checked)
 				{
 					continue;
 				}
-				ZigbeeDeviceInfo deviceInfo = new ZigbeeDeviceInfo();
+				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
 				string[] paraArr = new string[item.SubItems.Count];
 				int idx = 0;
 				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
@@ -469,8 +470,11 @@ namespace ServiceAreaClient
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
 				deviceInfo.DeviceSn = paraArr[1];
-				// 目标地址
-				deviceInfo.DeviceAddr = paraArr[2];
+				// 目标设备地址
+				if (int.TryParse(paraArr[2], out value))
+				{
+					deviceInfo.DeviceAddr = value;
+				}
 				// IP
 				deviceInfo.HostName = paraArr[3];
 				// 端口号
@@ -488,7 +492,7 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-        private ElectricMeterInquirer ElectricMeterInquiryStart(List<ElectricMeterInfo> electricMeterList, ServerInfo sInfo)
+		private ElectricMeterInquirer ElectricMeterInquiryStart(List<ModbusDeviceInfo> electricMeterList, ServerInfo sInfo)
 		{
             ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, sInfo);
 			int value;
@@ -511,9 +515,9 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private HttpDeviceInquirer HttpInquiryStart(List<HttpDeviceInfo> httpList, ServerInfo sInfo)
+		private PassengerCounterInquirer PassengerCounterInquiryStart(List<PassengerCounterInfo> passengerCounterList, ServerInfo sInfo)
 		{
-			HttpDeviceInquirer inquirer = new HttpDeviceInquirer(httpList, sInfo);
+			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, sInfo);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{
@@ -525,7 +529,7 @@ namespace ServiceAreaClient
 			return inquirer;
 		}
 
-		void HttpInquiryStop(HttpDeviceInquirer inqurier)
+		void PassengerCounterInquiryStop(PassengerCounterInquirer inqurier)
 		{
 			if (null != inqurier)
 			{
@@ -534,7 +538,7 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private ZigbeeDeviceInquirer ZigbeeInquiryStart(List<ZigbeeDeviceInfo> zigbeeList, ServerInfo sInfo)
+		private ZigbeeDeviceInquirer ZigbeeInquiryStart(List<ModbusDeviceInfo> zigbeeList, ServerInfo sInfo)
 		{
 			ZigbeeDeviceInquirer inquirer = new ZigbeeDeviceInquirer(zigbeeList, sInfo);
 			int value;

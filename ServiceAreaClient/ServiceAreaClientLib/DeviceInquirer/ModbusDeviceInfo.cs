@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceAreaClientLib
+namespace ServiceAreaClientLib.DeviceInquirer
 {
-    /// <summary>
-    /// 电表情报
-    /// </summary>
-    public class ElectricMeterInfo
-    {
+	public class ModbusDeviceInfo
+	{
 		int _serviceArea;			// 服务区编号
 
 		public int ServiceArea
@@ -35,29 +32,38 @@ namespace ServiceAreaClientLib
 			set { _deviceSn = value; }
 		}
 
-        int _deviceAddr;             // 设备地址
+		int _deviceAddr;
 
-        public int DeviceAddr
-        {
-            get { return _deviceAddr; }
-            set { _deviceAddr = value; }
-        }
+		// 设备地址
+		public int DeviceAddr
+		{
+			get { return _deviceAddr; }
+			set { _deviceAddr = value; }
+		}
 
-        string _hostName;           // ip字符串
+		string _dbTableName;
 
-        public string HostName
-        {
-            get { return _hostName; }
-            set { _hostName = value; }
-        }
+		public string DbTableName
+		{
+			get { return _dbTableName; }
+			set { _dbTableName = value; }
+		}
 
-        int _portNum;               // 访问端口号
+		string _hostName;           // ip字符串
 
-        public int PortNum
-        {
-            get { return _portNum; }
-            set { _portNum = value; }
-        }
+		public string HostName
+		{
+			get { return _hostName; }
+			set { _hostName = value; }
+		}
+
+		int _portNum;               // 访问端口号
+
+		public int PortNum
+		{
+			get { return _portNum; }
+			set { _portNum = value; }
+		}
 
 		int _readAddr;				// 读操作的起始地址
 
@@ -74,14 +80,7 @@ namespace ServiceAreaClientLib
 			set { _readLength = value; }
 		}
 
-		string _tableName;			// 数据库中的表名
-
-		public string TableName
-		{
-			get { return _tableName; }
-			set { _tableName = value; }
-		}
-
 		public int _dataSetting;
-    }
+
+	}
 }

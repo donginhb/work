@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 using System.Threading;
 using System.Net;
+using ServiceAreaClientLib.DeviceInquirer;
 
 namespace ServiceAreaClientLib
 {
 	public class ZigbeeDeviceInquirer
 	{
 		// 要查询的设备列表
-        List<ZigbeeDeviceInfo> _deviceList;
+        List<ModbusDeviceInfo> _deviceList;
 
 		// 数据库服务区情报
 		ServerInfo _dbServerInfo;
@@ -41,13 +42,13 @@ namespace ServiceAreaClientLib
 			set { _cyclePeriod = value; }
 		}
 
-        internal List<ZigbeeDeviceInfo> DeviceList
+		internal List<ModbusDeviceInfo> DeviceList
         {
             get { return _deviceList; }
             set { _deviceList = value; }
         }
 
-		public ZigbeeDeviceInquirer(List<ZigbeeDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public ZigbeeDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
 			DbServerInfo = sInfo;
@@ -98,7 +99,7 @@ namespace ServiceAreaClientLib
 				// 对列表中的各个设备, 逐一进行查询
 				for (int i = 0; i < DeviceList.Count; i++)
 				{
-					ZigbeeDeviceInfo di = DeviceList[i];
+					ModbusDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceSn);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
@@ -111,7 +112,7 @@ namespace ServiceAreaClientLib
 		/// 单个设备查询线程的执行过程
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-		void InquiryTask(ZigbeeDeviceInfo deviceInfo)
+		void InquiryTask(ModbusDeviceInfo deviceInfo)
 		{
 			try
 			{
@@ -131,14 +132,15 @@ namespace ServiceAreaClientLib
 				// 总字节数: 0x07
 				// 目标地址: 4byte16进制数
 				// IO功能编号: 0x0A PT100温度采集
-				if (8 != deviceInfo.DeviceAddr.PadLeft(8, '0').Length)
+				string deviceAddrStr = deviceInfo.DeviceAddr.ToString();
+				if (8 != deviceAddrStr.PadLeft(8, '0').Length)
 				{
 					return;
 				}
-				byte b1 = Convert.ToByte(deviceInfo.DeviceAddr.Substring(0, 2), 16);
-				byte b2 = Convert.ToByte(deviceInfo.DeviceAddr.Substring(2, 2), 16);
-				byte b3 = Convert.ToByte(deviceInfo.DeviceAddr.Substring(4, 2), 16);
-				byte b4 = Convert.ToByte(deviceInfo.DeviceAddr.Substring(6, 2), 16);
+				byte b1 = Convert.ToByte(deviceAddrStr.Substring(0, 2), 16);
+				byte b2 = Convert.ToByte(deviceAddrStr.Substring(2, 2), 16);
+				byte b3 = Convert.ToByte(deviceAddrStr.Substring(4, 2), 16);
+				byte b4 = Convert.ToByte(deviceAddrStr.Substring(6, 2), 16);
 				
 				byte[] sendBytes = { 0x10, 0x07, b1, b2, b3, b4, 0x0a };
 
@@ -181,7 +183,7 @@ namespace ServiceAreaClientLib
 			}
 		}
 
-		bool Report2Server(string dateTimeStr, string temperatureStr, ZigbeeDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, string temperatureStr, ModbusDeviceInfo deviceInfo)
 		{
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             float temperatureVal = 0;
@@ -191,10 +193,8 @@ namespace ServiceAreaClientLib
             }
             string reportStr = ", " + temperatureVal.ToString();
             string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-            int deviceAddrVal;
-            int.TryParse(deviceInfo.DeviceAddr, out deviceAddrVal);
             string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
-                                    + dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceAddrVal.ToString() + reportStr + @")";
+									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
             try
             {
                 mysql_object.ExecuteMySqlCommand(insertStr);
