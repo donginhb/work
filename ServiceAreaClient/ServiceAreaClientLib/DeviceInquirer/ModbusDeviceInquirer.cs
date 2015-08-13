@@ -101,9 +101,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
-		void InquiryTask(ModbusDeviceInfo deviceInfo)
-		{
-		}
+        virtual protected void InquiryTask(ModbusDeviceInfo deviceInfo)
+        {
+            AppendUITextBox("这里是基类的方法呀呀呀!!!!");
+        }
 
 		public delegate void UiUpdateDelegate(string txtStr);
 

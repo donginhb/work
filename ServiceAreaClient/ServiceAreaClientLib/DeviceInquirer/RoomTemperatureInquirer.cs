@@ -22,7 +22,7 @@ namespace ServiceAreaClientLib
 		/// 单个设备查询线程的执行过程
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-		void InquiryTask(ModbusDeviceInfo deviceInfo)
+        override protected void InquiryTask(ModbusDeviceInfo deviceInfo)
 		{
 			try
 			{

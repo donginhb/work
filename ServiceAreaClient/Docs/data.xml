@@ -137,7 +137,6 @@
       <IP>10.62.1.204</IP>
       <Port>26</Port>
       <DBTableName>water_temperature_readings</DBTableName>
-      <Magnification>1</Magnification>
     </Row_0>
   </listView5>
 </ListViewContents>
