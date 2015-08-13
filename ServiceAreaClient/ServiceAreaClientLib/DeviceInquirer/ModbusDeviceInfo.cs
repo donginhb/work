@@ -82,5 +82,13 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		public int _dataSetting;
 
+		// 读数放大倍率, 即结果由读数的实际值乘以这个倍率得出, 默认值是1
+		private int magnification = 1;
+
+		public int Magnification
+		{
+			get { return magnification; }
+			set { magnification = value; }
+		}
 	}
 }
