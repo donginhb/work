@@ -38,12 +38,12 @@ namespace ServiceAreaClient
             set { _passengerCounterInquirer = value; }
         }
 
-		ZigbeeDeviceInquirer _zigbeeInquirer = null;
+		RoomTemperatureInquirer _roomTemperatureInquirer = null;
 
-		public ZigbeeDeviceInquirer ZigbeeInquirer
+		public RoomTemperatureInquirer RoomTemperatureInquirer
 		{
-			get { return _zigbeeInquirer; }
-			set { _zigbeeInquirer = value; }
+			get { return _roomTemperatureInquirer; }
+			set { _roomTemperatureInquirer = value; }
 		}
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -65,15 +65,15 @@ namespace ServiceAreaClient
 				// 1.生成查询设备列表
 				List<ModbusDeviceInfo> electricMeterList;
 				List<PassengerCounterInfo> passengerCounterList;
-				List<ModbusDeviceInfo> zigbeeList;
-				CreateInquiryDeviceList(out electricMeterList, out passengerCounterList, out zigbeeList);
+				List<ModbusDeviceInfo> roomThermometerList;
+				CreateInquiryDeviceList(out electricMeterList, out passengerCounterList, out roomThermometerList);
 
 				// 2.查询开始
 				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList, sInfo);
 				System.Threading.Thread.Sleep(100);
 				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList, sInfo);
 				System.Threading.Thread.Sleep(100);
-				ZigbeeInquirer = ZigbeeInquiryStart(zigbeeList, sInfo);
+				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList, sInfo);
 				System.Threading.Thread.Sleep(100);
 				SaveIniFile();
             }
@@ -82,7 +82,7 @@ namespace ServiceAreaClient
 				// 停止查询
 				ElectricMeterInquiryStop(ElectricMeterInquirer);
 				PassengerCounterInquiryStop(PassengerCounterInquirer);
-				ZigbeeInquiryStop(ZigbeeInquirer);
+				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
                 btnStart.Text = "Start";
                 UIEnable(true);
             }
@@ -352,7 +352,7 @@ namespace ServiceAreaClient
 		/// </summary>
 		private void CreateInquiryDeviceList(out List<ModbusDeviceInfo> electricMeterList,
 												out List<PassengerCounterInfo> passengerCounterList,
-												out List<ModbusDeviceInfo> zigbeeList)
+												out List<ModbusDeviceInfo> roomThermometerList)
 		{
 			electricMeterList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
@@ -444,8 +444,8 @@ namespace ServiceAreaClient
 				passengerCounterList.Add(deviceInfo);
 			}
 
-			// 最后是ZigBee设备(温度传感器)
-			zigbeeList = new List<ModbusDeviceInfo>();
+			// 然后是室温传感器
+			roomThermometerList = new List<ModbusDeviceInfo>();
 			foreach (ListViewItem item in listView3.Items)
 			{
 				if (!item.Checked)
@@ -485,7 +485,7 @@ namespace ServiceAreaClient
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = paraArr[5];
 
-				zigbeeList.Add(deviceInfo);
+				roomThermometerList.Add(deviceInfo);
 			}
 		}
 
@@ -538,9 +538,9 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private ZigbeeDeviceInquirer ZigbeeInquiryStart(List<ModbusDeviceInfo> zigbeeList, ServerInfo sInfo)
+		private RoomTemperatureInquirer RoomTemperatureInquiryStart(List<ModbusDeviceInfo> roomThermometerList, ServerInfo sInfo)
 		{
-			ZigbeeDeviceInquirer inquirer = new ZigbeeDeviceInquirer(zigbeeList, sInfo);
+			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, sInfo);
 			int value;
 			if (int.TryParse(tbxUpdatePeriod.Text, out value))
 			{
@@ -552,7 +552,7 @@ namespace ServiceAreaClient
 			return inquirer;
 		}
 
-		void ZigbeeInquiryStop(ZigbeeDeviceInquirer inqurier)
+		void RoomTemperatureInquiryStop(RoomTemperatureInquirer inqurier)
 		{
 			if (null != inqurier)
 			{

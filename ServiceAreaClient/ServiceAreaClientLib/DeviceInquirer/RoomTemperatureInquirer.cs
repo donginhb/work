@@ -10,7 +10,7 @@ using ServiceAreaClientLib.DeviceInquirer;
 
 namespace ServiceAreaClientLib
 {
-	public class ZigbeeDeviceInquirer
+	public class RoomTemperatureInquirer
 	{
 		// 要查询的设备列表
         List<ModbusDeviceInfo> _deviceList;
@@ -48,7 +48,7 @@ namespace ServiceAreaClientLib
             set { _deviceList = value; }
         }
 
-		public ZigbeeDeviceInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public RoomTemperatureInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
         {
             DeviceList = deviceInfoList;
 			DbServerInfo = sInfo;
