@@ -132,8 +132,8 @@ namespace ServiceAreaClientLib
 				// 总字节数: 0x07
 				// 目标地址: 4byte16进制数
 				// IO功能编号: 0x0A PT100温度采集
-				string deviceAddrStr = deviceInfo.DeviceAddr.ToString();
-				if (8 != deviceAddrStr.PadLeft(8, '0').Length)
+				string deviceAddrStr = deviceInfo.DeviceAddr.ToString().PadLeft(8, '0');
+				if (8 != deviceAddrStr.Length)
 				{
 					return;
 				}
