@@ -47,7 +47,6 @@
 			this.tbxIP4 = new System.Windows.Forms.TextBox();
 			this.label11 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
-			this.btnTest = new System.Windows.Forms.Button();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.btnEdit1 = new System.Windows.Forms.Button();
@@ -92,10 +91,11 @@
 			// 
 			// btnStart
 			// 
-			this.btnStart.Location = new System.Drawing.Point(823, 34);
+			this.btnStart.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.btnStart.Location = new System.Drawing.Point(788, 34);
 			this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnStart.Name = "btnStart";
-			this.btnStart.Size = new System.Drawing.Size(76, 43);
+			this.btnStart.Size = new System.Drawing.Size(111, 43);
 			this.btnStart.TabIndex = 0;
 			this.btnStart.Text = "Start";
 			this.btnStart.UseVisualStyleBackColor = true;
@@ -280,18 +280,6 @@
 			this.label12.Size = new System.Drawing.Size(47, 12);
 			this.label12.TabIndex = 3;
 			this.label12.Text = "IP地址:";
-			// 
-			// btnTest
-			// 
-			this.btnTest.Enabled = false;
-			this.btnTest.Location = new System.Drawing.Point(744, 43);
-			this.btnTest.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.btnTest.Name = "btnTest";
-			this.btnTest.Size = new System.Drawing.Size(69, 25);
-			this.btnTest.TabIndex = 5;
-			this.btnTest.Text = "DBTest";
-			this.btnTest.UseVisualStyleBackColor = true;
-			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
 			// listView1
 			// 
@@ -711,7 +699,6 @@
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.tbxUpdatePeriod);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.textBox5);
@@ -724,7 +711,7 @@
 			this.Controls.Add(this.btnStart);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
@@ -758,8 +745,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbxIP4;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbxPassword;
         private System.Windows.Forms.TextBox tbxUsrName;
         private System.Windows.Forms.Label label14;

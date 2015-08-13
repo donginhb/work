@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="DBConnectMySQL.cs" />
     <Compile Include="DeviceInquirer\ModbusDeviceInfo.cs" />
+    <Compile Include="DeviceInquirer\WaterMeterInquirer.cs" />
+    <Compile Include="DeviceInquirer\WaterTemperatureInquirer.cs" />
     <Compile Include="FileControl.cs" />
     <Compile Include="DeviceInquirer\PassengerCounterInfo.cs" />
     <Compile Include="DeviceInquirer\PassengerCounterInquirer.cs" />

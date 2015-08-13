@@ -103,6 +103,8 @@ namespace ServiceAreaClient
 			ctrlList.Add(listView1);
 			ctrlList.Add(listView2);
 			ctrlList.Add(listView3);
+			ctrlList.Add(listView4);
+			ctrlList.Add(listView5);
 			XmlFile.LoadListViewItems(ctrlList);
         }
 
@@ -208,47 +210,9 @@ namespace ServiceAreaClient
 			ctrlList.Add(listView1);
 			ctrlList.Add(listView2);
 			ctrlList.Add(listView3);
+			ctrlList.Add(listView4);
+			ctrlList.Add(listView5);
 			XmlFile.SaveListViewItems(ctrlList);
-        }
-
-		/// <summary>
-		/// 测试用
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-			//ServerInfo sInfo = new ServerInfo("127.0.0.1", 3306, "saem_db", "admin", "admin");
-			//string dtStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-			//DBConnectMySQL mysql_object = new DBConnectMySQL(sInfo);
-			//string insertStr = @"INSERT INTO electric_meter (time) VALUES('" + dtStr + @"')";
-//			string deleteStr = "DELETE FROM electric_meter";
-			//try
-			//{
-			//	mysql_object.ExecuteMySqlCommand(insertStr);
-			//}
-			//catch (Exception ex)
-			//{
-			//	MessageBox.Show(ex.ToString());
-			//}
-
-			//byte[] sendBytes = { 0x03, 0x03, 0x00, 0x00, 0x00, 0x4c, 0x45, 0xdd };
-			//InquiryResult ir = new InquiryResult();
-			//ir.RcvBytes = sendBytes;
-			//ir.RcvLen = 8;
-            //string str = ElectricMeterInquirer.GetReportString(ir);
-			//MessageBox.Show(str);
-
-			//WebClient wc = new WebClient();
-			//string resultStr = wc.DownloadString(new Uri(@"http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&group=VCA.Ch1.Ct0.count"));
-			//MessageBox.Show(resultStr);
-
-			//List<ListView> ctrlList = new List<ListView>();
-			//ctrlList.Add(listView1);
-			//ctrlList.Add(listView2);
-			//XmlFile.SaveListViewItems(ctrlList);
-
-			//XmlFile.LoadListViewItems(ctrlList);
         }
 
 		private void btnAdd1_Click(object sender, EventArgs e)
@@ -294,6 +258,36 @@ namespace ServiceAreaClient
 		private void btnEdit3_Click(object sender, EventArgs e)
 		{
 			ButtonEditClick(listView3);
+		}
+
+		private void btnAdd4_Click(object sender, EventArgs e)
+		{
+			ButtonAddClick(listView4);
+		}
+
+		private void btnDel4_Click(object sender, EventArgs e)
+		{
+			ButtonDelClick(listView4);
+		}
+
+		private void btnEdit4_Click(object sender, EventArgs e)
+		{
+			ButtonEditClick(listView4);
+		}
+
+		private void btnAdd5_Click(object sender, EventArgs e)
+		{
+			ButtonAddClick(listView5);
+		}
+
+		private void btnDel5_Click(object sender, EventArgs e)
+		{
+			ButtonDelClick(listView5);
+		}
+
+		private void btnEdit5_Click(object sender, EventArgs e)
+		{
+			ButtonEditClick(listView5);
 		}
 
 		void ButtonAddClick(ListView list_view_ctrl)
@@ -591,6 +585,14 @@ namespace ServiceAreaClient
 			string listView3ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_3_COLUMN_NAME");
 			string listView3ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_3_COLUMN_WIDTH");
 			AddListViewColumns(listView3, listView3ColNames, listView3ColWidths);
+
+			string listView4ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_4_COLUMN_NAME");
+			string listView4ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_4_COLUMN_WIDTH");
+			AddListViewColumns(listView4, listView4ColNames, listView4ColWidths);
+
+			string listView5ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_5_COLUMN_NAME");
+			string listView5ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_5_COLUMN_WIDTH");
+			AddListViewColumns(listView5, listView5ColNames, listView5ColWidths);
 		}
 
 		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)
@@ -657,36 +659,6 @@ namespace ServiceAreaClient
 		private void listView3_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			btnEdit3_Click(sender, e);
-		}
-
-		private void btnAdd4_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void btnDel4_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void btnEdit4_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void btnAdd5_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void btnDel5_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void btnEdit5_Click(object sender, EventArgs e)
-		{
-
 		}
 
 	}

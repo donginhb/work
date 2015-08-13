@@ -10,6 +10,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>3</Magnification>
     </Row_0>
     <Row_1 Checked="false">
       <Name>东区餐厅照明</Name>
@@ -20,6 +21,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>3</Magnification>
     </Row_1>
     <Row_2 Checked="false">
       <Name>东区中央空调</Name>
@@ -30,6 +32,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>3</Magnification>
     </Row_2>
     <Row_3 Checked="true">
       <Name>实验电表1</Name>
@@ -40,6 +43,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>1</Magnification>
     </Row_3>
     <Row_4 Checked="true">
       <Name>实验电表2</Name>
@@ -50,6 +54,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>1</Magnification>
     </Row_4>
     <Row_5 Checked="true">
       <Name>实验电表3</Name>
@@ -60,6 +65,7 @@
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
       <DBTableName>modbus_device_readings</DBTableName>
+      <Magnification>1</Magnification>
     </Row_5>
   </listView1>
   <listView2>
@@ -112,4 +118,26 @@
       <DBTableName>temperature_readings</DBTableName>
     </Row_3>
   </listView3>
+  <listView4>
+    <Row_0 Checked="false">
+      <Name>东区水表1</Name>
+      <SN>001002001</SN>
+      <DeviceAddr>8</DeviceAddr>
+      <IP>10.62.1.206</IP>
+      <Port>26</Port>
+      <DBTableName>watermeter_readings</DBTableName>
+      <Magnification>1</Magnification>
+    </Row_0>
+  </listView4>
+  <listView5>
+    <Row_0 Checked="false">
+      <Name>东区锅炉水温</Name>
+      <SN>001005001</SN>
+      <DeviceAddr>8</DeviceAddr>
+      <IP>10.62.1.204</IP>
+      <Port>26</Port>
+      <DBTableName>water_temperature_readings</DBTableName>
+      <Magnification>1</Magnification>
+    </Row_0>
+  </listView5>
 </ListViewContents>
