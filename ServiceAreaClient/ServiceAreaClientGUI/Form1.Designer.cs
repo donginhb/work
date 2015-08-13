@@ -81,6 +81,7 @@
 			this.btnDel5 = new System.Windows.Forms.Button();
 			this.btnAdd5 = new System.Windows.Forms.Button();
 			this.listView5 = new System.Windows.Forms.ListView();
+			this.btnTest = new System.Windows.Forms.Button();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -92,10 +93,10 @@
 			// btnStart
 			// 
 			this.btnStart.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.btnStart.Location = new System.Drawing.Point(788, 34);
+			this.btnStart.Location = new System.Drawing.Point(823, 34);
 			this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnStart.Name = "btnStart";
-			this.btnStart.Size = new System.Drawing.Size(111, 43);
+			this.btnStart.Size = new System.Drawing.Size(76, 43);
 			this.btnStart.TabIndex = 0;
 			this.btnStart.Text = "Start";
 			this.btnStart.UseVisualStyleBackColor = true;
@@ -689,11 +690,22 @@
 			this.listView5.View = System.Windows.Forms.View.Details;
 			this.listView5.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView3_MouseDoubleClick);
 			// 
+			// btnTest
+			// 
+			this.btnTest.Location = new System.Drawing.Point(756, 44);
+			this.btnTest.Name = "btnTest";
+			this.btnTest.Size = new System.Drawing.Size(57, 23);
+			this.btnTest.TabIndex = 8;
+			this.btnTest.Text = "Test";
+			this.btnTest.UseVisualStyleBackColor = true;
+			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(932, 968);
+			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.groupBox6);
 			this.Controls.Add(this.groupBox5);
 			this.Controls.Add(this.groupBox4);
@@ -786,6 +798,7 @@
 		private System.Windows.Forms.Button btnDel5;
 		private System.Windows.Forms.Button btnAdd5;
 		private System.Windows.Forms.ListView listView5;
+		private System.Windows.Forms.Button btnTest;
     }
 }
 

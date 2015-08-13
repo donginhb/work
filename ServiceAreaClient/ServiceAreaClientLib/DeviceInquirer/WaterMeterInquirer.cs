@@ -23,12 +23,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// <param name="deviceInfo"></param>
         override protected void InquiryTask(ModbusDeviceInfo deviceInfo)
 		{
+			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 			try
 			{
-				string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-				TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
-
 				// 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
 				AppendUITextBox("	开始连接: " + deviceInfo.DeviceSn);
@@ -47,7 +45,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				byte crcLowByte = (byte)(crc16 & 0x00FF);
 				byte crcHighByte = (byte)((crc16 & 0xFF00) >> 8);
 				// 水表
-				byte[] sendBytes = { 0x08, 0x03, 0x02, 0x02, 0x00, 0x02, crcLowByte, crcHighByte };
+				byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x02, 0x02, 0x00, 0x02, crcLowByte, crcHighByte };
 
 				// 向设备模块发送读数查询指令
 				AppendUITextBox("	查询 " + deviceInfo.DeviceSn + " 指令发送!");
@@ -56,40 +54,63 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				// 接收设备模块返回的读数查询结果
 				InquiryResult ir = inquirer.Receive();
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
-				string outStr = System.Text.Encoding.ASCII.GetString(ir.RcvBytes).Substring(0, ir.RcvLen);
-				int idx = -1;
-				string temperatureStr = "";
-				// 加号表示零上温度，减号表示零下温度
-				if (-1 != (idx = outStr.IndexOf('+')))
+				if ((ir.RcvLen >= 1)
+					&& (deviceInfo.DeviceAddr != ir.RcvBytes[0]))
 				{
-					temperatureStr = outStr.Substring(idx).Trim();
-				}
-				else if (-1 != (idx = outStr.IndexOf('-')))
-				{
-					temperatureStr = outStr.Substring(idx).Trim();
-				}
-				else
-				{
-					inquirer.Close();
+					AppendUITextBox("	" + "收到的应答设备地址不一致: " + ir.RcvBytes[0].ToString());
 					return;
 				}
-				AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回值: " + temperatureStr);
+				if (ir.RcvLen < 3)
+				{
+					System.Diagnostics.Trace.WriteLine(@"收到数据不正确, 无长度位!");
+					return;
+				}
+				int data_len = ir.RcvBytes[2];
+				if (ir.RcvLen < data_len + 3)
+				{
+					System.Diagnostics.Trace.WriteLine(@"收到数据长度不正确!");
+					return;
+				}
+				string waterVolumeStr = "";
+				for (int i = 3; i < 3 + data_len; i++)
+				{
+					string valStr = string.Format("{0:X}", ir.RcvBytes[i]).PadLeft(2, '0');
+					waterVolumeStr += valStr;
+				}
+				int waterVolumeVal = Convert.ToInt32(waterVolumeStr, 16);
+				AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回值: " + waterVolumeVal.ToString());
 				// 上报给服务器
-				Report2Server(dateTimeStr, temperatureStr, deviceInfo);
+				Report2Server(dateTimeStr, waterVolumeVal, deviceInfo);
 
-				// 保存到本地
-
-				inquirer.Close();
+				// TODO:保存到本地
 			}
 			catch (Exception ex)
 			{
 				AppendUITextBox("	" + deviceInfo.DeviceSn + ": 查询失败!");
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
+			finally
+			{
+				inquirer.Close();
+			}
 		}
 
-		bool Report2Server(string dateTimeStr, string resultStr, ModbusDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, int waterVolumeVal, ModbusDeviceInfo deviceInfo)
 		{
+			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+			string reportStr = ", " + waterVolumeVal.ToString();
+			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
+									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
+			try
+			{
+				mysql_object.ExecuteMySqlCommand(insertStr);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
 			return true;
 		}
 

@@ -661,5 +661,9 @@ namespace ServiceAreaClient
 			btnEdit3_Click(sender, e);
 		}
 
+		private void btnTest_Click(object sender, EventArgs e)
+		{
+		}
+
 	}
 }

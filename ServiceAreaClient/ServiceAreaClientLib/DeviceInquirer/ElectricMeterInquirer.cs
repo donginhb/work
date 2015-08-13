@@ -26,7 +26,6 @@ namespace ServiceAreaClientLib
 		override protected void InquiryTask(ModbusDeviceInfo deviceInfo)
         {
             TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
-
             try
             {
                 // 与设备模块进行连接(Connect)

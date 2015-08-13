@@ -24,12 +24,10 @@ namespace ServiceAreaClientLib
 		/// <param name="deviceInfo"></param>
         override protected void InquiryTask(ModbusDeviceInfo deviceInfo)
 		{
+			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
 			try
 			{
-                string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-				TcpSocketCommunicator inquirer = new TcpSocketCommunicator();
-
 				// 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
 				AppendUITextBox("	开始连接: " + deviceInfo.DeviceSn);
@@ -75,21 +73,22 @@ namespace ServiceAreaClientLib
                 }
                 else
                 {
-                    inquirer.Close();
                     return;
                 }
                 AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回值: " + temperatureStr);
 				// 上报给服务器
                 Report2Server(dateTimeStr, temperatureStr, deviceInfo);
 
-				// 保存到本地
-
-				inquirer.Close();
+				// TODO:保存到本地
 			}
 			catch (Exception ex)
 			{
 				AppendUITextBox("	" + deviceInfo.DeviceSn + ": 查询失败!");
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
+			finally
+			{
+				inquirer.Close();
 			}
 		}
 
