@@ -122,7 +122,10 @@ namespace ServiceAreaClientLib
 				Task<string> t1 = GetResultStringAsync(deviceInfo.RequestString2);
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t0.Result);
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
-                Report2Server(dateTimeStr, t0.Result, t1.Result, deviceInfo);
+                if (!Report2Server(dateTimeStr, t0.Result, t1.Result, deviceInfo))
+                {
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
+                }
 			}
 			catch (Exception ex)
 			{

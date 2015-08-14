@@ -68,17 +68,12 @@ namespace ServiceAreaClientLib
 				{
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
 				}
-                else
-                {
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入成功!");
-                }
-
 				// TODO: 保存到本地
             }
             catch (Exception ex)
             {
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
-				AppendUITextBox("	" + deviceInfo.DeviceName + " : 连接失败!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + " : 查询失败!");
             }
 			finally
 			{

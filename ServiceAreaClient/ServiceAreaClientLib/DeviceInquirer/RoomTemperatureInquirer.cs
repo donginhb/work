@@ -78,7 +78,10 @@ namespace ServiceAreaClientLib
                 }
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr);
 				// 上报给服务器
-                Report2Server(dateTimeStr, temperatureStr, deviceInfo);
+                if (!Report2Server(dateTimeStr, temperatureStr, deviceInfo))
+                {
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
+                }
 
 				// TODO:保存到本地
 			}

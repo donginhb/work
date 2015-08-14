@@ -83,7 +83,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterTemperatureVal.ToString());
 				// 上报给服务器
-				Report2Server(dateTimeStr, fWaterTemperatureVal, deviceInfo);
+				if (!Report2Server(dateTimeStr, fWaterTemperatureVal, deviceInfo))
+                {
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
+                }
 
 				// TODO:保存到本地
 			}
