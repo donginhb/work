@@ -93,10 +93,10 @@
 			// btnStart
 			// 
 			this.btnStart.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.btnStart.Location = new System.Drawing.Point(823, 34);
+			this.btnStart.Location = new System.Drawing.Point(779, 34);
 			this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnStart.Name = "btnStart";
-			this.btnStart.Size = new System.Drawing.Size(76, 43);
+			this.btnStart.Size = new System.Drawing.Size(120, 48);
 			this.btnStart.TabIndex = 0;
 			this.btnStart.Text = "Start";
 			this.btnStart.UseVisualStyleBackColor = true;
@@ -692,7 +692,8 @@
 			// 
 			// btnTest
 			// 
-			this.btnTest.Location = new System.Drawing.Point(756, 44);
+			this.btnTest.Enabled = false;
+			this.btnTest.Location = new System.Drawing.Point(842, 6);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(57, 23);
 			this.btnTest.TabIndex = 8;

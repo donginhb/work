@@ -450,7 +450,7 @@ namespace ServiceAreaClient
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
-				deviceInfo.DeviceSn = paraArr[1];
+				deviceInfo.SpotNumber = paraArr[1];
 				// Request String
 				deviceInfo.RequestString1 = paraArr[2];
 				deviceInfo.RequestString2 = paraArr[3];

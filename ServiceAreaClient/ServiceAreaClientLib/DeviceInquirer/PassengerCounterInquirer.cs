@@ -99,7 +99,7 @@ namespace ServiceAreaClientLib
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
                     PassengerCounterInfo di = DeviceList[i];
-					AppendUITextBox("开始查询 " + di.DeviceSn);
+					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
 					System.Threading.Thread.Sleep(300);
@@ -120,13 +120,13 @@ namespace ServiceAreaClientLib
 				// 异步执行两个查询
 				Task<string> t0 = GetResultStringAsync(deviceInfo.RequestString1);
 				Task<string> t1 = GetResultStringAsync(deviceInfo.RequestString2);
-				AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回应答: " + t0.Result);
-                AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回应答: " + t1.Result);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t0.Result);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
                 Report2Server(dateTimeStr, t0.Result, t1.Result, deviceInfo);
 			}
 			catch (Exception ex)
 			{
-                AppendUITextBox("	" + deviceInfo.DeviceSn + ": 查询失败!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + ": 查询失败!");
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
         }
@@ -145,9 +145,13 @@ namespace ServiceAreaClientLib
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string reportStr0 = GetReportString(resultStr0);
 			string reportStr1 = GetReportString(resultStr1);
-			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, value01, value02" + @") VALUES('"
-                                    + dateTimeStr + @"'" + @"," + deviceSnStr + reportStr0 + reportStr1 + @")";
+			// 摄像头的设备种类编码是003
+			string deviceTypeStr = "003";
+			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
+			// 因为同一个点, 应该只能有一个摄像头, 所以对于摄像头来说, 3位设备地址由0x01固定值取代
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + 0x01.ToString().PadLeft(3, '0');
+            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, value_02" + @") VALUES('"
+                                    + dateTimeStr + @"'," + deviceSnStr + reportStr0 + reportStr1 + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

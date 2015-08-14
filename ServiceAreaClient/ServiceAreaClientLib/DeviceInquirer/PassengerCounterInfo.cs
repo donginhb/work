@@ -24,12 +24,12 @@ namespace ServiceAreaClientLib
 			set { _deviceName = value; }
 		}
 
-		string _deviceSn;
+		string _spotNumber;
 
-		public string DeviceSn		 // 设备编号(区域编号3位 + 设备种别编号3位 + 具体设备编号3位, 共九位, 插入数据库时与前面的三位服务区编号一起构成12位的完整设备序号)
+		public string SpotNumber		 // 区域(采集点)位置编号
 		{
-			get { return _deviceSn; }
-			set { _deviceSn = value; }
+			get { return _spotNumber; }
+			set { _spotNumber = value; }
 		}
 
 		string _requestString1;

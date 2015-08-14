@@ -120,7 +120,7 @@ namespace ServiceAreaClientLib
 			// 电表的设备种类编码是001
 			string deviceTypeStr = "001";
 			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
-			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
 			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
 								+ deviceSnStr + @"'," + fValue.ToString() + @")";
 			try

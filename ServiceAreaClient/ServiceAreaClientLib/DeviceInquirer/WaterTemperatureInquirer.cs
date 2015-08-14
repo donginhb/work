@@ -77,10 +77,13 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					string valStr = string.Format("{0:X}", ir.RcvBytes[i]).PadLeft(2, '0');
 					waterTemperatureStr += valStr;
 				}
-				int waterTemperatureVal = Convert.ToInt32(waterTemperatureStr, 16);
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + waterTemperatureVal.ToString());
+				int iWaterTemperatureVal = Convert.ToInt32(waterTemperatureStr, 16);
+				// 水温有量纲, 但是没有放大倍率
+				float fWaterTemperatureVal = iWaterTemperatureVal / deviceInfo.Magnitude;
+
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterTemperatureVal.ToString());
 				// 上报给服务器
-				Report2Server(dateTimeStr, waterTemperatureVal, deviceInfo);
+				Report2Server(dateTimeStr, fWaterTemperatureVal, deviceInfo);
 
 				// TODO:保存到本地
 			}
@@ -95,13 +98,15 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
-		bool Report2Server(string dateTimeStr, int waterTemperatureVal, ModbusDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, float waterTemperatureVal, ModbusDeviceInfo deviceInfo)
 		{
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string reportStr = ", " + waterTemperatureVal.ToString();
-			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.SpotNumber;
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
-									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
+			// 水温的设备种类编码是005
+			string deviceTypeStr = "005";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('"
+									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

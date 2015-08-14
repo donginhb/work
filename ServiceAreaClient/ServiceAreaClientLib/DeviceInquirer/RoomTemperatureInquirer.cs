@@ -59,6 +59,7 @@ namespace ServiceAreaClientLib
 				// 接收设备模块返回的读数查询结果
 				InquiryResult ir = inquirer.Receive();
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+				// 室温返回的结果是字符串, 直接是以小数表示, 所以不用除以量纲
                 string outStr = System.Text.Encoding.ASCII.GetString(ir.RcvBytes).Substring(0, ir.RcvLen);
                 int idx = -1;
                 string temperatureStr = "";
@@ -101,9 +102,11 @@ namespace ServiceAreaClientLib
                 return false;
             }
             string reportStr = ", " + temperatureVal.ToString();
-            string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.SpotNumber;
-            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
-									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
+			// 室温的设备种类编码是004
+			string deviceTypeStr = "004";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('"
+									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
             try
             {
                 mysql_object.ExecuteMySqlCommand(insertStr);

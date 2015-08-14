@@ -77,10 +77,15 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					string valStr = string.Format("{0:X}", ir.RcvBytes[i]).PadLeft(2, '0');
 					waterVolumeStr += valStr;
 				}
-				int waterVolumeVal = Convert.ToInt32(waterVolumeStr, 16);
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + waterVolumeVal.ToString());
+				int iWaterVolumeVal = Convert.ToInt32(waterVolumeStr, 16);
+				// 首先读数要乘以放大倍率
+				iWaterVolumeVal = iWaterVolumeVal * deviceInfo.Magnification;
+				// 然后除以量纲得到实际小数值
+				float fWaterVolumeVal = iWaterVolumeVal / deviceInfo.Magnitude;
+
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterVolumeVal.ToString());
 				// 上报给服务器
-				Report2Server(dateTimeStr, waterVolumeVal, deviceInfo);
+				Report2Server(dateTimeStr, fWaterVolumeVal, deviceInfo);
 
 				// TODO:保存到本地
 			}
@@ -95,13 +100,15 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
-		bool Report2Server(string dateTimeStr, int waterVolumeVal, ModbusDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, float waterVolumeVal, ModbusDeviceInfo deviceInfo)
 		{
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string reportStr = ", " + waterVolumeVal.ToString();
-			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.SpotNumber;
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
-									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
+			// 水表的设备种类编码是002
+			string deviceTypeStr = "002";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('"
+									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
