@@ -230,6 +230,10 @@ namespace ServiceAreaClient
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
 			SaveIniFile();
+        }
+
+		private void SaveListViewContents()
+		{
 			List<ListView> ctrlList = new List<ListView>();
 			ctrlList.Add(listView1);
 			ctrlList.Add(listView2);
@@ -237,7 +241,7 @@ namespace ServiceAreaClient
 			ctrlList.Add(listView4);
 			ctrlList.Add(listView5);
 			XmlFile.SaveListViewItems(ctrlList);
-        }
+		}
 
 		private void btnAdd1_Click(object sender, EventArgs e)
 		{
@@ -325,14 +329,21 @@ namespace ServiceAreaClient
 					item.SubItems.Add(editForm.ParaList[i]);
 				}
 				list_view_ctrl.Items.Add(item);
+				SaveListViewContents();
 			}
 		}
 
 		void ButtonDelClick(ListView list_view_ctrl)
 		{
+			bool changed = false;
 			foreach (ListViewItem item in list_view_ctrl.SelectedItems)
 			{
 				list_view_ctrl.Items.Remove(item);
+				changed = true;
+			}
+			if (changed)
+			{
+				SaveListViewContents();
 			}
 		}
 
@@ -362,6 +373,7 @@ namespace ServiceAreaClient
 				{
 					selectedItem.SubItems.Add(editForm.ParaList[i]);
 				}
+				SaveListViewContents();
 			}
 		}
 
