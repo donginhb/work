@@ -406,18 +406,8 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.PortNum = value;
 				}
-				// 读数据起始地址
-				if (int.TryParse(paraArr[5], out value))
-				{
-					deviceInfo.ReadAddr = value;
-				}
-				// 读数据长度
-				if (int.TryParse(paraArr[6], out value))
-				{
-					deviceInfo.ReadLength = value;
-				}
 				// 读数放大倍率
-				if (int.TryParse(paraArr[7], out value))
+				if (int.TryParse(paraArr[5], out value))
 				{
 					deviceInfo.Magnification = value;
 				}

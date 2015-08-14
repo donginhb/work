@@ -7,8 +7,6 @@
       <DeviceAddr>20</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>78</ReadLength>
       <Magnification>3</Magnification>
     </Row_0>
     <Row_1 Checked="false">
@@ -17,8 +15,6 @@
       <DeviceAddr>23</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>78</ReadLength>
       <Magnification>3</Magnification>
     </Row_1>
     <Row_2 Checked="false">
@@ -27,8 +23,6 @@
       <DeviceAddr>24</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>78</ReadLength>
       <Magnification>3</Magnification>
     </Row_2>
     <Row_3 Checked="true">
@@ -37,8 +31,6 @@
       <DeviceAddr>1</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>76</ReadLength>
       <Magnification>1</Magnification>
     </Row_3>
     <Row_4 Checked="true">
@@ -47,8 +39,6 @@
       <DeviceAddr>2</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>76</ReadLength>
       <Magnification>1</Magnification>
     </Row_4>
     <Row_5 Checked="true">
@@ -57,8 +47,6 @@
       <DeviceAddr>3</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
-      <ReadAddr>0</ReadAddr>
-      <ReadLength>76</ReadLength>
       <Magnification>1</Magnification>
     </Row_5>
   </listView1>
