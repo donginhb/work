@@ -30,9 +30,9 @@ namespace ServiceAreaClientLib
             {
                 // 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
-                AppendUITextBox("	开始连接: " + deviceInfo.DeviceSn);
+                AppendUITextBox("	开始连接: " + deviceInfo.DeviceName);
                 inquirer.Connect(deviceInfo.HostName, deviceInfo.PortNum, 3000);
-                AppendUITextBox("	" + deviceInfo.DeviceSn + "连接成功!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + "连接成功!");
 				System.Threading.Thread.Sleep(100);
                 // 向设备模块发送查询指令(Modbus协议)
                 //  第一个字节是通信地址(设备号)
@@ -49,12 +49,12 @@ namespace ServiceAreaClientLib
                 byte[] sendBytes = { (byte)deviceInfo.DeviceAddr, 0x03, 0x00, 0x00, 0x00, 0x4E, crcLowByte, crcHighByte };
 
 				// 向设备模块发送Modbus读数查询指令
-                AppendUITextBox("	查询 " + deviceInfo.DeviceSn + " 指令发送!");
+				AppendUITextBox("	查询 " + deviceInfo.DeviceName + " 指令发送!");
                 inquirer.Send(sendBytes);
 
                 // 接收设备模块返回的读数查询结果
                 InquiryResult ir = inquirer.Receive();
-                AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
                 // 对应答数据进行检查, 返回的第一个字节应该跟设备地址号一致
                 if (    (ir.RcvLen >= 1)
                     &&  (deviceInfo.DeviceAddr != ir.RcvBytes[0])    )
@@ -66,11 +66,11 @@ namespace ServiceAreaClientLib
                 // 上报给服务器
                 if (!Report2Server(ir, deviceInfo))
 				{
-                    AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库连接失败!");
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
 				}
                 else
                 {
-                    AppendUITextBox("	" + deviceInfo.DeviceSn + " : 数据库写入成功!");
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入成功!");
                 }
 
 				// TODO: 保存到本地
@@ -78,7 +78,7 @@ namespace ServiceAreaClientLib
             catch (Exception ex)
             {
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
-                AppendUITextBox("	" + deviceInfo.DeviceSn + " : 连接失败!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + " : 连接失败!");
             }
 			finally
 			{
@@ -91,15 +91,38 @@ namespace ServiceAreaClientLib
         {
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;
+
             string reportStr = GetReportString(inquiryResult, out counter);
-            string argStr = "";
-            for (int i = 0; i < counter; i++)
-            {
-                argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
-            }
-			string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr" + argStr + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", "
-								+ deviceSnStr + @"," + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
+			// 现在只把"正向(吸收)有功电能"即耗电量, 存到数据库表里
+			int idx = reportStr.LastIndexOf(',');
+			string valueStr = "";
+			if (-1 != idx)
+			{
+				valueStr = reportStr.Substring(idx + 1).Trim();
+			}
+			int iValue;
+			if (!int.TryParse(valueStr, out iValue))
+			{
+				return false;
+			}
+			// 读数值要乘以放大倍率
+			iValue = iValue * deviceInfo.Magnification;
+
+			// 然后还要除以量纲得到浮点型小数值
+			float fValue = iValue / deviceInfo.Magnitude;
+
+            //string argStr = "";
+			//for (int i = 0; i < counter; i++)
+			//{
+			//	argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
+			//}
+
+			// 电表的设备种类编码是001
+			string deviceTypeStr = "001";
+			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, value_01" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
+								+ deviceSnStr + @"'," + fValue.ToString() + @")";
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);

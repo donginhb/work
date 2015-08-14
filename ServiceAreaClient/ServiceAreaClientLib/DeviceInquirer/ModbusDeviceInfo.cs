@@ -24,12 +24,12 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			set { _deviceName = value; }
 		}
 
-		string _deviceSn;
+		string _spotNumber;
 
-		public string DeviceSn		 // 设备编号(区域编号3位 + 设备种别编号3位 + 具体设备编号3位, 共九位, 插入数据库时与前面的三位服务区编号一起构成12位的完整设备序号)
+		public string SpotNumber		 // 区域(采集点)位置编号
 		{
-			get { return _deviceSn; }
-			set { _deviceSn = value; }
+			get { return _spotNumber; }
+			set { _spotNumber = value; }
 		}
 
 		int _deviceAddr;
@@ -83,12 +83,21 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		public int _dataSetting;
 
 		// 读数放大倍率, 即结果由读数的实际值乘以这个倍率得出, 默认值是1
-		private int magnification = 1;
+		private int _magnification = 1;
 
 		public int Magnification
 		{
-			get { return magnification; }
-			set { magnification = value; }
+			get { return _magnification; }
+			set { _magnification = value; }
+		}
+
+		// 读数的量纲, 即由整数读数, 除以10的整数倍, 得到实际的小数值.
+		int _magnitude = 1;
+
+		public int Magnitude
+		{
+			get { return _magnitude; }
+			set { _magnitude = value; }
 		}
 	}
 }

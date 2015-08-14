@@ -393,7 +393,7 @@ namespace ServiceAreaClient
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
-				deviceInfo.DeviceSn = paraArr[1];
+				deviceInfo.SpotNumber = paraArr[1];
 				// 设备编号
 				if (int.TryParse(paraArr[2], out value))
 				{
@@ -422,6 +422,9 @@ namespace ServiceAreaClient
 					deviceInfo.Magnification = value;
 				}
 				deviceInfo.DbTableName = _db_table_list[0];
+
+				// 电表的量纲默认是100
+				deviceInfo.Magnitude = 100;
 
 				// 加入到查询设备列表中
 				electricMeterList.Add(deviceInfo);
@@ -495,7 +498,7 @@ namespace ServiceAreaClient
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
-				deviceInfo.DeviceSn = paraArr[1];
+				deviceInfo.SpotNumber = paraArr[1];
 				// 目标设备地址
 				if (int.TryParse(paraArr[2], out value))
 				{
@@ -510,6 +513,9 @@ namespace ServiceAreaClient
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = _db_table_list[2];
+
+				// 室温的量纲默认是100
+				deviceInfo.Magnitude = 100;
 
 				roomThermometerList.Add(deviceInfo);
 			}
@@ -542,7 +548,7 @@ namespace ServiceAreaClient
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
-				deviceInfo.DeviceSn = paraArr[1];
+				deviceInfo.SpotNumber = paraArr[1];
 				// 目标设备地址
 				if (int.TryParse(paraArr[2], out value))
 				{
@@ -562,6 +568,9 @@ namespace ServiceAreaClient
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = _db_table_list[3];
+
+				// 水表的量纲默认是10
+				deviceInfo.Magnitude = 10;
 
 				waterMeterList.Add(deviceInfo);
 			}
@@ -594,7 +603,7 @@ namespace ServiceAreaClient
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
-				deviceInfo.DeviceSn = paraArr[1];
+				deviceInfo.SpotNumber = paraArr[1];
 				// 目标设备地址
 				if (int.TryParse(paraArr[2], out value))
 				{
@@ -609,6 +618,9 @@ namespace ServiceAreaClient
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = _db_table_list[4];
+
+				// 水温的量纲默认是10
+				deviceInfo.Magnitude = 10;
 
 				waterTemperatureMeterList.Add(deviceInfo);
 			}

@@ -3,7 +3,7 @@
   <listView1>
     <Row_0 Checked="false">
       <Name>东区路灯</Name>
-      <SN>001001001</SN>
+      <SpotNumber>001</SpotNumber>
       <DeviceAddr>20</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
@@ -13,7 +13,7 @@
     </Row_0>
     <Row_1 Checked="false">
       <Name>东区餐厅照明</Name>
-      <SN>001001002</SN>
+      <SpotNumber>002</SpotNumber>
       <DeviceAddr>23</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
@@ -23,7 +23,7 @@
     </Row_1>
     <Row_2 Checked="false">
       <Name>东区中央空调</Name>
-      <SN>001001003</SN>
+      <SpotNumber>003</SpotNumber>
       <DeviceAddr>24</DeviceAddr>
       <IP>10.62.1.205</IP>
       <Port>26</Port>
@@ -33,7 +33,7 @@
     </Row_2>
     <Row_3 Checked="true">
       <Name>实验电表1</Name>
-      <SN>001001001</SN>
+      <SpotNumber>004</SpotNumber>
       <DeviceAddr>1</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
@@ -43,7 +43,7 @@
     </Row_3>
     <Row_4 Checked="true">
       <Name>实验电表2</Name>
-      <SN>001001002</SN>
+      <SpotNumber>005</SpotNumber>
       <DeviceAddr>2</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
@@ -53,7 +53,7 @@
     </Row_4>
     <Row_5 Checked="true">
       <Name>实验电表3</Name>
-      <SN>001001003</SN>
+      <SpotNumber>006</SpotNumber>
       <DeviceAddr>3</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>23</Port>
@@ -65,13 +65,13 @@
   <listView2>
     <Row_0 Checked="false">
       <Name>东区卫生间人流</Name>
-      <SN>001003001</SN>
+      <SpotNumber>007</SpotNumber>
       <RequestString1>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_0>
     <Row_1 Checked="true">
       <Name>实验人流1</Name>
-      <SN>001003001</SN>
+      <SpotNumber>008</SpotNumber>
       <RequestString1>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_1>
@@ -79,28 +79,28 @@
   <listView3>
     <Row_0 Checked="false">
       <Name>东区客房(0号温度)</Name>
-      <SN>001004001</SN>
+      <SpotNumber>009</SpotNumber>
       <DeviceAddr>00000000</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
     </Row_0>
     <Row_1 Checked="false">
       <Name>东区餐厅(7号温度)</Name>
-      <SN>001004002</SN>
+      <SpotNumber>010</SpotNumber>
       <DeviceAddr>00000007</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
     </Row_1>
     <Row_2 Checked="false">
       <Name>东区服务大厅(8号温度)</Name>
-      <SN>001004003</SN>
+      <SpotNumber>011</SpotNumber>
       <DeviceAddr>00000008</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
     </Row_2>
     <Row_3 Checked="true">
       <Name>实验温度1</Name>
-      <SN>001004004</SN>
+      <SpotNumber>012</SpotNumber>
       <DeviceAddr>00000001</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>26</Port>
@@ -109,7 +109,7 @@
   <listView4>
     <Row_0 Checked="false">
       <Name>东区水表1</Name>
-      <SN>001002001</SN>
+      <SpotNumber>013</SpotNumber>
       <DeviceAddr>8</DeviceAddr>
       <IP>10.62.1.206</IP>
       <Port>26</Port>
@@ -119,7 +119,7 @@
   <listView5>
     <Row_0 Checked="false">
       <Name>东区锅炉水温</Name>
-      <SN>001005001</SN>
+      <SpotNumber>014</SpotNumber>
       <DeviceAddr>8</DeviceAddr>
       <IP>10.62.1.204</IP>
       <Port>26</Port>

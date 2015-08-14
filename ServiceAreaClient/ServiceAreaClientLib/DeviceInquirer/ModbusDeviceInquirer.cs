@@ -93,7 +93,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				for (int i = 0; i < DeviceList.Count; i++)
 				{
 					ModbusDeviceInfo di = DeviceList[i];
-					AppendUITextBox("开始查询 " + di.DeviceSn);
+					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
 					inquiryThread.Start();
 					System.Threading.Thread.Sleep(500);

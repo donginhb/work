@@ -30,9 +30,9 @@ namespace ServiceAreaClientLib
 			{
 				// 与设备模块进行连接(Connect)
 				// 设定Receive的接收超时时间为3000毫秒
-				AppendUITextBox("	开始连接: " + deviceInfo.DeviceSn);
+				AppendUITextBox("	开始连接: " + deviceInfo.DeviceName);
 				inquirer.Connect(deviceInfo.HostName, deviceInfo.PortNum, 3000);
-				AppendUITextBox("	" + deviceInfo.DeviceSn + "连接成功!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + "连接成功!");
 				System.Threading.Thread.Sleep(100);
 
 				// 发送查询命令内容
@@ -53,12 +53,12 @@ namespace ServiceAreaClientLib
 				byte[] sendBytes = { 0x10, 0x07, b1, b2, b3, b4, 0x0a };
 
 				// 向设备模块发送读数查询指令
-				AppendUITextBox("	查询 " + deviceInfo.DeviceSn + " 指令发送!");
+				AppendUITextBox("	查询 " + deviceInfo.DeviceName + " 指令发送!");
 				inquirer.Send(sendBytes);
 
 				// 接收设备模块返回的读数查询结果
 				InquiryResult ir = inquirer.Receive();
-				AppendUITextBox("	接收到 " + deviceInfo.DeviceSn + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
                 string outStr = System.Text.Encoding.ASCII.GetString(ir.RcvBytes).Substring(0, ir.RcvLen);
                 int idx = -1;
                 string temperatureStr = "";
@@ -75,7 +75,7 @@ namespace ServiceAreaClientLib
                 {
                     return;
                 }
-                AppendUITextBox("	" + deviceInfo.DeviceSn + " 返回值: " + temperatureStr);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr);
 				// 上报给服务器
                 Report2Server(dateTimeStr, temperatureStr, deviceInfo);
 
@@ -83,7 +83,7 @@ namespace ServiceAreaClientLib
 			}
 			catch (Exception ex)
 			{
-				AppendUITextBox("	" + deviceInfo.DeviceSn + ": 查询失败!");
+				AppendUITextBox("	" + deviceInfo.DeviceName + ": 查询失败!");
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
 			finally
@@ -101,7 +101,7 @@ namespace ServiceAreaClientLib
                 return false;
             }
             string reportStr = ", " + temperatureVal.ToString();
-            string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.DeviceSn;
+            string deviceSnStr = deviceInfo.ServiceArea.ToString() + deviceInfo.SpotNumber;
             string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time, device_sn, device_addr, value01" + @") VALUES('"
 									+ dateTimeStr + @"'" + @"," + deviceSnStr + @", " + deviceInfo.DeviceAddr.ToString() + reportStr + @")";
             try
