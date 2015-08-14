@@ -46,6 +46,21 @@ namespace ServiceAreaClient
 			set { _roomTemperatureInquirer = value; }
 		}
 
+		WaterMeterInquirer _waterMeterInquirer = null;
+
+		public WaterMeterInquirer WaterMeterInquirer
+		{
+			get { return _waterMeterInquirer; }
+			set { _waterMeterInquirer = value; }
+		}
+		WaterTemperatureInquirer _waterTemperatureInquirer = null;
+
+		public WaterTemperatureInquirer WaterTemperatureInquirer
+		{
+			get { return _waterTemperatureInquirer; }
+			set { _waterTemperatureInquirer = value; }
+		}
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             if ("Start" == btnStart.Text)
@@ -63,18 +78,27 @@ namespace ServiceAreaClient
                 UIEnable(false);
 
 				// 1.生成查询设备列表
-				List<ModbusDeviceInfo> electricMeterList;
-				List<PassengerCounterInfo> passengerCounterList;
-				List<ModbusDeviceInfo> roomThermometerList;
-				CreateInquiryDeviceList(out electricMeterList, out passengerCounterList, out roomThermometerList);
-
+				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
 				// 2.查询开始
 				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList, sInfo);
 				System.Threading.Thread.Sleep(100);
+
+				List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
 				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList, sInfo);
 				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
 				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList, sInfo);
 				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
+				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList, sInfo);
+				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
+				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList, sInfo);
+				System.Threading.Thread.Sleep(100);
+
 				SaveIniFile();
             }
             else
@@ -341,14 +365,9 @@ namespace ServiceAreaClient
 			}
 		}
 
-		/// <summary>
-		/// 生成查询设备列表
-		/// </summary>
-		private void CreateInquiryDeviceList(out List<ModbusDeviceInfo> electricMeterList,
-												out List<PassengerCounterInfo> passengerCounterList,
-												out List<ModbusDeviceInfo> roomThermometerList)
+		private List<ModbusDeviceInfo> CreateElectricMeterList()
 		{
-			electricMeterList = new List<ModbusDeviceInfo>();
+			List<ModbusDeviceInfo>  electricMeterList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
 			// 首先是电表
 			foreach (ListViewItem item in listView1.Items)
@@ -373,7 +392,7 @@ namespace ServiceAreaClient
 				}
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
-                // DeviceSN
+				// DeviceSN
 				deviceInfo.DeviceSn = paraArr[1];
 				// 设备编号
 				if (int.TryParse(paraArr[2], out value))
@@ -397,13 +416,23 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.ReadLength = value;
 				}
-				deviceInfo.DbTableName = paraArr[7];
+				// 读数放大倍率
+				if (int.TryParse(paraArr[7], out value))
+				{
+					deviceInfo.Magnification = value;
+				}
+				deviceInfo.DbTableName = _db_table_list[0];
 
 				// 加入到查询设备列表中
 				electricMeterList.Add(deviceInfo);
 			}
 
-			passengerCounterList = new List<PassengerCounterInfo>();
+			return electricMeterList;
+		}
+
+		private List<PassengerCounterInfo> CreatePassengerCounterList()
+		{
+			List<PassengerCounterInfo> passengerCounterList = new List<PassengerCounterInfo>();
 			// 然后是客流计数设备(摄像头)
 			foreach (ListViewItem item in listView2.Items)
 			{
@@ -427,19 +456,22 @@ namespace ServiceAreaClient
 				}
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
-                // DeviceSN
+				// DeviceSN
 				deviceInfo.DeviceSn = paraArr[1];
-                // 数据库中对应的表名
-                deviceInfo.DbTableName = paraArr[2];
 				// Request String
-				deviceInfo.RequestString1 = paraArr[3];
-				deviceInfo.RequestString2 = paraArr[4];
+				deviceInfo.RequestString1 = paraArr[2];
+				deviceInfo.RequestString2 = paraArr[3];
+				// 数据库中对应的表名
+				deviceInfo.DbTableName = _db_table_list[1];
 
 				passengerCounterList.Add(deviceInfo);
 			}
+			return passengerCounterList;
+		}
 
-			// 然后是室温传感器
-			roomThermometerList = new List<ModbusDeviceInfo>();
+		private List<ModbusDeviceInfo> CreateRoomThermometerList()
+		{
+			List<ModbusDeviceInfo> roomThermometerList = new List<ModbusDeviceInfo>();
 			foreach (ListViewItem item in listView3.Items)
 			{
 				if (!item.Checked)
@@ -477,10 +509,110 @@ namespace ServiceAreaClient
 					deviceInfo.PortNum = value;
 				}
 				// 数据库中对应的表名
-				deviceInfo.DbTableName = paraArr[5];
+				deviceInfo.DbTableName = _db_table_list[2];
 
 				roomThermometerList.Add(deviceInfo);
 			}
+			return roomThermometerList;
+		}
+
+		private List<ModbusDeviceInfo> CreateWaterMeterList()
+		{
+			List<ModbusDeviceInfo> waterMeterList = new List<ModbusDeviceInfo>();
+			foreach (ListViewItem item in listView4.Items)
+			{
+				if (!item.Checked)
+				{
+					continue;
+				}
+				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
+				string[] paraArr = new string[item.SubItems.Count];
+				int idx = 0;
+				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
+				{
+					paraArr[idx] = subitems.Text.Trim();
+					idx++;
+				}
+				int value;
+				// 服务区编号
+				if (int.TryParse(tbxServiceAreaNum.Text, out value))
+				{
+					deviceInfo.ServiceArea = value;
+				}
+				// 设备名称
+				deviceInfo.DeviceName = paraArr[0];
+				// DeviceSN
+				deviceInfo.DeviceSn = paraArr[1];
+				// 目标设备地址
+				if (int.TryParse(paraArr[2], out value))
+				{
+					deviceInfo.DeviceAddr = value;
+				}
+				// IP
+				deviceInfo.HostName = paraArr[3];
+				// 端口号
+				if (int.TryParse(paraArr[4], out value))
+				{
+					deviceInfo.PortNum = value;
+				}
+				// 读数放大倍率
+				if (int.TryParse(paraArr[5], out value))
+				{
+					deviceInfo.Magnification = value;
+				}
+				// 数据库中对应的表名
+				deviceInfo.DbTableName = _db_table_list[3];
+
+				waterMeterList.Add(deviceInfo);
+			}
+			return waterMeterList;
+		}
+
+		private List<ModbusDeviceInfo> CreateWaterTemperatureList()
+		{
+			List<ModbusDeviceInfo> waterTemperatureMeterList = new List<ModbusDeviceInfo>();
+			foreach (ListViewItem item in listView5.Items)
+			{
+				if (!item.Checked)
+				{
+					continue;
+				}
+				ModbusDeviceInfo deviceInfo = new ModbusDeviceInfo();
+				string[] paraArr = new string[item.SubItems.Count];
+				int idx = 0;
+				foreach (ListViewItem.ListViewSubItem subitems in item.SubItems)
+				{
+					paraArr[idx] = subitems.Text.Trim();
+					idx++;
+				}
+				int value;
+				// 服务区编号
+				if (int.TryParse(tbxServiceAreaNum.Text, out value))
+				{
+					deviceInfo.ServiceArea = value;
+				}
+				// 设备名称
+				deviceInfo.DeviceName = paraArr[0];
+				// DeviceSN
+				deviceInfo.DeviceSn = paraArr[1];
+				// 目标设备地址
+				if (int.TryParse(paraArr[2], out value))
+				{
+					deviceInfo.DeviceAddr = value;
+				}
+				// IP
+				deviceInfo.HostName = paraArr[3];
+				// 端口号
+				if (int.TryParse(paraArr[4], out value))
+				{
+					deviceInfo.PortNum = value;
+				}
+				// 数据库中对应的表名
+				deviceInfo.DbTableName = _db_table_list[4];
+
+				waterTemperatureMeterList.Add(deviceInfo);
+			}
+			return waterTemperatureMeterList;
 		}
 
 		/// <summary>
@@ -542,7 +674,6 @@ namespace ServiceAreaClient
 			}
 			inquirer.TbxControl = textBox3;
 			inquirer.StartInquiry();
-
 			return inquirer;
 		}
 
@@ -554,6 +685,53 @@ namespace ServiceAreaClient
 				inqurier = null;
 			}
 		}
+
+		private WaterMeterInquirer WaterMeterInquiryStart(List<ModbusDeviceInfo> waterMeterList, ServerInfo sInfo)
+		{
+			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, sInfo);
+			int value;
+			if (int.TryParse(tbxUpdatePeriod.Text, out value))
+			{
+				inquirer.CyclePeriod = value;
+			}
+			inquirer.TbxControl = textBox4;
+			inquirer.StartInquiry();
+			return inquirer;
+		}
+
+		void WaterMeterInquiryStop(WaterMeterInquirer inqurier)
+		{
+			if (null != inqurier)
+			{
+				inqurier.StopInquiry();
+				inqurier = null;
+			}
+		}
+
+		private WaterTemperatureInquirer WaterTemperatureInquiryStart(List<ModbusDeviceInfo> waterTemperatureList, ServerInfo sInfo)
+		{
+			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, sInfo);
+			int value;
+			if (int.TryParse(tbxUpdatePeriod.Text, out value))
+			{
+				inquirer.CyclePeriod = value;
+			}
+			inquirer.TbxControl = textBox5;
+			inquirer.StartInquiry();
+			return inquirer;
+		}
+
+		void WaterTemperatureInquiryStop(WaterTemperatureInquirer inqurier)
+		{
+			if (null != inqurier)
+			{
+				inqurier.StopInquiry();
+				inqurier = null;
+			}
+		}
+
+		// 数据库各个表的名称列表
+		private List<string> _db_table_list = new List<string>();
 
 		void LoadIniFile()
 		{
@@ -593,6 +771,13 @@ namespace ServiceAreaClient
 			string listView5ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_5_COLUMN_NAME");
 			string listView5ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_5_COLUMN_WIDTH");
 			AddListViewColumns(listView5, listView5ColNames, listView5ColWidths);
+
+			_db_table_list = new List<string>();
+			string table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_1"); _db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_2"); _db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_3"); _db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_4"); _db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_5"); _db_table_list.Add(table_name);
 		}
 
 		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)

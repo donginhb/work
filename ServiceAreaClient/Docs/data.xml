@@ -9,7 +9,6 @@
       <Port>26</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>3</Magnification>
     </Row_0>
     <Row_1 Checked="false">
@@ -20,7 +19,6 @@
       <Port>26</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>3</Magnification>
     </Row_1>
     <Row_2 Checked="false">
@@ -31,7 +29,6 @@
       <Port>26</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>78</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>3</Magnification>
     </Row_2>
     <Row_3 Checked="true">
@@ -42,7 +39,6 @@
       <Port>23</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>1</Magnification>
     </Row_3>
     <Row_4 Checked="true">
@@ -53,7 +49,6 @@
       <Port>23</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>1</Magnification>
     </Row_4>
     <Row_5 Checked="true">
@@ -64,7 +59,6 @@
       <Port>23</Port>
       <ReadAddr>0</ReadAddr>
       <ReadLength>76</ReadLength>
-      <DBTableName>modbus_device_readings</DBTableName>
       <Magnification>1</Magnification>
     </Row_5>
   </listView1>
@@ -72,14 +66,12 @@
     <Row_0 Checked="false">
       <Name>东区卫生间人流</Name>
       <SN>001003001</SN>
-      <DBTableName>http_device_readings</DBTableName>
       <RequestString1>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_0>
     <Row_1 Checked="true">
       <Name>实验人流1</Name>
       <SN>001003001</SN>
-      <DBTableName>http_device_readings</DBTableName>
       <RequestString1>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_1>
@@ -91,7 +83,6 @@
       <DeviceAddr>00000000</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
-      <DBTableName>temperature_readings</DBTableName>
     </Row_0>
     <Row_1 Checked="false">
       <Name>东区餐厅(7号温度)</Name>
@@ -99,7 +90,6 @@
       <DeviceAddr>00000007</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
-      <DBTableName>temperature_readings</DBTableName>
     </Row_1>
     <Row_2 Checked="false">
       <Name>东区服务大厅(8号温度)</Name>
@@ -107,7 +97,6 @@
       <DeviceAddr>00000008</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
-      <DBTableName>temperature_readings</DBTableName>
     </Row_2>
     <Row_3 Checked="true">
       <Name>实验温度1</Name>
@@ -115,7 +104,6 @@
       <DeviceAddr>00000001</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>26</Port>
-      <DBTableName>temperature_readings</DBTableName>
     </Row_3>
   </listView3>
   <listView4>
@@ -125,7 +113,6 @@
       <DeviceAddr>8</DeviceAddr>
       <IP>10.62.1.206</IP>
       <Port>26</Port>
-      <DBTableName>watermeter_readings</DBTableName>
       <Magnification>1</Magnification>
     </Row_0>
   </listView4>
@@ -136,7 +123,6 @@
       <DeviceAddr>8</DeviceAddr>
       <IP>10.62.1.204</IP>
       <Port>26</Port>
-      <DBTableName>water_temperature_readings</DBTableName>
     </Row_0>
   </listView5>
 </ListViewContents>
