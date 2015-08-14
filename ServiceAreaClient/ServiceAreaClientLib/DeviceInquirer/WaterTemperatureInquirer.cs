@@ -101,7 +101,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		bool Report2Server(string dateTimeStr, float waterTemperatureVal, ModbusDeviceInfo deviceInfo)
 		{
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-			string reportStr = ", " + waterTemperatureVal.ToString();
+			string reportStr = waterTemperatureVal.ToString();
 			// 水温的设备种类编码是005
 			string deviceTypeStr = "005";
 			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');

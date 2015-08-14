@@ -101,7 +101,7 @@ namespace ServiceAreaClientLib
             {
                 return false;
             }
-            string reportStr = ", " + temperatureVal.ToString();
+            string reportStr = temperatureVal.ToString();
 			// 室温的设备种类编码是004
 			string deviceTypeStr = "004";
 			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
