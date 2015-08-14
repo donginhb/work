@@ -66,7 +66,7 @@ namespace ServiceAreaClientLib
                 // 上报给服务器
                 if (!Report2Server(ir, deviceInfo))
 				{
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库连接失败!");
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
 				}
                 else
                 {
@@ -82,7 +82,6 @@ namespace ServiceAreaClientLib
             }
 			finally
 			{
-				// AppendUITextBox("");
                 inquirer.Close();
             }
         }
@@ -126,6 +125,7 @@ namespace ServiceAreaClientLib
 			try
 			{
 				mysql_object.ExecuteMySqlCommand(insertStr);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 保存读数值: " + fValue.ToString());
 			}
 			catch (Exception ex)
 			{
