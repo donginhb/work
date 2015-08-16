@@ -71,6 +71,7 @@
       <DeviceAddr>00000000</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
+      <Adjustment>0</Adjustment>
     </Row_0>
     <Row_1 Checked="false">
       <Name>东区餐厅(7号温度)</Name>
@@ -78,6 +79,7 @@
       <DeviceAddr>00000007</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
+      <Adjustment>-1.8</Adjustment>
     </Row_1>
     <Row_2 Checked="false">
       <Name>东区服务大厅(8号温度)</Name>
@@ -85,6 +87,7 @@
       <DeviceAddr>00000008</DeviceAddr>
       <IP>10.62.1.201</IP>
       <Port>26</Port>
+      <Adjustment>1.7</Adjustment>
     </Row_2>
     <Row_3 Checked="true">
       <Name>实验温度1</Name>
@@ -92,6 +95,7 @@
       <DeviceAddr>00000001</DeviceAddr>
       <IP>192.168.0.7</IP>
       <Port>26</Port>
+      <Adjustment>-1.2</Adjustment>
     </Row_3>
   </listView3>
   <listView4>
@@ -111,6 +115,7 @@
       <DeviceAddr>8</DeviceAddr>
       <IP>10.62.1.204</IP>
       <Port>26</Port>
+      <Adjustment>-3</Adjustment>
     </Row_0>
   </listView5>
 </ListViewContents>

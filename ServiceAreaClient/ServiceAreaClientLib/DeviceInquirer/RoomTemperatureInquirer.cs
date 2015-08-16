@@ -76,9 +76,17 @@ namespace ServiceAreaClientLib
                 {
                     return;
                 }
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr);
+                float temperatureVal = 0;
+                if (!float.TryParse(temperatureStr, out temperatureVal))
+                {
+                    return;
+                }
+                // 加上校正值进行校正调整得到最终的温度值
+                float fValue = temperatureVal + deviceInfo.Adjustment;
+
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr + deviceInfo.Adjustment.ToString() + " = " + fValue.ToString());
 				// 上报给服务器
-                if (!Report2Server(dateTimeStr, temperatureStr, deviceInfo))
+                if (!Report2Server(dateTimeStr, fValue, deviceInfo))
                 {
                     AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
                 }
@@ -96,14 +104,9 @@ namespace ServiceAreaClientLib
 			}
 		}
 
-		bool Report2Server(string dateTimeStr, string temperatureStr, ModbusDeviceInfo deviceInfo)
+		bool Report2Server(string dateTimeStr, float temperatureVal, ModbusDeviceInfo deviceInfo)
 		{
             DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-            float temperatureVal = 0;
-            if (!float.TryParse(temperatureStr, out temperatureVal))
-            {
-                return false;
-            }
             string reportStr = temperatureVal.ToString();
 			// 室温的设备种类编码是004
 			string deviceTypeStr = "004";

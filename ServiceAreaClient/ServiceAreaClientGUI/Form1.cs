@@ -513,6 +513,12 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.PortNum = value;
 				}
+                // 校正值
+                float fAdjustment = 0;
+                if (float.TryParse(paraArr[5], out fAdjustment))
+                {
+                    deviceInfo.Adjustment = fAdjustment;
+                }
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = _db_table_list[2];
 

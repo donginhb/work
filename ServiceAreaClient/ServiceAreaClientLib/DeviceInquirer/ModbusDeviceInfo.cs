@@ -99,5 +99,14 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			get { return _magnitude; }
 			set { _magnitude = value; }
 		}
+
+        // 校正值
+        float _adjustment = 0;
+
+        public float Adjustment
+        {
+            get { return _adjustment; }
+            set { _adjustment = value; }
+        }
 	}
 }
