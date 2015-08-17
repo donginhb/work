@@ -202,6 +202,10 @@ namespace ServiceAreaClientLib
 			}
 			else
 			{
+                if (_tbxControl.Text.Length >= _tbxControl.MaxLength - 1000)
+                {
+                    _tbxControl.Text = _tbxControl.Text.Substring(_tbxControl.Text.Length - 100);
+                }
 				_tbxControl.AppendText(txtStr + "\r\n");
 			}
 		}
