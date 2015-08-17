@@ -84,7 +84,8 @@ namespace ServiceAreaClientLib
                 // 加上校正值进行校正调整得到最终的温度值
                 float fValue = temperatureVal + deviceInfo.Adjustment;
 
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr + deviceInfo.Adjustment.ToString() + " = " + fValue.ToString());
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + temperatureStr + " + ("
+									+ deviceInfo.Adjustment.ToString() + ") = " + fValue.ToString());
 				// 上报给服务器
                 if (!Report2Server(dateTimeStr, fValue, deviceInfo))
                 {

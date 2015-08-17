@@ -78,12 +78,14 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					waterTemperatureStr += valStr;
 				}
 				int iWaterTemperatureVal = Convert.ToInt32(waterTemperatureStr, 16);
-				// 水温有量纲, 但是没有放大倍率
+				// 水温有量纲, 但是没有放大倍率, 还要进行值校正
 				float fWaterTemperatureVal = iWaterTemperatureVal / deviceInfo.Magnitude;
+				float waterTemperatureVal = fWaterTemperatureVal + deviceInfo.Adjustment;
 
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterTemperatureVal.ToString());
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterTemperatureVal.ToString()
+									+ " + (" + deviceInfo.Adjustment.ToString() + ") = " + waterTemperatureVal.ToString());
 				// 上报给服务器
-				if (!Report2Server(dateTimeStr, fWaterTemperatureVal, deviceInfo))
+				if (!Report2Server(dateTimeStr, waterTemperatureVal, deviceInfo))
                 {
                     AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
                 }
