@@ -80,7 +80,7 @@ namespace ServiceAreaClient
 				int.TryParse(tbxUpdatePeriod.Text, out updatePeriod);
 				int.TryParse(tbxPortNum.Text, out serverPort);
 				ServerInfo sInfo = new ServerInfo(serverHost, serverPort, tbxDBName.Text, tbxUsrName.Text, tbxPassword.Text);
-                UpdateControlText(btnStart, "Stop");
+                btnStart.Text = "Stop";
 				UIEnable(false);
 
 				// 1.生成查询设备列表
@@ -113,7 +113,10 @@ namespace ServiceAreaClient
 				ElectricMeterInquiryStop(ElectricMeterInquirer);
 				PassengerCounterInquiryStop(PassengerCounterInquirer);
 				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-                UpdateControlText(btnStart, "Start");
+                WaterMeterInquiryStop(WaterMeterInquirer);
+                WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+
+                btnStart.Text = "Start";
 				UIEnable(true);
 			}
 		}
@@ -139,43 +142,43 @@ namespace ServiceAreaClient
         void UIEnable(bool enable)
         {
             // 文本框
-            UpdateControlEnable(tbxIP1, enable);
-            UpdateControlEnable(tbxIP2, enable);
-            UpdateControlEnable(tbxIP3, enable);
-            UpdateControlEnable(tbxIP4, enable);
-            UpdateControlEnable(tbxPortNum, enable);
-            UpdateControlEnable(tbxUpdatePeriod, enable);
-            UpdateControlEnable(tbxServiceAreaNum, enable);
-            UpdateControlEnable(tbxDBName, enable);
-            UpdateControlEnable(tbxUsrName, enable);
-            UpdateControlEnable(tbxPassword, enable);
+            tbxIP1.Enabled = enable;
+            tbxIP2.Enabled = enable;
+            tbxIP3.Enabled = enable;
+            tbxIP4.Enabled = enable;
+            tbxPortNum.Enabled = enable;
+            tbxUpdatePeriod.Enabled = enable;
+            tbxServiceAreaNum.Enabled = enable;
+            tbxDBName.Enabled = enable;
+            tbxUsrName.Enabled = enable;
+            tbxPassword.Enabled = enable;
 
             // 列表
-            UpdateControlEnable(listView1, enable);
-            UpdateControlEnable(listView2, enable);
-            UpdateControlEnable(listView3, enable);
-            UpdateControlEnable(listView4, enable);
-            UpdateControlEnable(listView5, enable);
+            listView1.Enabled = enable;
+            listView2.Enabled = enable;
+            listView3.Enabled = enable;
+            listView4.Enabled = enable;
+            listView5.Enabled = enable;
 
             // 按钮
-            UpdateControlEnable(btnAdd1, enable);
-            UpdateControlEnable(btnDel1, enable);
-            UpdateControlEnable(btnEdit1, enable);
-            UpdateControlEnable(btnAdd2, enable);
-            UpdateControlEnable(btnDel2, enable);
-            UpdateControlEnable(btnEdit2, enable);
-            UpdateControlEnable(btnAdd3, enable);
-            UpdateControlEnable(btnDel3, enable);
-            UpdateControlEnable(btnEdit3, enable);
-            UpdateControlEnable(btnAdd4, enable);
-            UpdateControlEnable(btnDel4, enable);
-            UpdateControlEnable(btnEdit4, enable);
-            UpdateControlEnable(btnAdd5, enable);
-            UpdateControlEnable(btnDel5, enable);
-            UpdateControlEnable(btnEdit5, enable);
+            btnAdd1.Enabled = enable;
+            btnDel1.Enabled = enable;
+            btnEdit1.Enabled = enable;
+            btnAdd2.Enabled = enable;
+            btnDel2.Enabled = enable;
+            btnEdit2.Enabled = enable;
+            btnAdd3.Enabled = enable;
+            btnDel3.Enabled = enable;
+            btnEdit3.Enabled = enable;
+            btnAdd4.Enabled = enable;
+            btnDel4.Enabled = enable;
+            btnEdit4.Enabled = enable;
+            btnAdd5.Enabled = enable;
+            btnDel5.Enabled = enable;
+            btnEdit5.Enabled = enable;
 
 			// 单选框
-            UpdateControlEnable(cbxAutoStart, enable);
+            cbxAutoStart.Enabled = enable;
         }
 
         /// <summary>
@@ -185,7 +188,7 @@ namespace ServiceAreaClient
         bool CheckUIValue()
         {
             if (
-				!IPValueCheck(tbxIP1.Text)
+				    !IPValueCheck(tbxIP1.Text)
                 ||  !IPValueCheck(tbxIP2.Text)
                 ||  !IPValueCheck(tbxIP3.Text)
                 ||  !IPValueCheck(tbxIP4.Text))
@@ -236,6 +239,13 @@ namespace ServiceAreaClient
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // 如果处于查询过程中, 要停止查询
+            ElectricMeterInquiryStop(ElectricMeterInquirer);
+            PassengerCounterInquiryStop(PassengerCounterInquirer);
+            RoomTemperatureInquiryStop(RoomTemperatureInquirer);
+            WaterMeterInquiryStop(WaterMeterInquirer);
+            WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+
 			SaveIniFile();
         }
 
@@ -888,62 +898,13 @@ namespace ServiceAreaClient
 		{
 		}
 
-		// 程序启动后自动开始查询
-		private System.Timers.Timer _autoStartTimer;
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			if (cbxAutoStart.Checked)
 			{
-				_autoStartTimer = new System.Timers.Timer(1 * 1000);
-				_autoStartTimer.AutoReset = true;
-				_autoStartTimer.Elapsed += autoStartTimer_Elapsed;
-				_autoStartTimer.Start();
+                InquiryStart();
 			}
 		}
 
-		private int _autoStartCountDown = 100;
-
-		void autoStartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-		{
-			_autoStartCountDown -= 1;
-            UpdateControlText(cbxAutoStart, _autoStartCountDown.ToString());
-			if (0 == _autoStartCountDown)
-			{
-				_autoStartTimer.Stop();
-				_autoStartCountDown = 100;
-                UpdateControlText(cbxAutoStart, @"自动开始");
-                btnStart_Click(null, null);
-			}
-		}
-
-		delegate void updateControlTextDlg(Control ctrl, string text);
-
-		void UpdateControlText(Control ctrl, string text)
-		{
-            if (ctrl.InvokeRequired)
-			{
-                updateControlTextDlg dlg = new updateControlTextDlg(UpdateControlText);
-				this.BeginInvoke(dlg, new object[] { ctrl, text });
-			}
-			else
-			{
-				ctrl.Text = text;
-			}
-		}
-
-        delegate void updateControlEnableDlg(Control ctrl, bool enable);
-
-        void UpdateControlEnable(Control ctrl, bool enable)
-        {
-            if (ctrl.InvokeRequired)
-            {
-                updateControlEnableDlg dlg = new updateControlEnableDlg(UpdateControlEnable);
-                this.BeginInvoke(dlg, new object[] { ctrl, enable });
-            }
-            else
-            {
-                ctrl.Enabled = enable;
-            }
-        }
 	}
 }
