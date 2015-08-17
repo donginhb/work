@@ -63,19 +63,25 @@ namespace ServiceAreaClient
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if ("Start" == btnStart.Text)
-            {
-                if (!CheckUIValue())
-                {
-                    return;
-                }
-                string serverHost = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
-                int updatePeriod, serverPort;
-                int.TryParse(tbxUpdatePeriod.Text, out updatePeriod);
-                int.TryParse(tbxPortNum.Text, out serverPort);
+			InquiryStart();
+        }
+
+//////////////////////////////////////////////////////////////////////////////////
+		void InquiryStart()
+		{
+			if ("Start" == btnStart.Text)
+			{
+				if (!CheckUIValue())
+				{
+					return;
+				}
+				string serverHost = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
+				int updatePeriod, serverPort;
+				int.TryParse(tbxUpdatePeriod.Text, out updatePeriod);
+				int.TryParse(tbxPortNum.Text, out serverPort);
 				ServerInfo sInfo = new ServerInfo(serverHost, serverPort, tbxDBName.Text, tbxUsrName.Text, tbxPassword.Text);
-                btnStart.Text = "Stop";
-                UIEnable(false);
+				btnStart.Text = "Stop";
+				UIEnable(false);
 
 				// 1.生成查询设备列表
 				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
@@ -100,19 +106,17 @@ namespace ServiceAreaClient
 				System.Threading.Thread.Sleep(100);
 
 				SaveIniFile();
-            }
-            else
-            {
+			}
+			else
+			{
 				// 停止查询
 				ElectricMeterInquiryStop(ElectricMeterInquirer);
 				PassengerCounterInquiryStop(PassengerCounterInquirer);
 				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-                btnStart.Text = "Start";
-                UIEnable(true);
-            }
-        }
-
-//////////////////////////////////////////////////////////////////////////////////
+				btnStart.Text = "Start";
+				UIEnable(true);
+			}
+		}
 
         /// <summary>
         /// UI控件初始化
@@ -169,6 +173,9 @@ namespace ServiceAreaClient
 			btnAdd5.Enabled = enable;
 			btnDel5.Enabled = enable;
 			btnEdit5.Enabled = enable;
+
+			// 单选框
+			cbxAutoStart.Enabled = enable;
         }
 
         /// <summary>
@@ -798,6 +805,16 @@ namespace ServiceAreaClient
 			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_3"); _db_table_list.Add(table_name);
 			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_4"); _db_table_list.Add(table_name);
 			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_5"); _db_table_list.Add(table_name);
+
+			string autoStartStr = IniFile.IniReadValue("SETTING", "AUTO_START");
+			if ("true" == autoStartStr.ToLower())
+			{
+				cbxAutoStart.Checked = true;
+			}
+			else
+			{
+				cbxAutoStart.Checked = false;
+			}
 		}
 
 		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)
@@ -844,6 +861,7 @@ namespace ServiceAreaClient
 
 				IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
 				IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
+				IniFile.IniWriteValue("SETTING", "AUTO_START", cbxAutoStart.Checked.ToString());
 			}
 			catch (Exception ex)
 			{
@@ -870,5 +888,47 @@ namespace ServiceAreaClient
 		{
 		}
 
+		// 程序启动后自动开始查询
+		private System.Timers.Timer _autoStartTimer;
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			if (cbxAutoStart.Checked)
+			{
+				_autoStartTimer = new System.Timers.Timer(1 * 1000);
+				_autoStartTimer.AutoReset = true;
+				_autoStartTimer.Elapsed += autoStartTimer_Elapsed;
+				_autoStartTimer.Start();
+			}
+		}
+
+		private int _autoStartCountDown = 100;
+
+		void autoStartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			_autoStartCountDown -= 1;
+			UpdateAutoStartCheckBoxText(_autoStartCountDown.ToString());
+			if (0 == _autoStartCountDown)
+			{
+				_autoStartTimer.Stop();
+				_autoStartCountDown = 100;
+				UpdateAutoStartCheckBoxText(@"自动开始");
+				InquiryStart();
+			}
+		}
+
+		delegate void updateCheckBoxTextDlg(string text);
+
+		void UpdateAutoStartCheckBoxText(string text)
+		{
+			if (cbxAutoStart.InvokeRequired)
+			{
+				updateCheckBoxTextDlg dlg = new updateCheckBoxTextDlg(UpdateAutoStartCheckBoxText);
+				this.BeginInvoke(dlg, new object[] { text });
+			}
+			else
+			{
+				cbxAutoStart.Text = text;
+			}
+		}
 	}
 }

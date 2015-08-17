@@ -82,6 +82,7 @@
 			this.btnAdd5 = new System.Windows.Forms.Button();
 			this.listView5 = new System.Windows.Forms.ListView();
 			this.btnTest = new System.Windows.Forms.Button();
+			this.cbxAutoStart = new System.Windows.Forms.CheckBox();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -348,7 +349,7 @@
 			// 
 			// tbxUpdatePeriod
 			// 
-			this.tbxUpdatePeriod.Location = new System.Drawing.Point(628, 46);
+			this.tbxUpdatePeriod.Location = new System.Drawing.Point(618, 44);
 			this.tbxUpdatePeriod.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.tbxUpdatePeriod.Name = "tbxUpdatePeriod";
 			this.tbxUpdatePeriod.Size = new System.Drawing.Size(61, 23);
@@ -358,7 +359,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(625, 29);
+			this.label1.Location = new System.Drawing.Point(615, 27);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(59, 17);
 			this.label1.TabIndex = 3;
@@ -367,7 +368,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(695, 47);
+			this.label3.Location = new System.Drawing.Point(685, 47);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(32, 17);
 			this.label3.TabIndex = 3;
@@ -701,11 +702,22 @@
 			this.btnTest.UseVisualStyleBackColor = true;
 			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
+			// cbxAutoStart
+			// 
+			this.cbxAutoStart.AutoSize = true;
+			this.cbxAutoStart.Location = new System.Drawing.Point(688, 8);
+			this.cbxAutoStart.Name = "cbxAutoStart";
+			this.cbxAutoStart.Size = new System.Drawing.Size(75, 21);
+			this.cbxAutoStart.TabIndex = 9;
+			this.cbxAutoStart.Text = "自动开始";
+			this.cbxAutoStart.UseVisualStyleBackColor = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(932, 968);
+			this.Controls.Add(this.cbxAutoStart);
 			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.groupBox6);
 			this.Controls.Add(this.groupBox5);
@@ -732,6 +744,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ServiceAreaClient";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
@@ -800,6 +813,7 @@
 		private System.Windows.Forms.Button btnAdd5;
 		private System.Windows.Forms.ListView listView5;
 		private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.CheckBox cbxAutoStart;
     }
 }
 
