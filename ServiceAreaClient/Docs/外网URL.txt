@@ -1,1 +1,2 @@
-http114.215.104.1468765serviceArealogininit 
+http://114.215.104.146:8765/serviceArea/login/init
+
