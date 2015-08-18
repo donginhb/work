@@ -57,7 +57,7 @@
       <RequestString1>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://10.62.1.202/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
     </Row_0>
-    <Row_1 Checked="true">
+    <Row_1 Checked="false">
       <Name>实验人流1</Name>
       <SpotNumber>008</SpotNumber>
       <RequestString1>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
@@ -89,7 +89,7 @@
       <Port>26</Port>
       <Adjustment>1.7</Adjustment>
     </Row_2>
-    <Row_3 Checked="true">
+    <Row_3 Checked="false">
       <Name>实验温度1</Name>
       <SpotNumber>012</SpotNumber>
       <DeviceAddr>00000001</DeviceAddr>

@@ -247,6 +247,7 @@ namespace ServiceAreaClient
             WaterTemperatureInquiryStop(WaterTemperatureInquirer);
 
 			SaveIniFile();
+            SaveListViewContents();
         }
 
 		private void SaveListViewContents()
@@ -902,6 +903,7 @@ namespace ServiceAreaClient
 		{
 			if (cbxAutoStart.Checked)
 			{
+                System.Threading.Thread.Sleep(5000);
                 InquiryStart();
 			}
 		}
