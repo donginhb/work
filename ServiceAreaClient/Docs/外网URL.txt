@@ -1,6 +1,14 @@
 http://114.215.104.146:8765/serviceArea/login/init
 
 DB:
-114.215.104.146
-sarea
-Huachang2015!
+Host:   114.215.104.146
+DB名：  service_area
+用户名：sarea
+密码：  Huachang2015!
+
+本地
+Host:   127.0.0.1
+DB名：  service_area
+用户名：admin
+密码：  admin
+
