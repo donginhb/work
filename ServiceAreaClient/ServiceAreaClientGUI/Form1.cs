@@ -415,6 +415,7 @@ namespace ServiceAreaClient
 					idx++;
 				}
 				int value;
+				float fvalue;
 				// 服务区编号
 				if (int.TryParse(tbxServiceAreaNum.Text, out value))
 				{
@@ -437,9 +438,9 @@ namespace ServiceAreaClient
 					deviceInfo.PortNum = value;
 				}
 				// 读数放大倍率
-				if (int.TryParse(paraArr[5], out value))
+				if (float.TryParse(paraArr[5], out fvalue))
 				{
-					deviceInfo.Magnification = value;
+					deviceInfo.Magnification = fvalue;
 				}
 				deviceInfo.DbTableName = _db_table_list[0];
 
@@ -566,6 +567,7 @@ namespace ServiceAreaClient
 					idx++;
 				}
 				int value;
+				float fvalue;
 				// 服务区编号
 				if (int.TryParse(tbxServiceAreaNum.Text, out value))
 				{
@@ -588,9 +590,9 @@ namespace ServiceAreaClient
 					deviceInfo.PortNum = value;
 				}
 				// 读数放大倍率
-				if (int.TryParse(paraArr[5], out value))
+				if (float.TryParse(paraArr[5], out fvalue))
 				{
-					deviceInfo.Magnification = value;
+					deviceInfo.Magnification = fvalue;
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = _db_table_list[3];

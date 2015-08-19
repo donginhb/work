@@ -79,9 +79,9 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				}
 				int iWaterVolumeVal = Convert.ToInt32(waterVolumeStr, 16);
 				// 首先读数要乘以放大倍率
-				iWaterVolumeVal = iWaterVolumeVal * deviceInfo.Magnification;
+				float waterVolumeVal = iWaterVolumeVal * deviceInfo.Magnification;
 				// 然后除以量纲得到实际小数值
-				float fWaterVolumeVal = iWaterVolumeVal / deviceInfo.Magnitude;
+				float fWaterVolumeVal = waterVolumeVal / deviceInfo.Magnitude;
 
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterVolumeVal.ToString());
 				// 上报给服务器

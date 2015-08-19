@@ -100,10 +100,10 @@ namespace ServiceAreaClientLib
 				return false;
 			}
 			// 读数值要乘以放大倍率
-			iValue = iValue * deviceInfo.Magnification;
+			float value = iValue * deviceInfo.Magnification;
 
 			// 然后还要除以量纲得到浮点型小数值
-			float fValue = iValue / deviceInfo.Magnitude;
+			float fValue = value / deviceInfo.Magnitude;
 
             //string argStr = "";
 			//for (int i = 0; i < counter; i++)
