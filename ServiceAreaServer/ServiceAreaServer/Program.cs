@@ -70,9 +70,9 @@ namespace ServiceAreaServer
 						sendStr = "Server receive Fail!";
 					}
 
-					//给Client端返回信息
+					// 给Client端返回信息
 					byte[] bs = Encoding.ASCII.GetBytes(sendStr);
-					cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
+					//cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
 					cSocket.Close();
 
 					// System.Threading.Thread.Sleep(1000);
@@ -80,7 +80,7 @@ namespace ServiceAreaServer
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Trace.WriteLine(ex.ToString());
+                Console.WriteLine(ex.ToString());
 			}
 			finally
 			{

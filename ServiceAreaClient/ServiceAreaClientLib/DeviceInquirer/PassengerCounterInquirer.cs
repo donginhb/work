@@ -165,7 +165,6 @@ namespace ServiceAreaClientLib
         // 报告给服务器(写入数据库表)
 		bool Report2Server(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
         {
-			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			string reportStr0 = GetReportString(resultStr0);
 			string reportStr1 = GetReportString(resultStr1);
 			// 摄像头的设备种类编码是003
@@ -177,7 +176,21 @@ namespace ServiceAreaClientLib
                                     + dateTimeStr + @"'," + deviceSnStr + reportStr0 + reportStr1 + @")";
 			try
 			{
-				mysql_object.ExecuteMySqlCommand(insertStr);
+                if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+                {
+                    DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+                    mysql_object.ExecuteMySqlCommand(insertStr);
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " 数据库写入OK!");
+                }
+                else
+                {
+                    // 通过中继服务器
+                    TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+                    reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+                    reporter.Send(Encoding.ASCII.GetBytes(insertStr));
+                    reporter.Close();
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
+                }
 			}
 			catch (Exception ex)
 			{

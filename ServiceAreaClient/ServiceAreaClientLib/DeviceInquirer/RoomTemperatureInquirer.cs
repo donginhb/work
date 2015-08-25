@@ -110,7 +110,6 @@ namespace ServiceAreaClientLib
 
 		bool Report2Server(string dateTimeStr, float temperatureVal, ModbusDeviceInfo deviceInfo)
 		{
-            DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             string reportStr = temperatureVal.ToString();
 			// 室温的设备种类编码是004
 			string deviceTypeStr = "004";
@@ -119,7 +118,20 @@ namespace ServiceAreaClientLib
 									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
             try
             {
-                mysql_object.ExecuteMySqlCommand(insertStr);
+                if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+                {
+                    DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+                    mysql_object.ExecuteMySqlCommand(insertStr);
+                }
+                else
+                {
+                    // 通过中继服务器
+                    TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+                    reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+                    reporter.Send(Encoding.ASCII.GetBytes(insertStr));
+                    reporter.Close();
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
+                }
             }
             catch (Exception ex)
             {
