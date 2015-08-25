@@ -14,7 +14,7 @@ namespace ServiceAreaClientLib
 		// 要查询的设备列表
         List<PassengerCounterInfo> _deviceList;
 
-		// 数据库服务区情报
+		// 数据库服务器情报
 		ServerInfo _dbServerInfo;
 
 		public ServerInfo DbServerInfo
