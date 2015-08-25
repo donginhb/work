@@ -14,7 +14,8 @@ namespace ServiceAreaClient
 {
 	public partial class FormSetting : Form
 	{
-		public FormSetting(ServerInfo db_server, ServerInfo relay_server, int sarea_num, int update_period)
+		public FormSetting( ServerInfo db_server, ServerInfo relay_server, int sarea_num,
+                            int update_period, E_DB_CONNECT_MODE connect_mode)
 		{
 			InitializeComponent();
 			string host = db_server.Host_name;
@@ -46,6 +47,19 @@ namespace ServiceAreaClient
 			Service_area_num = sarea_num;
 			tbxUpdatePeriod.Text = update_period.ToString();
 			Update_period = update_period;
+
+            Db_server = db_server;
+            Relay_server = relay_server;
+
+            Db_connect_mode = connect_mode;
+            if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+            {
+                checkBox1.Checked = true;
+            }
+            else
+            {
+                checkBox2.Checked = true;
+            }
 		}
 
 		private ServerInfo _db_server;		// 数据库服务器信息
@@ -114,7 +128,30 @@ namespace ServiceAreaClient
 
 		private void button1_Click(object sender, EventArgs e)
 		{
+            Db_server.Host_name = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
+            int value;
+            if (int.TryParse(tbxPortNum1.Text, out value))
+	        {
+		        Db_server.Port_num = value;
+	        }
+            Db_server.Db_name = tbxDBName.Text;
+            Db_server.User_id = tbxUsrName.Text;
+            Db_server.Pass_word = tbxPassword.Text;
 
+            Relay_server.Host_name = tbxIP5.Text + "." + tbxIP6.Text + "." + tbxIP7.Text + "." + tbxIP8.Text;
+            if (int.TryParse(tbxPortNum2.Text, out value))
+            {
+                Relay_server.Port_num = value;
+            }
+
+            if (int.TryParse(tbxServiceAreaNum.Text, out value))
+	        {
+                Service_area_num = value;
+	        }
+            if (int.TryParse(tbxUpdatePeriod.Text, out value))
+            {
+                Update_period = value;
+            }
 		}
 
 		/// <summary>

@@ -20,13 +20,21 @@ namespace ServiceAreaServer
 			set { _dbServerInfo = value; }
 		}
 
+        static int _port = 1981;
+
+        public static int Port
+        {
+            get { return Program._port; }
+            set { Program._port = value; }
+        }
+
 		static void Main(string[] args)
 		{
 			// 读设定文件
 			LoadIniFile();
 
 			byte[] data = new byte[1024];									// 用于缓存客户端所发送的信息,通过socket传递的信息必须为字节数组
-			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 9050);			// 本机预使用的IP和端口
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);			// 本机预使用的IP和端口
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			try
@@ -110,6 +118,13 @@ namespace ServiceAreaServer
 			string pass_word = IniFile.IniReadValue("DB_SERVER_INFO", "PASSWORD");
 
 			DbServerInfo = new ServerInfo(host, port, db_name, user_id, pass_word);
+
+            portStr = IniFile.IniReadValue("LOCAL_INFO", "PORT");
+            if (!int.TryParse(portStr, out port))
+            {
+                return;
+            }
+            Port = port;
 		}
 	}
 }

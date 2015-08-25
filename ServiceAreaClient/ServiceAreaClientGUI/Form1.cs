@@ -750,6 +750,16 @@ namespace ServiceAreaClient
 				Update_period = value;
 			}
 
+            readStr = IniFile.IniReadValue("DB_CONNECT_INFO", "CONNECT_MODE");
+            if (readStr == E_DB_CONNECT_MODE.DIRECT.ToString())
+            {
+                Db_connect_mode = E_DB_CONNECT_MODE.DIRECT;
+            }
+            else
+            {
+                Db_connect_mode = E_DB_CONNECT_MODE.RELAY;
+            }
+
 			string listView1ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_NAME");
 			string listView1ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_WIDTH");
 			AddListViewColumns(listView1, listView1ColNames, listView1ColWidths);
@@ -855,7 +865,7 @@ namespace ServiceAreaClient
 
 		private void btnSetting_Click(object sender, EventArgs e)
 		{
-			FormSetting fs = new FormSetting(Db_server, Relay_server, Service_area_num, Update_period);
+            FormSetting fs = new FormSetting(Db_server, Relay_server, Service_area_num, Update_period, Db_connect_mode);
 			if (DialogResult.OK == fs.ShowDialog())
 			{
 				Db_connect_mode = fs.Db_connect_mode;
