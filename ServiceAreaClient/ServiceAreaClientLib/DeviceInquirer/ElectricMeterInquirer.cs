@@ -13,10 +13,13 @@ namespace ServiceAreaClientLib
 {
 	public class ElectricMeterInquirer : ModbusDeviceInquirer
     {
-		public ElectricMeterInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public ElectricMeterInquirer(	List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
+										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = sInfo;
+			DbServerInfo = dbServer;
+			RelayServerInfo = relayServer;
+			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>
@@ -53,18 +56,18 @@ namespace ServiceAreaClientLib
                 inquirer.Send(sendBytes);
 
                 // 接收设备模块返回的读数查询结果
-                InquiryResult ir = inquirer.Receive();
-				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
+                ReceiveData rd = inquirer.Receive();
+				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + rd.RcvLen.ToString() + " 字节.");
                 // 对应答数据进行检查, 返回的第一个字节应该跟设备地址号一致
-                if (    (ir.RcvLen >= 1)
-                    &&  (deviceInfo.DeviceAddr != ir.RcvBytes[0])    )
+                if (    (rd.RcvLen >= 1)
+                    &&  (deviceInfo.DeviceAddr != rd.RcvBytes[0])    )
                 {
-                    AppendUITextBox("	" + "收到的应答设备地址不一致: " + ir.RcvBytes[0].ToString());
+                    AppendUITextBox("	" + "收到的应答设备地址不一致: " + rd.RcvBytes[0].ToString());
                     return;
                 }
 
                 // 上报给服务器
-                if (!Report2Server(ir, deviceInfo))
+				if (!Report2Server(rd, deviceInfo))
 				{
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
 				}
@@ -81,9 +84,8 @@ namespace ServiceAreaClientLib
             }
         }
 
-		bool Report2Server(InquiryResult inquiryResult, ModbusDeviceInfo deviceInfo)
+		bool Report2Server(ReceiveData inquiryResult, ModbusDeviceInfo deviceInfo)
         {
-            DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
             int counter;
 
             string reportStr = GetReportString(inquiryResult, out counter);
@@ -119,18 +121,36 @@ namespace ServiceAreaClientLib
 								+ deviceSnStr + @"'," + fValue.ToString() + @")";
 			try
 			{
-				mysql_object.ExecuteMySqlCommand(insertStr);
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 保存读数值: " + fValue.ToString());
+				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+				{
+					// 直接写入数据库
+					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+					mysql_object.ExecuteMySqlCommand(insertStr);
+					AppendUITextBox("	" + deviceInfo.DeviceName + " 保存读数值: " + fValue.ToString());
+				}
+				else
+				{
+					// 通过中继服务器
+					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+					reporter.Send(Encoding.ASCII.GetBytes(insertStr));
+					reporter.Close();
+					AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
+				}
 			}
 			catch (Exception ex)
 			{
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
 				return false;
 			}
+			finally
+			{
+				;
+			}
 			return true;
         }
 
-        public static string GetReportString(InquiryResult inquiryResult, out int counter)
+        public static string GetReportString(ReceiveData inquiryResult, out int counter)
         {
 			string reportStr = "";
 			List<DataUnitInfo> dataInfoList = ElectricMeterDataSetting.GetElectricMeterDataSetting();

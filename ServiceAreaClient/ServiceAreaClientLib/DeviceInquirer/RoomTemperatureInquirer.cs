@@ -12,10 +12,13 @@ namespace ServiceAreaClientLib
 {
 	public class RoomTemperatureInquirer : ModbusDeviceInquirer
 	{
-		public RoomTemperatureInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public RoomTemperatureInquirer(	List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
+										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = sInfo;
+			DbServerInfo = dbServer;
+			RelayServerInfo = relayServer;
+			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>
@@ -57,7 +60,7 @@ namespace ServiceAreaClientLib
 				inquirer.Send(sendBytes);
 
 				// 接收设备模块返回的读数查询结果
-				InquiryResult ir = inquirer.Receive();
+				ReceiveData ir = inquirer.Receive();
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 				// 室温返回的结果是字符串, 直接是以小数表示, 所以不用除以量纲
                 string outStr = System.Text.Encoding.ASCII.GetString(ir.RcvBytes).Substring(0, ir.RcvLen);

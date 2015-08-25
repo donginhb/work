@@ -20,13 +20,30 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			set { _deviceList = value; }
 		}
 
-		// 数据库服务区情报
+		// 数据库服务器情报
 		protected ServerInfo _dbServerInfo;
 
 		public ServerInfo DbServerInfo
 		{
 			get { return _dbServerInfo; }
 			set { _dbServerInfo = value; }
+		}
+
+		// 中继服务器情报
+		private ServerInfo _relayServerInfo;
+
+		protected ServerInfo RelayServerInfo
+		{
+			get { return _relayServerInfo; }
+			set { _relayServerInfo = value; }
+		}
+
+		private E_DB_CONNECT_MODE _db_connect_mode;
+
+		public E_DB_CONNECT_MODE Db_connect_mode
+		{
+			get { return _db_connect_mode; }
+			set { _db_connect_mode = value; }
 		}
 
 		// 要更新的UI textBox控件

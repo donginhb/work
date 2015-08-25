@@ -23,6 +23,23 @@ namespace ServiceAreaClientLib
 			set { _dbServerInfo = value; }
 		}
 
+		// 中继服务器情报
+		private ServerInfo _relayServerInfo;
+
+		protected ServerInfo RelayServerInfo
+		{
+			get { return _relayServerInfo; }
+			set { _relayServerInfo = value; }
+		}
+
+		private E_DB_CONNECT_MODE _db_connect_mode;
+
+		public E_DB_CONNECT_MODE Db_connect_mode
+		{
+			get { return _db_connect_mode; }
+			set { _db_connect_mode = value; }
+		}
+
 		// 要更新的UI textBox控件
 		System.Windows.Forms.TextBox _tbxControl = null;
 
@@ -47,10 +64,13 @@ namespace ServiceAreaClientLib
             set { _deviceList = value; }
         }
 
-		public PassengerCounterInquirer(List<PassengerCounterInfo> deviceInfoList, ServerInfo sInfo)
+		public PassengerCounterInquirer(List<PassengerCounterInfo> deviceInfoList, ServerInfo dbServer,
+										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = sInfo;
+			DbServerInfo = dbServer;
+			RelayServerInfo = relayServer;
+			Db_connect_mode = dbConnectMode;
         }
 
 		System.Timers.Timer _timer;

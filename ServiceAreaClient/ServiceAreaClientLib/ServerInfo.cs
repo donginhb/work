@@ -52,5 +52,14 @@ namespace ServiceAreaClientLib
 			User_id = usr;
 			Pass_word = pwd;
 		}
+
     }
+
+	// 数据库的连接方式
+	public enum E_DB_CONNECT_MODE
+	{
+		DIRECT,			// 直接连接
+		RELAY			// 通过中继服务器
+	}
+
 }

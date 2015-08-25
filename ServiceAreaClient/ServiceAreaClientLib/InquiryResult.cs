@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServiceAreaClientLib
 {
-    public class InquiryResult
+    public class ReceiveData
     {
         string _timeStamp;
 

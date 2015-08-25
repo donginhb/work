@@ -11,10 +11,13 @@ namespace ServiceAreaClientLib.DeviceInquirer
 {
 	public class WaterMeterInquirer : ModbusDeviceInquirer
 	{
-		public WaterMeterInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo sInfo)
+		public WaterMeterInquirer(	List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
+									ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = sInfo;
+			DbServerInfo = dbServer;
+			RelayServerInfo = relayServer;
+			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>
@@ -52,7 +55,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				inquirer.Send(sendBytes);
 
 				// 接收设备模块返回的读数查询结果
-				InquiryResult ir = inquirer.Receive();
+				ReceiveData ir = inquirer.Receive();
 				AppendUITextBox("	接收到 " + deviceInfo.DeviceName + " 应答数据: " + ir.RcvLen.ToString() + " 字节.");
 				if ((ir.RcvLen >= 1)
 					&& (deviceInfo.DeviceAddr != ir.RcvBytes[0]))

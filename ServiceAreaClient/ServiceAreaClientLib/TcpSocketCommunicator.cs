@@ -34,9 +34,9 @@ namespace ServiceAreaClientLib
             _socket.Send(sendBytes);
         }
 
-        public InquiryResult Receive()
+        public ReceiveData Receive()
         {
-            InquiryResult ir = new InquiryResult();
+            ReceiveData ir = new ReceiveData();
             byte[] rcvBytes = new byte[1024];
             int bytes = _socket.Receive(rcvBytes, rcvBytes.Length, 0);
             ir.RcvBytes = rcvBytes;

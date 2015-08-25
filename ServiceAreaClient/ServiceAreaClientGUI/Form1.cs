@@ -67,42 +67,74 @@ namespace ServiceAreaClient
         }
 
 //////////////////////////////////////////////////////////////////////////////////
+		private ServerInfo _db_server;		// 数据库服务器信息
+
+		public ServerInfo Db_server
+		{
+			get { return _db_server; }
+			set { _db_server = value; }
+		}
+
+		private ServerInfo _relay_server;	// 中继服务器信息
+
+		public ServerInfo Relay_server
+		{
+			get { return _relay_server; }
+			set { _relay_server = value; }
+		}
+
+		private int _service_area_num;		// 服务区编号
+
+		public int Service_area_num
+		{
+			get { return _service_area_num; }
+			set { _service_area_num = value; }
+		}
+
+		private int _update_period;			// 更新周期(分钟)
+
+		public int Update_period
+		{
+			get { return _update_period; }
+			set { _update_period = value; }
+		}
+
+		// 数据库的连接方式(直接连接数据库服务器, 或者经由中继服务器)
+		private E_DB_CONNECT_MODE _db_connect_mode = E_DB_CONNECT_MODE.DIRECT;
+
+		public E_DB_CONNECT_MODE Db_connect_mode
+		{
+			get { return _db_connect_mode; }
+			set { _db_connect_mode = value; }
+		}
+
 		void InquiryStart()
 		{
 			if ("Start" == btnStart.Text)
 			{
-				if (!CheckUIValue())
-				{
-					return;
-				}
-				string serverHost = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
-				int updatePeriod, serverPort;
-				int.TryParse(tbxUpdatePeriod.Text, out updatePeriod);
-				int.TryParse(tbxPortNum.Text, out serverPort);
-				ServerInfo sInfo = new ServerInfo(serverHost, serverPort, tbxDBName.Text, tbxUsrName.Text, tbxPassword.Text);
                 btnStart.Text = "Stop";
 				UIEnable(false);
 
 				// 1.生成查询设备列表
 				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
 				// 2.查询开始
-				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList, sInfo);
+				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
 				System.Threading.Thread.Sleep(100);
 
 				List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
-				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList, sInfo);
+				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
 				System.Threading.Thread.Sleep(100);
 
 				List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
-				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList, sInfo);
+				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
 				System.Threading.Thread.Sleep(100);
 
 				List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
-				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList, sInfo);
+				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
 				System.Threading.Thread.Sleep(100);
 
 				List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
-				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList, sInfo);
+				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
 				System.Threading.Thread.Sleep(100);
 
 				SaveIniFile();
@@ -141,18 +173,6 @@ namespace ServiceAreaClient
 
         void UIEnable(bool enable)
         {
-            // 文本框
-            tbxIP1.Enabled = enable;
-            tbxIP2.Enabled = enable;
-            tbxIP3.Enabled = enable;
-            tbxIP4.Enabled = enable;
-            tbxPortNum.Enabled = enable;
-            tbxUpdatePeriod.Enabled = enable;
-            tbxServiceAreaNum.Enabled = enable;
-            tbxDBName.Enabled = enable;
-            tbxUsrName.Enabled = enable;
-            tbxPassword.Enabled = enable;
-
             // 列表
             listView1.Enabled = enable;
             listView2.Enabled = enable;
@@ -177,50 +197,10 @@ namespace ServiceAreaClient
             btnDel5.Enabled = enable;
             btnEdit5.Enabled = enable;
 
+			btnSetting.Enabled = enable;
+
 			// 单选框
             cbxAutoStart.Enabled = enable;
-        }
-
-        /// <summary>
-        /// UI参数检查
-        /// </summary>
-        /// <returns></returns>
-        bool CheckUIValue()
-        {
-            if (
-				    !IPValueCheck(tbxIP1.Text)
-                ||  !IPValueCheck(tbxIP2.Text)
-                ||  !IPValueCheck(tbxIP3.Text)
-                ||  !IPValueCheck(tbxIP4.Text))
-            {
-                return false;
-            }
-            int val;
-            if (!int.TryParse(tbxPortNum.Text, out val))
-            {
-                return false;
-            }
-			if (!int.TryParse(tbxUpdatePeriod.Text, out val))
-			{
-				return false;
-			}
-            return true;
-        }
-
-        bool IPValueCheck(string ipStr)
-        {
-            int ipVal;
-            if (    (string.Empty == ipStr)
-                || !int.TryParse(ipStr, out ipVal)  )
-            {
-                return false;
-            }
-            if (    ipVal < 0
-                ||  ipVal > 255 )
-            {
-                return false;
-            }
-            return true;
         }
 
         string GetBytesStr(byte[] bytesArr, int bytesCnt)
@@ -417,10 +397,7 @@ namespace ServiceAreaClient
 				int value;
 				float fvalue;
 				// 服务区编号
-				if (int.TryParse(tbxServiceAreaNum.Text, out value))
-				{
-					deviceInfo.ServiceArea = value;
-				}
+				deviceInfo.ServiceArea = Service_area_num;
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
@@ -472,12 +449,8 @@ namespace ServiceAreaClient
 					paraArr[idx] = subitems.Text.Trim();
 					idx++;
 				}
-				int value;
 				// 服务区编号
-				if (int.TryParse(tbxServiceAreaNum.Text, out value))
-				{
-					deviceInfo.ServiceArea = value;
-				}
+				deviceInfo.ServiceArea = Service_area_num;
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
@@ -512,10 +485,7 @@ namespace ServiceAreaClient
 				}
 				int value;
 				// 服务区编号
-				if (int.TryParse(tbxServiceAreaNum.Text, out value))
-				{
-					deviceInfo.ServiceArea = value;
-				}
+				deviceInfo.ServiceArea = Service_area_num;
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
@@ -569,10 +539,7 @@ namespace ServiceAreaClient
 				int value;
 				float fvalue;
 				// 服务区编号
-				if (int.TryParse(tbxServiceAreaNum.Text, out value))
-				{
-					deviceInfo.ServiceArea = value;
-				}
+				deviceInfo.ServiceArea = Service_area_num;
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
@@ -624,10 +591,7 @@ namespace ServiceAreaClient
 				}
 				int value;
 				// 服务区编号
-				if (int.TryParse(tbxServiceAreaNum.Text, out value))
-				{
-					deviceInfo.ServiceArea = value;
-				}
+				deviceInfo.ServiceArea = Service_area_num;
 				// 设备名称
 				deviceInfo.DeviceName = paraArr[0];
 				// DeviceSN
@@ -658,14 +622,10 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 开始查询
 		/// </summary>
-		private ElectricMeterInquirer ElectricMeterInquiryStart(List<ModbusDeviceInfo> electricMeterList, ServerInfo sInfo)
+		private ElectricMeterInquirer ElectricMeterInquiryStart(List<ModbusDeviceInfo> electricMeterList)
 		{
-            ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, sInfo);
-			int value;
-			if (int.TryParse(tbxUpdatePeriod.Text, out value))
-			{
-				inquirer.CyclePeriod = value;
-			}
+			ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, Db_server, Relay_server, Db_connect_mode);
+			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox1;
 			inquirer.StartInquiry();
 
@@ -681,14 +641,10 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private PassengerCounterInquirer PassengerCounterInquiryStart(List<PassengerCounterInfo> passengerCounterList, ServerInfo sInfo)
+		private PassengerCounterInquirer PassengerCounterInquiryStart(List<PassengerCounterInfo> passengerCounterList)
 		{
-			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, sInfo);
-			int value;
-			if (int.TryParse(tbxUpdatePeriod.Text, out value))
-			{
-				inquirer.CyclePeriod = value;
-			}
+			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, Db_server, Relay_server, Db_connect_mode);
+			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox2;
 			inquirer.StartInquiry();
 
@@ -704,14 +660,10 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private RoomTemperatureInquirer RoomTemperatureInquiryStart(List<ModbusDeviceInfo> roomThermometerList, ServerInfo sInfo)
+		private RoomTemperatureInquirer RoomTemperatureInquiryStart(List<ModbusDeviceInfo> roomThermometerList)
 		{
-			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, sInfo);
-			int value;
-			if (int.TryParse(tbxUpdatePeriod.Text, out value))
-			{
-				inquirer.CyclePeriod = value;
-			}
+			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, Db_server, Relay_server, Db_connect_mode);
+			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox3;
 			inquirer.StartInquiry();
 			return inquirer;
@@ -726,14 +678,10 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private WaterMeterInquirer WaterMeterInquiryStart(List<ModbusDeviceInfo> waterMeterList, ServerInfo sInfo)
+		private WaterMeterInquirer WaterMeterInquiryStart(List<ModbusDeviceInfo> waterMeterList)
 		{
-			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, sInfo);
-			int value;
-			if (int.TryParse(tbxUpdatePeriod.Text, out value))
-			{
-				inquirer.CyclePeriod = value;
-			}
+			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, Db_server, Relay_server, Db_connect_mode);
+			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox4;
 			inquirer.StartInquiry();
 			return inquirer;
@@ -748,14 +696,10 @@ namespace ServiceAreaClient
 			}
 		}
 
-		private WaterTemperatureInquirer WaterTemperatureInquiryStart(List<ModbusDeviceInfo> waterTemperatureList, ServerInfo sInfo)
+		private WaterTemperatureInquirer WaterTemperatureInquiryStart(List<ModbusDeviceInfo> waterTemperatureList)
 		{
-			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, sInfo);
-			int value;
-			if (int.TryParse(tbxUpdatePeriod.Text, out value))
-			{
-				inquirer.CyclePeriod = value;
-			}
+			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, Db_server, Relay_server, Db_connect_mode);
+			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox5;
 			inquirer.StartInquiry();
 			return inquirer;
@@ -775,22 +719,36 @@ namespace ServiceAreaClient
 
 		void LoadIniFile()
 		{
-			string host = IniFile.IniReadValue("DB_SERVER_INFO", "HOST");
-			string[] arr = host.Split('.');
-			if (4 == arr.Length)
+			Db_server = new ServerInfo("", 0, "", "", "");
+			Db_server.Host_name = IniFile.IniReadValue("DB_SERVER_INFO", "HOST");
+			string readStr = IniFile.IniReadValue("DB_SERVER_INFO", "PORT");
+			int value;
+			if (int.TryParse(readStr, out value))
 			{
-				tbxIP1.Text = arr[0];
-				tbxIP2.Text = arr[1];
-				tbxIP3.Text = arr[2];
-				tbxIP4.Text = arr[3];
+				Db_server.Port_num = value;
 			}
-			tbxPortNum.Text = IniFile.IniReadValue("DB_SERVER_INFO", "PORT");
-			tbxDBName.Text = IniFile.IniReadValue("DB_SERVER_INFO", "DB_NAME");
-			tbxUsrName.Text = IniFile.IniReadValue("DB_SERVER_INFO", "USR_NAME");
-			tbxPassword.Text = IniFile.IniReadValue("DB_SERVER_INFO", "PASSWORD");
+			Db_server.Db_name = IniFile.IniReadValue("DB_SERVER_INFO", "DB_NAME");
+			Db_server.User_id = IniFile.IniReadValue("DB_SERVER_INFO", "USR_NAME");
+			Db_server.Pass_word = IniFile.IniReadValue("DB_SERVER_INFO", "PASSWORD");
 
-			tbxServiceAreaNum.Text = IniFile.IniReadValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM");
-			tbxUpdatePeriod.Text = IniFile.IniReadValue("SETTING", "UPDATE_PERIOD");
+			Relay_server = new ServerInfo("", 0, "", "", "");
+			Relay_server.Host_name = IniFile.IniReadValue("RELAY_SERVER_INFO", "HOST");
+			readStr = IniFile.IniReadValue("RELAY_SERVER_INFO", "PORT");
+			if (int.TryParse(readStr, out value))
+			{
+				Relay_server.Port_num = value;
+			}
+
+			readStr = IniFile.IniReadValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM");
+			if (int.TryParse(readStr, out value))
+			{
+				Service_area_num = value;
+			}
+			readStr = IniFile.IniReadValue("SETTING", "UPDATE_PERIOD");
+			if (int.TryParse(readStr, out value))
+			{
+				Update_period = value;
+			}
 
 			string listView1ColNames = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_NAME");
 			string listView1ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_1_COLUMN_WIDTH");
@@ -858,23 +816,21 @@ namespace ServiceAreaClient
 		{
 			try
 			{
-				if (IPValueCheck(tbxIP1.Text)
-					&& IPValueCheck(tbxIP2.Text)
-					&& IPValueCheck(tbxIP3.Text)
-					&& IPValueCheck(tbxIP4.Text))
-				{
-					string host = tbxIP1.Text + "." + tbxIP2.Text + "." + tbxIP3.Text + "." + tbxIP4.Text;
-					IniFile.IniWriteValue("DB_SERVER_INFO", "HOST", host);
-				}
+				IniFile.IniWriteValue("DB_SERVER_INFO", "HOST", Db_server.Host_name);
 
-				IniFile.IniWriteValue("DB_SERVER_INFO", "PORT", tbxPortNum.Text);
-				IniFile.IniWriteValue("DB_SERVER_INFO", "DB_NAME", tbxDBName.Text);
-				IniFile.IniWriteValue("DB_SERVER_INFO", "USR_NAME", tbxUsrName.Text);
-				IniFile.IniWriteValue("DB_SERVER_INFO", "PASSWORD", tbxPassword.Text);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "PORT", Db_server.Port_num.ToString());
+				IniFile.IniWriteValue("DB_SERVER_INFO", "DB_NAME", Db_server.Db_name);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "USR_NAME", Db_server.User_id);
+				IniFile.IniWriteValue("DB_SERVER_INFO", "PASSWORD", Db_server.Pass_word);
 
-				IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", tbxServiceAreaNum.Text);
-				IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", tbxUpdatePeriod.Text);
+				IniFile.IniWriteValue("SERVICE_AREA_INFO", "SERVICE_AREA_NUM", Service_area_num.ToString());
+				IniFile.IniWriteValue("SETTING", "UPDATE_PERIOD", Update_period.ToString());
 				IniFile.IniWriteValue("SETTING", "AUTO_START", cbxAutoStart.Checked.ToString());
+
+				IniFile.IniWriteValue("RELAY_SERVER_INFO", "HOST", Relay_server.Host_name);
+				IniFile.IniWriteValue("RELAY_SERVER_INFO", "PORT", Relay_server.Port_num.ToString());
+
+				IniFile.IniWriteValue("DB_CONNECT_INFO", "CONNECT_MODE", Db_connect_mode.ToString());
 			}
 			catch (Exception ex)
 			{
@@ -897,8 +853,17 @@ namespace ServiceAreaClient
 			btnEdit3_Click(sender, e);
 		}
 
-		private void btnTest_Click(object sender, EventArgs e)
+		private void btnSetting_Click(object sender, EventArgs e)
 		{
+			FormSetting fs = new FormSetting(Db_server, Relay_server, Service_area_num, Update_period);
+			if (DialogResult.OK == fs.ShowDialog())
+			{
+				Db_connect_mode = fs.Db_connect_mode;
+				Db_server = fs.Db_server;
+				Relay_server = fs.Relay_server;
+				Service_area_num = fs.Service_area_num;
+				Update_period = fs.Update_period;
+			}
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
