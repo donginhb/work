@@ -50,11 +50,15 @@ namespace ServiceAreaClientLib
 			di = new DataUnitInfo(); di.Name = "C相功率因数"; di.Offset = 146; di.Length = 2; dataInfoList.Add(di);
 			di = new DataUnitInfo(); di.Name = "总功率因数"; di.Offset = 148; di.Length = 2; dataInfoList.Add(di);
 			di = new DataUnitInfo(); di.Name = "频率"; di.Offset = 150; di.Length = 2; dataInfoList.Add(di);
-			di = new DataUnitInfo(); di.Name = "正向(吸收)有功电能"; di.Offset = 152; di.Length = 4; dataInfoList.Add(di);
-			di = new DataUnitInfo(); di.Name = "反向(释放)有功电能"; di.Offset = 156; di.Length = 4; dataInfoList.Add(di);
-			di = new DataUnitInfo(); di.Name = "感性无功电能"; di.Offset = 160; di.Length = 4; dataInfoList.Add(di);
-			di = new DataUnitInfo(); di.Name = "容性无功电能"; di.Offset = 164; di.Length = 4; dataInfoList.Add(di);
+            //di = new DataUnitInfo(); di.Name = "正向(吸收)有功电能"; di.Offset = 152; di.Length = 4; dataInfoList.Add(di);
+            //di = new DataUnitInfo(); di.Name = "反向(释放)有功电能"; di.Offset = 156; di.Length = 4; dataInfoList.Add(di);
+            //di = new DataUnitInfo(); di.Name = "感性无功电能"; di.Offset = 160; di.Length = 4; dataInfoList.Add(di);
+            //di = new DataUnitInfo(); di.Name = "容性无功电能"; di.Offset = 164; di.Length = 4; dataInfoList.Add(di);
 
+            di = new DataUnitInfo(); di.Name = "正向(吸收)有功电能"; di.Offset = 20; di.Length = 4; dataInfoList.Add(di);
+            di = new DataUnitInfo(); di.Name = "反向(释放)有功电能"; di.Offset = 24; di.Length = 4; dataInfoList.Add(di);
+            di = new DataUnitInfo(); di.Name = "感性无功电能"; di.Offset = 28; di.Length = 4; dataInfoList.Add(di);
+            di = new DataUnitInfo(); di.Name = "容性无功电能"; di.Offset = 32; di.Length = 4; dataInfoList.Add(di);
 			return dataInfoList;
         }
     }

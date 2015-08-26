@@ -98,7 +98,7 @@ namespace ServiceAreaServer
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Trace.WriteLine(ex.ToString());
+                Console.WriteLine(ex.ToString());
 				return false;
 			}
 			return true;

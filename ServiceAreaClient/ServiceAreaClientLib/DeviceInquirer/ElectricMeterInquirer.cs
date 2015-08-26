@@ -90,12 +90,8 @@ namespace ServiceAreaClientLib
 
             string reportStr = GetReportString(inquiryResult, out counter);
 			// 现在只把"正向(吸收)有功电能"即耗电量, 存到数据库表里
-			int idx = reportStr.LastIndexOf(',');
-			string valueStr = "";
-			if (-1 != idx)
-			{
-				valueStr = reportStr.Substring(idx + 1).Trim();
-			}
+            string[] arr = reportStr.Split(',');
+			string valueStr = arr[arr.Length - 4].Trim();
 			int iValue;
 			if (!int.TryParse(valueStr, out iValue))
 			{
