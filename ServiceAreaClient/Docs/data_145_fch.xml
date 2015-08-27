@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ListViewContents>
+  <listView1>
+    <Row_0 Checked="false">
+      <Name>东区总电表</Name>
+      <SpotNumber>001</SpotNumber>
+      <DeviceAddr>25</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>100</Magnification>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>西区开水机</Name>
+      <SpotNumber>002</SpotNumber>
+      <DeviceAddr>31</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_1>
+    <Row_2 Checked="false">
+      <Name>东区路灯</Name>
+      <SpotNumber>003</SpotNumber>
+      <DeviceAddr>28</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_2>
+    <Row_3 Checked="false">
+      <Name>西区餐厅</Name>
+      <SpotNumber>004</SpotNumber>
+      <DeviceAddr>29</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_3>
+    <Row_4 Checked="false">
+      <Name>西区电子屏</Name>
+      <SpotNumber>005</SpotNumber>
+      <DeviceAddr>30</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_4>
+    <Row_5 Checked="false">
+      <Name>东区加油站</Name>
+      <SpotNumber>006</SpotNumber>
+      <DeviceAddr>26</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_5>
+    <Row_6 Checked="false">
+      <Name>东区电子屏</Name>
+      <SpotNumber>017</SpotNumber>
+      <DeviceAddr>27</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_6>
+    <Row_7 Checked="true">
+      <Name>西区锅炉房水泵</Name>
+      <SpotNumber>007</SpotNumber>
+      <DeviceAddr>32</DeviceAddr>
+      <IP>10.62.100.83</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_7>
+  </listView1>
+  <listView2>
+    <Row_0 Checked="false">
+      <Name>西区客流</Name>
+      <SpotNumber>008</SpotNumber>
+      <RequestString1>http://10.62.100.82/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct6.count</RequestString1>
+      <RequestString2>http://10.62.100.82/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct7.count</RequestString2>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>东区客流</Name>
+      <SpotNumber>009</SpotNumber>
+      <RequestString1>http://10.62.100.82/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
+      <RequestString2>http://10.62.100.82/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct3.count</RequestString2>
+    </Row_1>
+  </listView2>
+  <listView3>
+    <Row_0 Checked="false">
+      <Name>东区客房</Name>
+      <SpotNumber>010</SpotNumber>
+      <DeviceAddr>00000000</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>西区客房</Name>
+      <SpotNumber>011</SpotNumber>
+      <DeviceAddr>00000000</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_1>
+    <Row_2 Checked="false">
+      <Name>东区餐厅</Name>
+      <SpotNumber>012</SpotNumber>
+      <DeviceAddr>00000009</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_2>
+    <Row_3 Checked="false">
+      <Name>东区服务大厅</Name>
+      <SpotNumber>013</SpotNumber>
+      <DeviceAddr>00000010</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_3>
+    <Row_4 Checked="false">
+      <Name>西区餐厅</Name>
+      <SpotNumber>004</SpotNumber>
+      <DeviceAddr>00000011</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_4>
+    <Row_5 Checked="false">
+      <Name>西区服务大厅</Name>
+      <SpotNumber>014</SpotNumber>
+      <DeviceAddr>00000012</DeviceAddr>
+      <IP>10.62.100.81</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_5>
+  </listView3>
+  <listView4 />
+  <listView5>
+    <Row_0 Checked="false">
+      <Name>锅炉房进水</Name>
+      <SpotNumber>015</SpotNumber>
+      <DeviceAddr>10</DeviceAddr>
+      <IP>10.62.100.84</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>锅炉房回水</Name>
+      <SpotNumber>016</SpotNumber>
+      <DeviceAddr>11</DeviceAddr>
+      <IP>10.62.100.84</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_1>
+  </listView5>
+</ListViewContents>
