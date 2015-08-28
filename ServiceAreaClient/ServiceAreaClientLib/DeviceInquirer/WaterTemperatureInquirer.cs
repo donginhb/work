@@ -87,13 +87,17 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回值: " + fWaterTemperatureVal.ToString()
 									+ " + (" + deviceInfo.Adjustment.ToString() + ") = " + waterTemperatureVal.ToString());
+
+				// 针对有时水温传感器设备读数会返回一个异常较大的读数进行过滤, 如果读数大于101, 就丢弃该条读数
+				if (waterTemperatureVal > 101)
+				{
+					return;
+				}
 				// 上报给服务器
 				if (!Report2Server(dateTimeStr, waterTemperatureVal, deviceInfo))
                 {
                     AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
                 }
-
-				// TODO:保存到本地
 			}
 			catch (Exception ex)
 			{
