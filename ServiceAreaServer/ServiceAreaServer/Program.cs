@@ -33,7 +33,6 @@ namespace ServiceAreaServer
 			// 读设定文件
 			LoadIniFile();
 
-			byte[] data = new byte[1024];									// 用于缓存客户端所发送的信息,通过socket传递的信息必须为字节数组
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);			// 本机预使用的IP和端口
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
