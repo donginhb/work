@@ -118,6 +118,44 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
+		protected bool Report2Server(string insertStr, ModbusDeviceInfo deviceInfo)
+		{
+			try
+			{
+				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+				{
+					// 直接写入数据库
+					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+					mysql_object.ExecuteMySqlCommand(insertStr);
+				}
+				else
+				{
+					// 通过中继服务器
+					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+					reporter.Send(Encoding.ASCII.GetBytes(insertStr));
+					// 取得中继服务器回复的应答
+					ReceiveData rd = reporter.Receive();
+					string rspStr = Encoding.ASCII.GetString(rd.RcvBytes, 0, rd.RcvLen);
+					AppendUITextBox("	" + deviceInfo.DeviceName + " 中继服务器返回应答: " + rspStr);
+					if (rspStr.ToLower().Equals("report confirmed"))
+					{
+					}
+					reporter.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
+			finally
+			{
+				;
+			}
+			return true;
+		}
+
         virtual protected void InquiryTask(ModbusDeviceInfo deviceInfo)
         {
             AppendUITextBox("这里是基类的方法呀呀呀!!!!");

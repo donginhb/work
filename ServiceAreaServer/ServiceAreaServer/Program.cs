@@ -61,17 +61,17 @@ namespace ServiceAreaServer
 					if (ClientMsgProcess(recvStr))
 					{
 						Console.WriteLine("☆☆☆ Process OK! ☆☆☆");
-						sendStr = "Server receive OK!";
+						sendStr = "Report Confirmed";
 					}
 					else
 					{
 						Console.WriteLine("※※※ Process Fail! ※※※");
-						sendStr = "Server receive Fail!";
+						sendStr = "Report Fail";
 					}
 
 					// 给Client端返回信息
 					byte[] bs = Encoding.ASCII.GetBytes(sendStr);
-					//cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
+					cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
 					cSocket.Close();
 
 					// System.Threading.Thread.Sleep(1000);

@@ -91,13 +91,19 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				// 针对有时水温传感器设备读数会返回一个异常较大的读数进行过滤, 如果读数大于101, 就丢弃该条读数
 				if (waterTemperatureVal > 101)
 				{
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 温度值异常! 数据丢弃.");
 					return;
 				}
 				// 上报给服务器
-				if (!Report2Server(dateTimeStr, waterTemperatureVal, deviceInfo))
+				string insertStr = GetReportString(dateTimeStr, waterTemperatureVal, deviceInfo);
+				if (	Report2Server(insertStr, deviceInfo)	)
                 {
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
-                }
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + waterTemperatureVal.ToString());
+				}
+				else
+				{
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -110,7 +116,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
-		bool Report2Server(string dateTimeStr, float waterTemperatureVal, ModbusDeviceInfo deviceInfo)
+		public static string GetReportString(string dateTimeStr, float waterTemperatureVal, ModbusDeviceInfo deviceInfo)
 		{
 			string reportStr = waterTemperatureVal.ToString();
 			// 水温的设备种类编码是005
@@ -118,29 +124,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
 			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('"
 									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
-			try
-			{
-                if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
-                {
-                    DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-                    mysql_object.ExecuteMySqlCommand(insertStr);
-                }
-                else
-                {
-                    // 通过中继服务器
-                    TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-                    reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-                    reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-                    reporter.Close();
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
-                }
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Trace.WriteLine(ex.ToString());
-				return false;
-			}
-			return true;
+			return insertStr;
 		}
 
 	}
