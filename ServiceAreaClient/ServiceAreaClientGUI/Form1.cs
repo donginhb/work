@@ -16,27 +16,32 @@ namespace ServiceAreaClient
 {
     public partial class Form1 : Form
     {
+		/// <summary>
+		/// 构造函数
+		/// </summary>
         public Form1()
         {
             InitializeComponent();
             UIInit();
         }
 
-        ElectricMeterInquirer _electricMeterInquirer = null;
+		#region 全部字段
 
-        public ElectricMeterInquirer ElectricMeterInquirer
-        {
-            get { return _electricMeterInquirer; }
-            set { _electricMeterInquirer = value; }
-        }
+		ElectricMeterInquirer _electricMeterInquirer = null;
+
+		public ElectricMeterInquirer ElectricMeterInquirer
+		{
+			get { return _electricMeterInquirer; }
+			set { _electricMeterInquirer = value; }
+		}
 
 		PassengerCounterInquirer _passengerCounterInquirer = null;
 
 		public PassengerCounterInquirer PassengerCounterInquirer
-        {
-            get { return _passengerCounterInquirer; }
-            set { _passengerCounterInquirer = value; }
-        }
+		{
+			get { return _passengerCounterInquirer; }
+			set { _passengerCounterInquirer = value; }
+		}
 
 		RoomTemperatureInquirer _roomTemperatureInquirer = null;
 
@@ -61,12 +66,6 @@ namespace ServiceAreaClient
 			set { _waterTemperatureInquirer = value; }
 		}
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-			InquiryStart();
-        }
-
-//////////////////////////////////////////////////////////////////////////////////
 		private ServerInfo _db_server;		// 数据库服务器信息
 
 		public ServerInfo Db_server
@@ -108,138 +107,50 @@ namespace ServiceAreaClient
 			set { _db_connect_mode = value; }
 		}
 
-		void InquiryStart()
+		// 数据库各个表的名称列表
+		private List<string> _db_table_list = new List<string>();
+
+		public List<string> Db_table_list
 		{
-			if ("Start" == btnStart.Text)
+			get { return _db_table_list; }
+			set { _db_table_list = value; }
+		}
+
+		#endregion
+
+		#region UI按钮处理
+
+		/// <summary>
+		/// Start/Stop按钮
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnStart_Click(object sender, EventArgs e)
+		{
+			InquiryStart();
+		}
+
+		/// <summary>
+		/// 设定窗体
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnSetting_Click(object sender, EventArgs e)
+		{
+			FormSetting fs = new FormSetting(Db_server, Relay_server, Service_area_num, Update_period, Db_connect_mode);
+			if (DialogResult.OK == fs.ShowDialog())
 			{
-                btnStart.Text = "Stop";
-				UIEnable(false);
-
-				// 1.生成查询设备列表
-				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
-				// 2.查询开始
-				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
-				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
-				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
-				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
-				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
-				System.Threading.Thread.Sleep(100);
-
-				SaveIniFile();
-			}
-			else
-			{
-				// 停止查询
-				ElectricMeterInquiryStop(ElectricMeterInquirer);
-				PassengerCounterInquiryStop(PassengerCounterInquirer);
-				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-                WaterMeterInquiryStop(WaterMeterInquirer);
-                WaterTemperatureInquiryStop(WaterTemperatureInquirer);
-
-                btnStart.Text = "Start";
-				UIEnable(true);
+				Db_connect_mode = fs.Db_connect_mode;
+				Db_server = fs.Db_server;
+				Relay_server = fs.Relay_server;
+				Service_area_num = fs.Service_area_num;
+				Update_period = fs.Update_period;
 			}
 		}
 
-        /// <summary>
-        /// UI控件初始化
-        /// </summary>
-        void UIInit()
-        {
-			// 读取INI文件
-			LoadIniFile();
+		#endregion
 
-			// 读取XML文件初始化ListView
-			List<ListView> ctrlList = new List<ListView>();
-			ctrlList.Add(listView1);
-			ctrlList.Add(listView2);
-			ctrlList.Add(listView3);
-			ctrlList.Add(listView4);
-			ctrlList.Add(listView5);
-			XmlFile.LoadListViewItems(ctrlList);
-        }
-
-        void UIEnable(bool enable)
-        {
-            // 列表
-            listView1.Enabled = enable;
-            listView2.Enabled = enable;
-            listView3.Enabled = enable;
-            listView4.Enabled = enable;
-            listView5.Enabled = enable;
-
-            // 按钮
-            btnAdd1.Enabled = enable;
-            btnDel1.Enabled = enable;
-            btnEdit1.Enabled = enable;
-            btnAdd2.Enabled = enable;
-            btnDel2.Enabled = enable;
-            btnEdit2.Enabled = enable;
-            btnAdd3.Enabled = enable;
-            btnDel3.Enabled = enable;
-            btnEdit3.Enabled = enable;
-            btnAdd4.Enabled = enable;
-            btnDel4.Enabled = enable;
-            btnEdit4.Enabled = enable;
-            btnAdd5.Enabled = enable;
-            btnDel5.Enabled = enable;
-            btnEdit5.Enabled = enable;
-
-			btnSetting.Enabled = enable;
-
-			// 单选框
-            cbxAutoStart.Enabled = enable;
-        }
-
-        string GetBytesStr(byte[] bytesArr, int bytesCnt)
-        {
-            string retStr = "";
-            for (int i = 0; i < bytesCnt; i++)
-            {
-                retStr += string.Format("{0:X2}", bytesArr[i]);
-                if (i != bytesCnt - 1)
-                {
-                    retStr += " ";
-                }
-            }
-            return retStr;
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // 如果处于查询过程中, 要停止查询
-            ElectricMeterInquiryStop(ElectricMeterInquirer);
-            PassengerCounterInquiryStop(PassengerCounterInquirer);
-            RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-            WaterMeterInquiryStop(WaterMeterInquirer);
-            WaterTemperatureInquiryStop(WaterTemperatureInquirer);
-
-			SaveIniFile();
-            SaveListViewContents();
-        }
-
-		private void SaveListViewContents()
-		{
-			List<ListView> ctrlList = new List<ListView>();
-			ctrlList.Add(listView1);
-			ctrlList.Add(listView2);
-			ctrlList.Add(listView3);
-			ctrlList.Add(listView4);
-			ctrlList.Add(listView5);
-			XmlFile.SaveListViewItems(ctrlList);
-		}
+		#region ListView控件右侧的"添加, 删除, 编辑"按钮事件
 
 		private void btnAdd1_Click(object sender, EventArgs e)
 		{
@@ -375,9 +286,178 @@ namespace ServiceAreaClient
 			}
 		}
 
+		private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit1_Click(sender, e);
+		}
+
+		private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit2_Click(sender, e);
+		}
+
+		private void listView3_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit3_Click(sender, e);
+		}
+		private void listView4_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit4_Click(sender, e);
+		}
+
+		private void listView5_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			btnEdit5_Click(sender, e);
+		}
+
+		#endregion
+
+		#region 代理 & 事件
+		public delegate void UpdateEventHandler();
+		public event UpdateEventHandler OnUpdate;
+		#endregion
+
+		//////////////////////////////////////////////////////////////////////////////////
+
+		/// <summary>
+		/// 查询开始/终止
+		/// </summary>
+		void InquiryStart()
+		{
+			if ("Start" == btnStart.Text)
+			{
+                btnStart.Text = "Stop";
+				UIEnable(false);
+
+				// 1.生成查询设备列表
+				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
+				// 2.查询开始
+				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
+				System.Threading.Thread.Sleep(100);
+
+				List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
+				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
+				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
+				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
+				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
+				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
+				System.Threading.Thread.Sleep(100);
+
+				List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
+				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
+				System.Threading.Thread.Sleep(100);
+
+				SaveIniFile();
+			}
+			else
+			{
+				// 停止查询
+				ElectricMeterInquiryStop(ElectricMeterInquirer);
+				PassengerCounterInquiryStop(PassengerCounterInquirer);
+				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
+                WaterMeterInquiryStop(WaterMeterInquirer);
+                WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+
+                btnStart.Text = "Start";
+				UIEnable(true);
+			}
+		}
+
+        /// <summary>
+        /// UI控件初始化
+        /// </summary>
+        void UIInit()
+        {
+			// 读取INI文件
+			LoadIniFile();
+
+			// 读取XML文件初始化ListView
+			List<ListView> ctrlList = new List<ListView>();
+			ctrlList.Add(listView1);
+			ctrlList.Add(listView2);
+			ctrlList.Add(listView3);
+			ctrlList.Add(listView4);
+			ctrlList.Add(listView5);
+			XmlFile.LoadListViewItems(ctrlList);
+        }
+
+		/// <summary>
+		/// UI控件有效/无效状态设定
+		/// </summary>
+		/// <param name="enable"></param>
+        void UIEnable(bool enable)
+        {
+            // 列表
+            listView1.Enabled = enable;
+            listView2.Enabled = enable;
+            listView3.Enabled = enable;
+            listView4.Enabled = enable;
+            listView5.Enabled = enable;
+
+            // 按钮
+            btnAdd1.Enabled = enable;
+            btnDel1.Enabled = enable;
+            btnEdit1.Enabled = enable;
+            btnAdd2.Enabled = enable;
+            btnDel2.Enabled = enable;
+            btnEdit2.Enabled = enable;
+            btnAdd3.Enabled = enable;
+            btnDel3.Enabled = enable;
+            btnEdit3.Enabled = enable;
+            btnAdd4.Enabled = enable;
+            btnDel4.Enabled = enable;
+            btnEdit4.Enabled = enable;
+            btnAdd5.Enabled = enable;
+            btnDel5.Enabled = enable;
+            btnEdit5.Enabled = enable;
+
+			btnSetting.Enabled = enable;
+
+			// 单选框
+            cbxAutoStart.Enabled = enable;
+        }
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			if (cbxAutoStart.Checked)
+			{
+				System.Threading.Thread.Sleep(5000);
+				InquiryStart();
+			}
+		}
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 如果处于查询过程中, 要停止查询
+            ElectricMeterInquiryStop(ElectricMeterInquirer);
+            PassengerCounterInquiryStop(PassengerCounterInquirer);
+            RoomTemperatureInquiryStop(RoomTemperatureInquirer);
+            WaterMeterInquiryStop(WaterMeterInquirer);
+            WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+
+			SaveIniFile();
+            SaveListViewContents();
+        }
+
+		private void SaveListViewContents()
+		{
+			List<ListView> ctrlList = new List<ListView>();
+			ctrlList.Add(listView1);
+			ctrlList.Add(listView2);
+			ctrlList.Add(listView3);
+			ctrlList.Add(listView4);
+			ctrlList.Add(listView5);
+			XmlFile.SaveListViewItems(ctrlList);
+		}
+
+		#region 创建各种类型设备的查询列表
 		private List<ModbusDeviceInfo> CreateElectricMeterList()
 		{
-			List<ModbusDeviceInfo>  electricMeterList = new List<ModbusDeviceInfo>();
+			List<ModbusDeviceInfo> electricMeterList = new List<ModbusDeviceInfo>();
 			// 遍历ListView控件取得各个查询设备的参数情报
 			// 首先是电表
 			foreach (ListViewItem item in listView1.Items)
@@ -419,7 +499,7 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.Magnification = fvalue;
 				}
-				deviceInfo.DbTableName = _db_table_list[0];
+				deviceInfo.DbTableName = Db_table_list[0];
 
 				// 电表的量纲默认是100
 				deviceInfo.Magnitude = 100;
@@ -459,7 +539,7 @@ namespace ServiceAreaClient
 				deviceInfo.RequestString1 = paraArr[2];
 				deviceInfo.RequestString2 = paraArr[3];
 				// 数据库中对应的表名
-				deviceInfo.DbTableName = _db_table_list[1];
+				deviceInfo.DbTableName = Db_table_list[1];
 
 				passengerCounterList.Add(deviceInfo);
 			}
@@ -502,14 +582,14 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.PortNum = value;
 				}
-                // 校正值
-                float fAdjustment = 0;
-                if (float.TryParse(paraArr[5], out fAdjustment))
-                {
-                    deviceInfo.Adjustment = fAdjustment;
-                }
+				// 校正值
+				float fAdjustment = 0;
+				if (float.TryParse(paraArr[5], out fAdjustment))
+				{
+					deviceInfo.Adjustment = fAdjustment;
+				}
 				// 数据库中对应的表名
-				deviceInfo.DbTableName = _db_table_list[2];
+				deviceInfo.DbTableName = Db_table_list[2];
 
 				// 室温的量纲默认是100
 				deviceInfo.Magnitude = 100;
@@ -562,7 +642,7 @@ namespace ServiceAreaClient
 					deviceInfo.Magnification = fvalue;
 				}
 				// 数据库中对应的表名
-				deviceInfo.DbTableName = _db_table_list[3];
+				deviceInfo.DbTableName = Db_table_list[3];
 
 				// 水表的量纲默认是10
 				deviceInfo.Magnitude = 10;
@@ -609,7 +689,7 @@ namespace ServiceAreaClient
 					deviceInfo.PortNum = value;
 				}
 				// 数据库中对应的表名
-				deviceInfo.DbTableName = _db_table_list[4];
+				deviceInfo.DbTableName = Db_table_list[4];
 
 				// 水温的量纲默认是10
 				deviceInfo.Magnitude = 10;
@@ -618,6 +698,10 @@ namespace ServiceAreaClient
 			}
 			return waterTemperatureMeterList;
 		}
+		
+		#endregion
+
+		#region 各种类型设备的查询开始/结束(InquiryStart/InquiryStop)动作
 
 		/// <summary>
 		/// 开始查询
@@ -632,7 +716,7 @@ namespace ServiceAreaClient
 			return inquirer;
 		}
 
-        void ElectricMeterInquiryStop(ElectricMeterInquirer inqurier)
+		void ElectricMeterInquiryStop(ElectricMeterInquirer inqurier)
 		{
 			if (null != inqurier)
 			{
@@ -713,9 +797,8 @@ namespace ServiceAreaClient
 				inqurier = null;
 			}
 		}
-
-		// 数据库各个表的名称列表
-		private List<string> _db_table_list = new List<string>();
+		
+		#endregion
 
 		void LoadIniFile()
 		{
@@ -780,12 +863,12 @@ namespace ServiceAreaClient
 			string listView5ColWidths = IniFile.IniReadValue("LISTVIEW_COLUMN", "LISTVIEW_5_COLUMN_WIDTH");
 			AddListViewColumns(listView5, listView5ColNames, listView5ColWidths);
 
-			_db_table_list = new List<string>();
-			string table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_1"); _db_table_list.Add(table_name);
-			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_2"); _db_table_list.Add(table_name);
-			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_3"); _db_table_list.Add(table_name);
-			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_4"); _db_table_list.Add(table_name);
-			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_5"); _db_table_list.Add(table_name);
+			Db_table_list = new List<string>();
+			string table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_1"); Db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_2"); Db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_3"); Db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_4"); Db_table_list.Add(table_name);
+			table_name = IniFile.IniReadValue("DB_TABLE_NAME", "DB_TABLE_5"); Db_table_list.Add(table_name);
 
 			string autoStartStr = IniFile.IniReadValue("SETTING", "AUTO_START");
 			if ("true" == autoStartStr.ToLower())
@@ -845,43 +928,6 @@ namespace ServiceAreaClient
 			catch (Exception ex)
 			{
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
-			}
-		}
-
-		private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			btnEdit1_Click(sender, e);
-		}
-
-		private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			btnEdit2_Click(sender, e);
-		}
-
-		private void listView3_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			btnEdit3_Click(sender, e);
-		}
-
-		private void btnSetting_Click(object sender, EventArgs e)
-		{
-            FormSetting fs = new FormSetting(Db_server, Relay_server, Service_area_num, Update_period, Db_connect_mode);
-			if (DialogResult.OK == fs.ShowDialog())
-			{
-				Db_connect_mode = fs.Db_connect_mode;
-				Db_server = fs.Db_server;
-				Relay_server = fs.Relay_server;
-				Service_area_num = fs.Service_area_num;
-				Update_period = fs.Update_period;
-			}
-		}
-
-		private void Form1_Load(object sender, EventArgs e)
-		{
-			if (cbxAutoStart.Checked)
-			{
-                System.Threading.Thread.Sleep(5000);
-                InquiryStart();
 			}
 		}
 

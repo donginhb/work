@@ -140,6 +140,24 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					AppendUITextBox("	" + deviceInfo.DeviceName + " 中继服务器返回应答: " + rspStr);
 					if (rspStr.ToLower().Equals("report confirmed"))
 					{
+						// 正常的确认应答
+					}
+					else if (rspStr.ToLower().Equals("update program"))
+					{
+						// 更新程序要求
+						// 启动更新程序
+						// 自身Close退出
+					}
+					else if (rspStr.ToLower().Equals("update config"))
+					{
+						// 更新config要求
+					}
+					else if (rspStr.ToLower().Equals("update data setting"))
+					{
+						// 更新data setting要求
+					}
+					else
+					{
 					}
 					reporter.Close();
 				}

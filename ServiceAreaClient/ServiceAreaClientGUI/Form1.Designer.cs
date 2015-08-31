@@ -367,7 +367,7 @@
 			this.listView4.TabIndex = 6;
 			this.listView4.UseCompatibleStateImageBehavior = false;
 			this.listView4.View = System.Windows.Forms.View.Details;
-			this.listView4.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView3_MouseDoubleClick);
+			this.listView4.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView4_MouseDoubleClick);
 			// 
 			// textBox4
 			// 
@@ -453,7 +453,7 @@
 			this.listView5.TabIndex = 6;
 			this.listView5.UseCompatibleStateImageBehavior = false;
 			this.listView5.View = System.Windows.Forms.View.Details;
-			this.listView5.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView3_MouseDoubleClick);
+			this.listView5.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView5_MouseDoubleClick);
 			// 
 			// btnSetting
 			// 
