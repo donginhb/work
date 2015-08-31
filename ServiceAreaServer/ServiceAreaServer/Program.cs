@@ -33,16 +33,16 @@ namespace ServiceAreaServer
 			// 读设定文件
 			LoadIniFile();
 
-			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);			// 本机预使用的IP和端口
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);				// 本机预使用的IP和端口
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			try
-			{
-				sSocket.Bind(ipep);												// 绑定
-				sSocket.Listen(10);												// 监听
+			sSocket.Bind(ipep);													// 绑定
+			sSocket.Listen(10);													// 监听
 
-				// 第一层的主循环, 循环接收来自各个客户端的数据
-				while (true)
+			// 第一层的主循环, 循环接收来自各个客户端的数据
+			while (true)
+			{
+				try
 				{
 					Console.WriteLine("Waiting for a client");
 					Socket cSocket = sSocket.Accept();							// 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
@@ -76,15 +76,15 @@ namespace ServiceAreaServer
 
 					// System.Threading.Thread.Sleep(1000);
 				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+				finally
+				{
+				}
 			}
-			catch (Exception ex)
-			{
-                Console.WriteLine(ex.ToString());
-			}
-			finally
-			{
-				sSocket.Close();
-			}
+			//sSocket.Close();
 		}
 
 		private static bool ClientMsgProcess(string clientMsg)

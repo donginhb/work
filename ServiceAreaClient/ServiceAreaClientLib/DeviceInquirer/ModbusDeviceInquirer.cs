@@ -9,6 +9,8 @@ using System.Net;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
+	public delegate void UpdateEventHandler();
+
 	public class ModbusDeviceInquirer
 	{
 		// 要查询的设备列表
@@ -66,11 +68,20 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		protected System.Timers.Timer _timer;
 
+		UpdateEventHandler _updateDelegate;
+
+		public UpdateEventHandler UpdateDelegate
+		{
+			get { return _updateDelegate; }
+			set { _updateDelegate = value; }
+		}
+
 		/// <summary>
 		/// 查询开始
 		/// </summary>
-		public void StartInquiry()
+		public void StartInquiry(UpdateEventHandler ud)
 		{
+			UpdateDelegate = ud;
 			// 启动timer
 			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
 			_timer.AutoReset = false;
@@ -146,7 +157,8 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					{
 						// 更新程序要求
 						// 启动更新程序
-						// 自身Close退出
+						// 主Form Close退出
+						UpdateDelegate();
 					}
 					else if (rspStr.ToLower().Equals("update config"))
 					{
@@ -158,6 +170,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					}
 					else
 					{
+						UpdateDelegate.Invoke();
 					}
 					reporter.Close();
 				}

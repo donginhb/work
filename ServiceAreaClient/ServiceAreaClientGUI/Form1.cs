@@ -23,7 +23,8 @@ namespace ServiceAreaClient
         {
             InitializeComponent();
             UIInit();
-        }
+			updateDelegate = new UpdateEventHandler(OnUpdateEventProcess);
+		}
 
 		#region 全部字段
 
@@ -313,8 +314,7 @@ namespace ServiceAreaClient
 		#endregion
 
 		#region 代理 & 事件
-		public delegate void UpdateEventHandler();
-		public event UpdateEventHandler OnUpdate;
+		UpdateEventHandler updateDelegate;
 		#endregion
 
 		//////////////////////////////////////////////////////////////////////////////////
@@ -711,7 +711,7 @@ namespace ServiceAreaClient
 			ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox1;
-			inquirer.StartInquiry();
+			inquirer.StartInquiry(updateDelegate);
 
 			return inquirer;
 		}
@@ -730,7 +730,7 @@ namespace ServiceAreaClient
 			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox2;
-			inquirer.StartInquiry();
+			inquirer.StartInquiry(updateDelegate);
 
 			return inquirer;
 		}
@@ -749,7 +749,7 @@ namespace ServiceAreaClient
 			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox3;
-			inquirer.StartInquiry();
+			inquirer.StartInquiry(updateDelegate);
 			return inquirer;
 		}
 
@@ -767,7 +767,7 @@ namespace ServiceAreaClient
 			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox4;
-			inquirer.StartInquiry();
+			inquirer.StartInquiry(updateDelegate);
 			return inquirer;
 		}
 
@@ -785,7 +785,7 @@ namespace ServiceAreaClient
 			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox5;
-			inquirer.StartInquiry();
+			inquirer.StartInquiry(updateDelegate);
 			return inquirer;
 		}
 
@@ -931,5 +931,15 @@ namespace ServiceAreaClient
 			}
 		}
 
+		/// <summary>
+		/// 程序更新事件处理
+		/// </summary>
+		void OnUpdateEventProcess()
+		{
+			// 启动更新程序
+			// 自身关闭退出
+			MessageBox.Show("我感受到Update事件发生了!");
+			this.Close();
+		}
 	}
 }

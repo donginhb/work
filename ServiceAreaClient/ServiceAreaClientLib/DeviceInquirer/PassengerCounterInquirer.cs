@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
 
-namespace ServiceAreaClientLib
+namespace ServiceAreaClientLib.DeviceInquirer
 {
 	public class PassengerCounterInquirer
 	{
@@ -75,11 +75,20 @@ namespace ServiceAreaClientLib
 
 		System.Timers.Timer _timer;
 
+		UpdateEventHandler _updateDelegate;
+
+		public UpdateEventHandler UpdateDelegate
+		{
+			get { return _updateDelegate; }
+			set { _updateDelegate = value; }
+		}
+
 		/// <summary>
 		/// 查询开始
 		/// </summary>
-		public void StartInquiry()
+		public void StartInquiry(UpdateEventHandler ud)
 		{
+			UpdateDelegate = ud;
 			// 启动timer
 			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
 			_timer.AutoReset = false;
@@ -188,8 +197,25 @@ namespace ServiceAreaClientLib
 					if (rspStr.ToLower().Equals("report confirmed"))
 					{
 					}
+					else if (rspStr.ToLower().Equals("update program"))
+					{
+						// 更新程序要求
+						// 启动更新程序
+						// 主Form Close退出
+						UpdateDelegate();
+					}
+					else if (rspStr.ToLower().Equals("update config"))
+					{
+						// 更新config要求
+					}
+					else if (rspStr.ToLower().Equals("update data setting"))
+					{
+						// 更新data setting要求
+					}
+					else
+					{
+					}
 					reporter.Close();
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
                 }
 			}
 			catch (Exception ex)
