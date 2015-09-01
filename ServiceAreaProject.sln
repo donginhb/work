@@ -3,16 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientGUI", "ServiceAreaClientGUI\ServiceAreaClientGUI.csproj", "{C1669763-10CB-4868-9C28-C227A78BA053}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientGUI", "ServiceAreaClient\ServiceAreaClientGUI\ServiceAreaClientGUI.csproj", "{C1669763-10CB-4868-9C28-C227A78BA053}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE} = {8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientLib", "ServiceAreaClientLib\ServiceAreaClientLib.csproj", "{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaClientLib", "ServiceAreaClient\ServiceAreaClientLib\ServiceAreaClientLib.csproj", "{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{DD83334A-B94E-482A-AD9A-F7DD3AB4B028}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaServer", "ServiceAreaServer\ServiceAreaServer\ServiceAreaServer.csproj", "{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaServer", "..\ServiceAreaServer\ServiceAreaServer\ServiceAreaServer.csproj", "{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterClient", "UpdaterClient\UpdaterClient\UpdaterClient.csproj", "{87E9CBC4-B2AE-461B-9248-1BA8D389339A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterServer", "UpdaterServer\UpdaterServer\UpdaterServer.csproj", "{E810A933-914E-4310-8A80-C1E6F850EE76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,14 +30,18 @@ Global
 		{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EFC28F5-3BBD-4BDD-AA99-8DA244E9A4BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD83334A-B94E-482A-AD9A-F7DD3AB4B028}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD83334A-B94E-482A-AD9A-F7DD3AB4B028}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD83334A-B94E-482A-AD9A-F7DD3AB4B028}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD83334A-B94E-482A-AD9A-F7DD3AB4B028}.Release|Any CPU.Build.0 = Release|Any CPU
 		{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29381E52-8A1A-43C8-9B25-C0BD5E76FFC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E9CBC4-B2AE-461B-9248-1BA8D389339A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87E9CBC4-B2AE-461B-9248-1BA8D389339A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E9CBC4-B2AE-461B-9248-1BA8D389339A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87E9CBC4-B2AE-461B-9248-1BA8D389339A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E810A933-914E-4310-8A80-C1E6F850EE76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E810A933-914E-4310-8A80-C1E6F850EE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E810A933-914E-4310-8A80-C1E6F850EE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E810A933-914E-4310-8A80-C1E6F850EE76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

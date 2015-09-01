@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using System.Net;
 using ServiceAreaClientLib;
 using ServiceAreaClientLib.DeviceInquirer;
+using System.Threading;
+using System.Net.Sockets;
 
 namespace ServiceAreaClient
 {
@@ -23,7 +25,6 @@ namespace ServiceAreaClient
         {
             InitializeComponent();
             UIInit();
-			updateDelegate = new UpdateEventHandler(OnUpdateEventProcess);
 		}
 
 		#region 全部字段
@@ -117,6 +118,15 @@ namespace ServiceAreaClient
 			set { _db_table_list = value; }
 		}
 
+		// 用以监听消息的线程
+		Thread _listenerThread;
+
+		public Thread ListenerThread
+		{
+			get { return _listenerThread; }
+			set { _listenerThread = value; }
+		}
+
 		#endregion
 
 		#region UI按钮处理
@@ -128,7 +138,7 @@ namespace ServiceAreaClient
 		/// <param name="e"></param>
 		private void btnStart_Click(object sender, EventArgs e)
 		{
-			InquiryStart();
+			DoInquiry();
 		}
 
 		/// <summary>
@@ -313,58 +323,65 @@ namespace ServiceAreaClient
 
 		#endregion
 
-		#region 代理 & 事件
-		UpdateEventHandler updateDelegate;
-		#endregion
-
 		//////////////////////////////////////////////////////////////////////////////////
 
 		/// <summary>
 		/// 查询开始/终止
 		/// </summary>
-		void InquiryStart()
+		void DoInquiry()
 		{
 			if ("Start" == btnStart.Text)
 			{
                 btnStart.Text = "Stop";
-				UIEnable(false);
-
-				// 1.生成查询设备列表
-				List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
-				// 2.查询开始
-				ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
-				PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
-				RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
-				WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
-				System.Threading.Thread.Sleep(100);
-
-				List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
-				WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
-				System.Threading.Thread.Sleep(100);
-
+				// 开始查询
+				InquiryStart();
 				SaveIniFile();
+				// 启动一个线程, 监听1982端口
+				ListenerThread = new Thread(new ThreadStart(ListenerMain));
+				ListenerThread.Start();
+				UIEnable(false);
 			}
 			else
 			{
 				// 停止查询
-				ElectricMeterInquiryStop(ElectricMeterInquirer);
-				PassengerCounterInquiryStop(PassengerCounterInquirer);
-				RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-                WaterMeterInquiryStop(WaterMeterInquirer);
-                WaterTemperatureInquiryStop(WaterTemperatureInquirer);
-
+				InquiryStop();
                 btnStart.Text = "Start";
 				UIEnable(true);
 			}
+		}
+
+		void InquiryStart()
+		{
+			// 1.生成查询设备列表
+			List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
+			// 2.查询开始
+			ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
+			System.Threading.Thread.Sleep(100);
+
+			List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
+			PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
+			System.Threading.Thread.Sleep(100);
+
+			List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
+			RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
+			System.Threading.Thread.Sleep(100);
+
+			List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
+			WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
+			System.Threading.Thread.Sleep(100);
+
+			List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
+			WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
+			System.Threading.Thread.Sleep(100);
+		}
+		void InquiryStop()
+		{
+			ElectricMeterInquiryStop(ElectricMeterInquirer);
+			PassengerCounterInquiryStop(PassengerCounterInquirer);
+			RoomTemperatureInquiryStop(RoomTemperatureInquirer);
+			WaterMeterInquiryStop(WaterMeterInquirer);
+			WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+
 		}
 
         /// <summary>
@@ -426,21 +443,20 @@ namespace ServiceAreaClient
 			if (cbxAutoStart.Checked)
 			{
 				System.Threading.Thread.Sleep(5000);
-				InquiryStart();
+				DoInquiry();
 			}
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             // 如果处于查询过程中, 要停止查询
-            ElectricMeterInquiryStop(ElectricMeterInquirer);
-            PassengerCounterInquiryStop(PassengerCounterInquirer);
-            RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-            WaterMeterInquiryStop(WaterMeterInquirer);
-            WaterTemperatureInquiryStop(WaterTemperatureInquirer);
-
+			InquiryStop();
 			SaveIniFile();
             SaveListViewContents();
+			//if (ListenerThread.IsAlive)
+			//{
+			//	ListenerThread.Abort();
+			//}
         }
 
 		private void SaveListViewContents()
@@ -711,7 +727,7 @@ namespace ServiceAreaClient
 			ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox1;
-			inquirer.StartInquiry(updateDelegate);
+			inquirer.StartInquiry();
 
 			return inquirer;
 		}
@@ -730,7 +746,7 @@ namespace ServiceAreaClient
 			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox2;
-			inquirer.StartInquiry(updateDelegate);
+			inquirer.StartInquiry();
 
 			return inquirer;
 		}
@@ -749,7 +765,7 @@ namespace ServiceAreaClient
 			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox3;
-			inquirer.StartInquiry(updateDelegate);
+			inquirer.StartInquiry();
 			return inquirer;
 		}
 
@@ -767,7 +783,7 @@ namespace ServiceAreaClient
 			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox4;
-			inquirer.StartInquiry(updateDelegate);
+			inquirer.StartInquiry();
 			return inquirer;
 		}
 
@@ -785,7 +801,7 @@ namespace ServiceAreaClient
 			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, Db_server, Relay_server, Db_connect_mode);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox5;
-			inquirer.StartInquiry(updateDelegate);
+			inquirer.StartInquiry();
 			return inquirer;
 		}
 
@@ -934,12 +950,52 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 程序更新事件处理
 		/// </summary>
-		void OnUpdateEventProcess()
+		void OnUpdateProgram()
 		{
+			// 停止查询
+			InquiryStop();
 			// 启动更新程序
-			// 自身关闭退出
-			MessageBox.Show("我感受到Update事件发生了!");
-			this.Close();
+			System.Diagnostics.Process exep = new System.Diagnostics.Process();
+			exep.StartInfo.FileName = "UpdaterClient.exe";
+			exep.StartInfo.Arguments = "127.0.0.1";
+			exep.Start();
+			// 自身退出关闭Form
+			this.BeginInvoke(new MethodInvoker(() => { this.Close(); }));
+		}
+
+		void ListenerMain()
+		{
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 1983);
+			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+			sSocket.Bind(ipep);													// 绑定
+			sSocket.Listen(10);													// 监听
+			while (true)
+			{
+				try
+				{
+					// 等待从监听端口收到消息
+					Socket cSocket = sSocket.Accept();
+					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
+
+					string recvStr = "";
+					byte[] recvBytes = new byte[1024];
+					int bytes;
+					bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
+					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
+
+					// 更新程序
+					if (recvStr.ToLower().Trim().Equals("update program"))
+					{
+						OnUpdateProgram();
+						break;
+					}
+				}
+				catch (Exception ex)
+				{
+					System.Diagnostics.Trace.WriteLine(ex.ToString());
+				}
+			}
 		}
 	}
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Threading;
 
 namespace UpdaterClient
 {
@@ -21,18 +22,39 @@ namespace UpdaterClient
 			set { Program._host = value; }
 		}
 
-		static int _port = 1982;
+		// 端口号:1981 用于ServiceAreaClient向ServiceAreaServer(中继服务端)发送采集数据report
+		// 端口号:1982 用于UpdaterServer向UpdaterClient传送更新文件
+		// 端口号:1983 用于ServiceAreaClient监听接收消息
+		static int _portTransData = 1982;
 
-		public static int Port
+		public static int PortTransData
 		{
-			get { return Program._port; }
-			set { Program._port = value; }
+			get { return Program._portTransData; }
+			set { Program._portTransData = value; }
+		}
+
+		// 更新对象文件名
+		static string _updateFileName = "ServiceAreaClient.exe";
+
+		public static string UpdateFileName
+		{
+			get { return Program._updateFileName; }
+			set { Program._updateFileName = value; }
+		}
+
+		// 更新传输临时文件名
+		static string _tempFileName = @"\Recv\temp.dat";
+
+		public static string TempFileName
+		{
+			get { return Program._tempFileName; }
+			set { Program._tempFileName = value; }
 		}
 
 		#endregion
 		static void Main(string[] args)
 		{
-			IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Host), Port);
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Host), PortTransData);
 			Socket sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			try
@@ -43,15 +65,24 @@ namespace UpdaterClient
 				string sndStr = "Update Start Ready";
 				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
 				sServer.Send(sndBytes);
+				Console.WriteLine("更新开始就绪送信");
 
 				// 开始接收文件数据
-				FileDataRecv(GetModulePath() + @"\Recv\test.pdf", sServer);
+				FileDataRecv(GetModulePath() + TempFileName, sServer);
+				Console.WriteLine("更新文件接收OK");
+				Thread.Sleep(500);
 
 				// 确认本地程序已关闭
 
 				// 复制更新文件
+				File.Copy(TempFileName, UpdateFileName, true);
+				Console.WriteLine("更新文件复制OK");
+				Thread.Sleep(500);
 
 				// 重新启动程序
+				System.Diagnostics.Process exep = new System.Diagnostics.Process();
+				exep.StartInfo.FileName = UpdateFileName;
+				exep.Start();
 			}
 			catch (Exception ex)
 			{
@@ -60,8 +91,8 @@ namespace UpdaterClient
 			finally
 			{
 			}
-			Console.WriteLine("Client到最后了!");
-			Console.ReadLine();
+			Console.WriteLine("UpdaterClient结束退出!");
+			Thread.Sleep(3000);
 		}
 
 		#region 内部方法

@@ -68,20 +68,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		protected System.Timers.Timer _timer;
 
-		UpdateEventHandler _updateDelegate;
-
-		public UpdateEventHandler UpdateDelegate
-		{
-			get { return _updateDelegate; }
-			set { _updateDelegate = value; }
-		}
-
 		/// <summary>
 		/// 查询开始
 		/// </summary>
-		public void StartInquiry(UpdateEventHandler ud)
+		public void StartInquiry()
 		{
-			UpdateDelegate = ud;
 			// 启动timer
 			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
 			_timer.AutoReset = false;
@@ -145,33 +136,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
 					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
 					reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-					// 取得中继服务器回复的应答
-					ReceiveData rd = reporter.Receive();
-					string rspStr = Encoding.ASCII.GetString(rd.RcvBytes, 0, rd.RcvLen);
-					AppendUITextBox("	" + deviceInfo.DeviceName + " 中继服务器返回应答: " + rspStr);
-					if (rspStr.ToLower().Equals("report confirmed"))
-					{
-						// 正常的确认应答
-					}
-					else if (rspStr.ToLower().Equals("update program"))
-					{
-						// 更新程序要求
-						// 启动更新程序
-						// 主Form Close退出
-						UpdateDelegate();
-					}
-					else if (rspStr.ToLower().Equals("update config"))
-					{
-						// 更新config要求
-					}
-					else if (rspStr.ToLower().Equals("update data setting"))
-					{
-						// 更新data setting要求
-					}
-					else
-					{
-						UpdateDelegate.Invoke();
-					}
 					reporter.Close();
 				}
 			}

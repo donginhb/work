@@ -56,25 +56,16 @@ namespace ServiceAreaServer
 					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
 					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
 
-					string sendStr = "";
 					// 处理客户端发来的消息
 					if (ClientMsgProcess(recvStr))
 					{
 						Console.WriteLine("☆☆☆ Process OK! ☆☆☆");
-						sendStr = "Report Confirmed";
 					}
 					else
 					{
 						Console.WriteLine("※※※ Process Fail! ※※※");
-						sendStr = "Report Fail";
 					}
-
-					// 给Client端返回信息
-					byte[] bs = Encoding.ASCII.GetBytes(sendStr);
-					cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
 					cSocket.Close();
-
-					// System.Threading.Thread.Sleep(1000);
 				}
 				catch (Exception ex)
 				{
