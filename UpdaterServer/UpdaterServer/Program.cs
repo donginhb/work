@@ -55,6 +55,41 @@ namespace UpdaterServer
 
 		static void Main(string[] args)
 		{
+			while (true)
+			{
+				Console.WriteLine("0: Exit");
+				Console.WriteLine("1: Say Hello");
+				Console.WriteLine("2: Update Program");
+				Console.WriteLine("3: Update Setting XML");
+				Console.WriteLine("4: Update Config INI");
+
+				string cmd = Console.ReadLine();
+				if (cmd.Equals("0"))
+				{
+					break;
+				}
+				else if (cmd.Equals("1"))
+				{
+
+				}
+				else if (cmd.Equals("2"))
+				{
+					UpdateProgram();
+					Console.WriteLine("Update Program结束. 按任意键继续...");
+					Console.ReadKey();
+				}
+				else
+				{
+					Console.WriteLine("无效的命令输入!. 按任意键继续...");
+					Console.ReadKey();
+				}
+			}
+		}
+
+		#region 内部方法
+
+		static void UpdateProgram()
+		{
 			// 获得输入的对端IP地址
 			IPAddress clientIpAddr = GetTargetIpAddr();
 
@@ -99,12 +134,7 @@ namespace UpdaterServer
 			finally
 			{
 			}
-
-			Console.WriteLine("UpdaterServer结束退出!");
-			Thread.Sleep(3000);
 		}
-
-		#region 内部方法
 
 		static void UpdateProcess(Socket cSocket)
 		{
