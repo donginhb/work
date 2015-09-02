@@ -127,6 +127,14 @@ namespace ServiceAreaClient
 			set { _listenerThread = value; }
 		}
 
+		int _portListener = 1983;
+
+		public int PortListener
+		{
+			get { return _portListener; }
+			set { _portListener = value; }
+		}
+
 		#endregion
 
 		#region UI按钮处理
@@ -453,10 +461,7 @@ namespace ServiceAreaClient
 			InquiryStop();
 			SaveIniFile();
             SaveListViewContents();
-			//if (ListenerThread.IsAlive)
-			//{
-			//	ListenerThread.Abort();
-			//}
+			StopListener();
         }
 
 		private void SaveListViewContents()
@@ -965,7 +970,7 @@ namespace ServiceAreaClient
 
 		void ListenerMain()
 		{
-			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 1983);
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, PortListener);
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			sSocket.Bind(ipep);													// 绑定
@@ -990,11 +995,37 @@ namespace ServiceAreaClient
 						OnUpdateProgram();
 						break;
 					}
+					else if (recvStr.ToLower().Trim().Equals("abort"))
+					{
+						break;
+					}
 				}
 				catch (Exception ex)
 				{
 					System.Diagnostics.Trace.WriteLine(ex.ToString());
+					break;
 				}
+			}
+		}
+
+		void StopListener()
+		{
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Loopback, PortListener);
+			Socket cSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+			try
+			{
+				cSocket.Connect(ipep);
+
+				// 向客户端发送更新指示
+				string sndStr = "Abort";
+				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
+				cSocket.Send(sndBytes);
+				cSocket.Close();
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
 			}
 		}
 	}

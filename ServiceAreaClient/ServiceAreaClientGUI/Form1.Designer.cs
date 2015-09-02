@@ -96,7 +96,6 @@
 			this.listView1.CheckBoxes = true;
 			this.listView1.FullRowSelect = true;
 			this.listView1.GridLines = true;
-			this.listView1.HideSelection = false;
 			this.listView1.Location = new System.Drawing.Point(7, 25);
 			this.listView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listView1.MultiSelect = false;
@@ -208,7 +207,6 @@
 			this.listView2.CheckBoxes = true;
 			this.listView2.FullRowSelect = true;
 			this.listView2.GridLines = true;
-			this.listView2.HideSelection = false;
 			this.listView2.Location = new System.Drawing.Point(7, 25);
 			this.listView2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listView2.MultiSelect = false;
@@ -272,7 +270,6 @@
 			this.listView3.CheckBoxes = true;
 			this.listView3.FullRowSelect = true;
 			this.listView3.GridLines = true;
-			this.listView3.HideSelection = false;
 			this.listView3.Location = new System.Drawing.Point(7, 25);
 			this.listView3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listView3.MultiSelect = false;
@@ -358,7 +355,6 @@
 			this.listView4.CheckBoxes = true;
 			this.listView4.FullRowSelect = true;
 			this.listView4.GridLines = true;
-			this.listView4.HideSelection = false;
 			this.listView4.Location = new System.Drawing.Point(7, 25);
 			this.listView4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listView4.MultiSelect = false;
@@ -444,7 +440,6 @@
 			this.listView5.CheckBoxes = true;
 			this.listView5.FullRowSelect = true;
 			this.listView5.GridLines = true;
-			this.listView5.HideSelection = false;
 			this.listView5.Location = new System.Drawing.Point(7, 25);
 			this.listView5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listView5.MultiSelect = false;
