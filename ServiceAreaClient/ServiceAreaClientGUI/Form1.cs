@@ -946,15 +946,24 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 程序更新事件处理
 		/// </summary>
-		void OnUpdateProgram()
+		void OnUpdateProgram(Socket s)
 		{
+			string sndStr = "停止查询";
+			byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
+			s.Send(sndBytes);
 			// 停止查询
 			InquiryStop();
+			sndStr = "启动更新程序";
+			sndBytes = Encoding.ASCII.GetBytes(sndStr);
+			s.Send(sndBytes);
 			// 启动更新程序
 			System.Diagnostics.Process exep = new System.Diagnostics.Process();
 			exep.StartInfo.FileName = "UpdaterClient.exe";
 			exep.StartInfo.Arguments = "127.0.0.1";
 			exep.Start();
+			sndStr = "程序退出,关闭窗体";
+			sndBytes = Encoding.ASCII.GetBytes(sndStr);
+			s.Send(sndBytes);
 			// 自身退出关闭Form
 			this.BeginInvoke(new MethodInvoker(() => { this.Close(); }));
 		}
@@ -983,7 +992,7 @@ namespace ServiceAreaClient
 					// 更新程序
 					if (recvStr.ToLower().Trim().Equals("update program"))
 					{
-						OnUpdateProgram();
+						OnUpdateProgram(cSocket);
 						break;
 					}
 					else if (recvStr.ToLower().Trim().Equals("abort"))
