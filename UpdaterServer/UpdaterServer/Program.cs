@@ -70,12 +70,23 @@ namespace UpdaterServer
 				}
 				else if (cmd.Equals("1"))
 				{
-
+					Console.WriteLine("未完成, 按任意键继续...");
+					Console.ReadKey();
 				}
 				else if (cmd.Equals("2"))
 				{
 					UpdateProgram();
 					Console.WriteLine("Update Program结束. 按任意键继续...");
+					Console.ReadKey();
+				}
+				else if (cmd.Equals("3"))
+				{
+					Console.WriteLine("未完成, 按任意键继续...");
+					Console.ReadKey();
+				}
+				else if (cmd.Equals("4"))
+				{
+					Console.WriteLine("未完成, 按任意键继续...");
 					Console.ReadKey();
 				}
 				else
@@ -90,10 +101,14 @@ namespace UpdaterServer
 
 		static void UpdateProgram()
 		{
-			// 获得输入的对端IP地址
+			// ① 获得输入的对端IP地址
 			IPAddress clientIpAddr = GetTargetIpAddr();
 
+			// ② 确定更新文件所在的路径和文件名
+			string fullName = GetUpdateFileFullName();
+
 			Console.WriteLine("更新开始: " + clientIpAddr.ToString());
+			Thread.Sleep(1000);
 			// 首先以客户端的身份连接ServiceAreaClient的消息监听线程, 并向其发送更新指示"Update Program"
 			IPEndPoint ipep = new IPEndPoint(clientIpAddr, PortListener);
 			Socket cSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -102,12 +117,25 @@ namespace UpdaterServer
 			{
 				cSocket.Connect(ipep);
 				Console.WriteLine("Connect成功!");
+				Thread.Sleep(1000);
 
 				// 向客户端发送更新指示
 				string sndStr = "Update Program";
 				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
 				cSocket.Send(sndBytes);
 				Console.WriteLine("\"Update Program\"送信成功!");
+				while (true)
+				{
+					byte[] recvBytes = new byte[1024];
+					int bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);
+					if (0 == bytes)
+					{
+						break;
+					}
+					string recvStr = Encoding.ASCII.GetString(recvBytes, 0, bytes);
+					Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);
+
+				}
 				cSocket.Close();
 
 				// 接着再以服务器的身份等待来自客户端更新程序(UpdaterClient)的更新就绪应答
@@ -243,6 +271,26 @@ namespace UpdaterServer
 				}
 			}
 			return clientIpAddr;
+		}
+
+		static string GetUpdateFileFullName()
+		{
+			string fullName = "";
+			while (true)
+			{
+				Console.WriteLine("请输入更新文件的完整路径和文件名:");
+				fullName = Console.ReadLine();
+				if (File.Exists(fullName))
+				{
+					break;
+				}
+				else
+				{
+					Console.WriteLine("指定的路径名或者文件名不正确!");
+					Thread.Sleep(2000);
+				}
+			}
+			return fullName;
 		}
 
 		#endregion
