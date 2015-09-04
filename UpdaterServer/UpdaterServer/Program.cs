@@ -105,13 +105,14 @@ namespace UpdaterServer
 			IPAddress clientIpAddr = GetTargetIpAddr();
 
 			// ② 确定更新文件所在的路径和文件名
-			string fullName = GetUpdateFileFullName();
+            UpdateFileName = GetUpdateFileFullName();
 
 			Console.WriteLine("更新开始: " + clientIpAddr.ToString());
 			Thread.Sleep(1000);
 			// 首先以客户端的身份连接ServiceAreaClient的消息监听线程, 并向其发送更新指示"Update Program"
 			IPEndPoint ipep = new IPEndPoint(clientIpAddr, PortListener);
 			Socket cSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			try
 			{
@@ -132,28 +133,55 @@ namespace UpdaterServer
 					{
 						break;
 					}
-					string recvStr = Encoding.ASCII.GetString(recvBytes, 0, bytes);
+					string recvStr = Encoding.Unicode.GetString(recvBytes, 0, bytes);
 					Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);
-
+                    if (recvStr.ToLower().Equals("form close"))
+                    {
+                        break;
+                    }
 				}
 				cSocket.Close();
 
 				// 接着再以服务器的身份等待来自客户端更新程序(UpdaterClient)的更新就绪应答
 				ipep = new IPEndPoint(IPAddress.Any, PortTransData);
-				Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 				sSocket.Bind(ipep);												// 绑定
 				sSocket.Listen(10);												// 监听
 
 				Console.WriteLine(@"等待客户端更新程序的连接...");
-				cSocket = sSocket.Accept();							// 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
-				IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
-				Console.WriteLine(@"与客户端更新程序建立连接: " + clientip.Address + @" 端口号: " + clientip.Port);
 
-				UpdateProcess(cSocket);
+                while (true)
+                {
+                    cSocket = sSocket.Accept();							        // 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
+                    IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
+                    Console.WriteLine(@"与客户端更新程序建立连接: " + clientip.Address + @" 端口号: " + clientip.Port);
 
-				Console.WriteLine("客户端: " + clientip.Address + "更新OK!");
-				cSocket.Close();
-				sSocket.Close();
+                    while (true)
+                    {
+                        byte[] recvBytes = new byte[1024];
+                        int bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
+
+                        string recvStr = Encoding.Unicode.GetString(recvBytes, 0, bytes);
+                        Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);	// 把客户端传来的信息显示出来
+
+                        if (recvStr.Equals("Update Start Ready"))
+                        {
+                            UpdateProcess(clientIpAddr, cSocket);
+                            Console.WriteLine("客户端: " + clientip.Address + "更新OK!");
+                            cSocket.Close();
+                            break;
+                        }
+                        else if (recvStr.Equals("UpdaterClient Close"))
+                        {
+                            cSocket.Close();
+                            return;
+                        }
+                        else
+                        {
+                        }
+                        
+                    }
+                }
 			}
 			catch (Exception ex)
 			{
@@ -161,32 +189,22 @@ namespace UpdaterServer
 			}
 			finally
 			{
-			}
+                if (cSocket.Connected)
+                {
+                    cSocket.Close();
+                }
+                if (sSocket.Connected)
+                {
+                    sSocket.Close();
+                }
+            }
 		}
 
-		static void UpdateProcess(Socket cSocket)
+		static void UpdateProcess(IPAddress ipAddr, Socket cSocket)
 		{
-			string recvStr = "";
-			byte[] recvBytes = new byte[1024];
-			int bytes;
-			bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
 
-			recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
-			Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
-
-			// 处理客户端发来的消息
-			ClientMsgProcess(recvStr, cSocket);
-		}
-
-		private static bool ClientMsgProcess(string clientMsg, Socket s)
-		{
-			if ("Update Start Ready" == clientMsg)
-			{
-				// 开始进行更新文件的传输
-				FileDataSend(GetModulePath() + UpdateFileName, s);
-				return true;
-			}
-			return false;
+            // 开始进行更新文件的传输
+            FileDataSend(UpdateFileName, cSocket);
 		}
 
 		static string GetModulePath()
@@ -225,6 +243,7 @@ namespace UpdaterServer
 			FileInfo sfi = new FileInfo(full_name);
 			if (!sfi.Exists)
 			{
+                Console.WriteLine("Error! " + sfi.FullName + " 不存在!");
 				return;
 			}
 			FileStream sfs = sfi.OpenRead();
