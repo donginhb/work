@@ -43,7 +43,7 @@ namespace UpdaterClient
 		}
 
 		// 更新传输临时文件名
-		static string _tempFileName = @"\Recv\temp.dat";
+		static string _tempFileName = @".\temp.dat";
 
 		public static string TempFileName
 		{
@@ -63,35 +63,63 @@ namespace UpdaterClient
 
 				// 向服务器发消息表示更新开始准备好
 				string sndStr = "Update Start Ready";
-				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
+				byte[] sndBytes = Encoding.Unicode.GetBytes(sndStr);
 				sServer.Send(sndBytes);
 				Console.WriteLine("更新开始就绪送信");
 
 				// 开始接收文件数据
 				FileDataRecv(GetModulePath() + TempFileName, sServer);
-				Console.WriteLine("更新文件接收OK");
-				Thread.Sleep(500);
+                sServer.Close();
+
+                sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sServer.Connect(ipep);
+                sndStr = "更新文件接收OK";
+                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sServer.Send(sndBytes);
+                Console.WriteLine(sndStr);
+                Thread.Sleep(1000);
 
 				// 确认本地程序已关闭
 
 				// 复制更新文件
 				File.Copy(TempFileName, UpdateFileName, true);
-				Console.WriteLine("更新文件复制OK");
-				Thread.Sleep(500);
+                sndStr = "更新文件复制OK";
+                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sServer.Send(sndBytes);
+                Console.WriteLine(sndStr);
+				Thread.Sleep(1000);
 
+                // 删除临时文件
+                File.Delete(TempFileName);
+                sndStr = "临时文件删除OK";
+                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sServer.Send(sndBytes);
+                Console.WriteLine(sndStr);
+                Thread.Sleep(1000);
+
+                sndStr = "开始启动更新后的目标程序...";
+                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sServer.Send(sndBytes);
+                Console.WriteLine(sndStr);
 				// 重新启动程序
 				System.Diagnostics.Process exep = new System.Diagnostics.Process();
 				exep.StartInfo.FileName = UpdateFileName;
 				exep.Start();
-			}
+
+                sndStr = "UpdaterClient Close";
+                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sServer.Send(sndBytes);
+                sServer.Close();
+            }
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
+                Console.ReadKey();
 			}
 			finally
 			{
 			}
-			Console.WriteLine("UpdaterClient结束退出!");
+			Console.WriteLine("UpdaterClient任务结束,准备退出!");
 			Thread.Sleep(3000);
 		}
 
@@ -112,9 +140,7 @@ namespace UpdaterClient
 					MyFileStream.Write(data, 0, data.Length);
 				}
 			}
-
 			MyFileStream.Close();
-			sServer.Close();
 		}
 
 		static string GetModulePath()

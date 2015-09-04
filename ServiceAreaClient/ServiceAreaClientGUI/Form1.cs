@@ -335,9 +335,6 @@ namespace ServiceAreaClient
 				// 开始查询
 				InquiryStart();
 				SaveIniFile();
-				// 启动一个线程, 监听1982端口
-				Thread listenerThd = new Thread(new ThreadStart(ListenerMain));
-				listenerThd.Start();
 				UIEnable(false);
 			}
 			else
@@ -439,7 +436,11 @@ namespace ServiceAreaClient
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			if (cbxAutoStart.Checked)
+            // 启动一个线程, 监听1982端口
+            Thread listenerThd = new Thread(new ThreadStart(ListenerMain));
+            listenerThd.Start();
+
+            if (cbxAutoStart.Checked)
 			{
 				System.Threading.Thread.Sleep(5000);
 				DoInquiry();
@@ -949,12 +950,12 @@ namespace ServiceAreaClient
 		void OnUpdateProgram(Socket s)
 		{
 			string sndStr = "停止查询";
-			byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
+            byte[] sndBytes = Encoding.Unicode.GetBytes(sndStr);
 			s.Send(sndBytes);
 			// 停止查询
 			InquiryStop();
 			sndStr = "启动更新程序";
-			sndBytes = Encoding.ASCII.GetBytes(sndStr);
+            sndBytes = Encoding.Unicode.GetBytes(sndStr);
 			s.Send(sndBytes);
 			// 启动更新程序
 			System.Diagnostics.Process exep = new System.Diagnostics.Process();
@@ -962,8 +963,11 @@ namespace ServiceAreaClient
 			exep.StartInfo.Arguments = "127.0.0.1";
 			exep.Start();
 			sndStr = "程序退出,关闭窗体";
-			sndBytes = Encoding.ASCII.GetBytes(sndStr);
+            sndBytes = Encoding.Unicode.GetBytes(sndStr);
 			s.Send(sndBytes);
+            sndStr = "Form Close";
+            sndBytes = Encoding.Unicode.GetBytes(sndStr);
+            s.Send(sndBytes);
 			// 自身退出关闭Form
 			this.BeginInvoke(new MethodInvoker(() => { this.Close(); }));
 		}
@@ -973,12 +977,12 @@ namespace ServiceAreaClient
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, PortListener);
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			sSocket.Bind(ipep);													// 绑定
-			sSocket.Listen(10);													// 监听
-			while (true)
+			try
 			{
-				try
-				{
+			    sSocket.Bind(ipep);													// 绑定
+			    sSocket.Listen(10);													// 监听
+			    while (true)
+			    {
 					// 等待从监听端口收到消息
 					Socket cSocket = sSocket.Accept();
 					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
@@ -1000,13 +1004,12 @@ namespace ServiceAreaClient
 						break;
 					}
 				}
-				catch (Exception ex)
-				{
-					System.Diagnostics.Trace.WriteLine(ex.ToString());
-					break;
-				}
 			}
-		}
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.ToString());
+            }
+        }
 
 		void StopListener()
 		{
