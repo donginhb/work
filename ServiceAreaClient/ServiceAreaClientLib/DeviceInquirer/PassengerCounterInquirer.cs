@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
 
-namespace ServiceAreaClientLib
+namespace ServiceAreaClientLib.DeviceInquirer
 {
 	public class PassengerCounterInquirer
 	{
@@ -142,10 +142,12 @@ namespace ServiceAreaClientLib
 				Task<string> t1 = GetResultStringAsync(deviceInfo.RequestString2);
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t0.Result);
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
-                if (!Report2Server(dateTimeStr, t0.Result, t1.Result, deviceInfo))
+
+				string insertStr = GetInsertString(dateTimeStr, t0.Result, t1.Result, deviceInfo);
+                if ( !Report2Server(insertStr, deviceInfo) )
                 {
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
-                }
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -163,17 +165,8 @@ namespace ServiceAreaClientLib
 		}
 
         // 报告给服务器(写入数据库表)
-		bool Report2Server(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
+		bool Report2Server(string insertStr, PassengerCounterInfo deviceInfo)
         {
-			string reportStr0 = GetReportString(resultStr0);
-			string reportStr1 = GetReportString(resultStr1);
-			// 摄像头的设备种类编码是003
-			string deviceTypeStr = "003";
-			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
-			// 因为同一个点, 应该只能有一个摄像头, 所以对于摄像头来说, 3位设备地址由0x01固定值取代
-			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + 0x01.ToString().PadLeft(3, '0');
-            string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, value_02" + @") VALUES('"
-                                    + dateTimeStr + @"'," + deviceSnStr + reportStr0 + reportStr1 + @")";
 			try
 			{
                 if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
@@ -188,8 +181,7 @@ namespace ServiceAreaClientLib
                     TcpSocketCommunicator reporter = new TcpSocketCommunicator();
                     reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
                     reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-                    reporter.Close();
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
+					reporter.Close();
                 }
 			}
 			catch (Exception ex)
@@ -216,6 +208,21 @@ namespace ServiceAreaClientLib
 			}
 			return reportStr;
         }
+
+		public static string GetInsertString(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
+		{
+			string reportStr0 = GetReportString(resultStr0);
+			string reportStr1 = GetReportString(resultStr1);
+			// 摄像头的设备种类编码是003
+			string deviceTypeStr = "003";
+			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
+			// 因为同一个点, 应该只能有一个摄像头, 所以对于摄像头来说, 3位设备地址由0x01固定值取代
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + 0x01.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, value_02" + @") VALUES('"
+									+ dateTimeStr + @"'," + deviceSnStr + reportStr0 + reportStr1 + @")";
+
+			return insertStr;
+		}
 
 		public delegate void UiUpdateDelegate(string txtStr);
 

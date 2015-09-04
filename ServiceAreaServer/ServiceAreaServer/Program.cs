@@ -33,17 +33,16 @@ namespace ServiceAreaServer
 			// 读设定文件
 			LoadIniFile();
 
-			byte[] data = new byte[1024];									// 用于缓存客户端所发送的信息,通过socket传递的信息必须为字节数组
-			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);			// 本机预使用的IP和端口
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, Port);				// 本机预使用的IP和端口
 			Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			try
-			{
-				sSocket.Bind(ipep);												// 绑定
-				sSocket.Listen(10);												// 监听
+			sSocket.Bind(ipep);													// 绑定
+			sSocket.Listen(10);													// 监听
 
-				// 第一层的主循环, 循环接收来自各个客户端的数据
-				while (true)
+			// 第一层的主循环, 循环接收来自各个客户端的数据
+			while (true)
+			{
+				try
 				{
 					Console.WriteLine("Waiting for a client");
 					Socket cSocket = sSocket.Accept();							// 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
@@ -57,35 +56,26 @@ namespace ServiceAreaServer
 					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
 					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
 
-					string sendStr = "";
 					// 处理客户端发来的消息
 					if (ClientMsgProcess(recvStr))
 					{
 						Console.WriteLine("☆☆☆ Process OK! ☆☆☆");
-						sendStr = "Server receive OK!";
 					}
 					else
 					{
 						Console.WriteLine("※※※ Process Fail! ※※※");
-						sendStr = "Server receive Fail!";
 					}
-
-					// 给Client端返回信息
-					byte[] bs = Encoding.ASCII.GetBytes(sendStr);
-					//cSocket.Send(bs, bs.Length, 0);  //返回信息给客户端
 					cSocket.Close();
-
-					// System.Threading.Thread.Sleep(1000);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+				finally
+				{
 				}
 			}
-			catch (Exception ex)
-			{
-                Console.WriteLine(ex.ToString());
-			}
-			finally
-			{
-				sSocket.Close();
-			}
+			//sSocket.Close();
 		}
 
 		private static bool ClientMsgProcess(string clientMsg)

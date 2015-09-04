@@ -9,6 +9,8 @@ using System.Net;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
+	public delegate void UpdateEventHandler();
+
 	public class ModbusDeviceInquirer
 	{
 		// 要查询的设备列表
@@ -116,6 +118,37 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					System.Threading.Thread.Sleep(500);
 				}
 			}
+		}
+
+		protected bool Report2Server(string insertStr, ModbusDeviceInfo deviceInfo)
+		{
+			try
+			{
+				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+				{
+					// 直接写入数据库
+					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+					mysql_object.ExecuteMySqlCommand(insertStr);
+				}
+				else
+				{
+					// 通过中继服务器
+					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+					reporter.Send(Encoding.ASCII.GetBytes(insertStr));
+					reporter.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
+			finally
+			{
+				;
+			}
+			return true;
 		}
 
         virtual protected void InquiryTask(ModbusDeviceInfo deviceInfo)

@@ -67,11 +67,17 @@ namespace ServiceAreaClientLib
                 }
 
                 // 上报给服务器
-				if (!Report2Server(rd, deviceInfo))
+				float fValue;
+				string insertStr = GetReportString(rd, deviceInfo, out fValue);
+				if (	null != insertStr
+					&&	Report2Server(insertStr, deviceInfo)	)
 				{
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库写入失败!");
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
 				}
-				// TODO: 保存到本地
+				else
+				{
+					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+				}
             }
             catch (Exception ex)
             {
@@ -84,73 +90,17 @@ namespace ServiceAreaClientLib
             }
         }
 
-		bool Report2Server(ReceiveData inquiryResult, ModbusDeviceInfo deviceInfo)
-        {
-            int counter;
-
-            string reportStr = GetReportString(inquiryResult, out counter);
-			// 现在只把"正向(吸收)有功电能"即耗电量, 存到数据库表里
-            string[] arr = reportStr.Split(',');
-			string valueStr = arr[arr.Length - 4].Trim();
-			int iValue;
-			if (!int.TryParse(valueStr, out iValue))
-			{
-				return false;
-			}
-			// 读数值要乘以放大倍率
-			float value = iValue * deviceInfo.Magnification;
-
-			// 然后还要除以量纲得到浮点型小数值
-			float fValue = value / deviceInfo.Magnitude;
-
-            //string argStr = "";
-			//for (int i = 0; i < counter; i++)
-			//{
-			//	argStr += ", value" + (i + 1).ToString().PadLeft(2, '0');
-			//}
-
-			// 电表的设备种类编码是001
-			string deviceTypeStr = "001";
-			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
-			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
-								+ deviceSnStr + @"'," + fValue.ToString() + @")";
-			try
-			{
-				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
-				{
-					// 直接写入数据库
-					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-					mysql_object.ExecuteMySqlCommand(insertStr);
-					AppendUITextBox("	" + deviceInfo.DeviceName + " 保存读数值: " + fValue.ToString());
-				}
-				else
-				{
-					// 通过中继服务器
-					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-					reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-					reporter.Close();
-					AppendUITextBox("	" + deviceInfo.DeviceName + " 向中继服务器转送OK!");
-				}
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Trace.WriteLine(ex.ToString());
-				return false;
-			}
-			finally
-			{
-				;
-			}
-			return true;
-        }
-
-        public static string GetReportString(ReceiveData inquiryResult, out int counter)
+        public static string GetReportString(ReceiveData inquiryResult, ModbusDeviceInfo deviceInfo, out float fValue)
         {
 			string reportStr = "";
+			fValue = 0;
 			List<DataUnitInfo> dataInfoList = ElectricMeterDataSetting.GetElectricMeterDataSetting();
-            counter = 0;
+			int total_flg = 0;	// 数据库表中用以标识该电表是否为"总表"的标志, 如果是总表, 那么不在表示用电量占比的饼图和柱状图中显示其用电量;
+			if (-1 != deviceInfo.DeviceName.IndexOf(@"总表"))
+			{
+				total_flg = 1;
+			}
+
 			foreach (var dataInfo in dataInfoList)
 			{
                 // -5是因为要去掉前面三个字节(分别是设备码， 操作码03， 和读的长度)和最后两个字节(CRC校验)
@@ -170,7 +120,6 @@ namespace ServiceAreaClientLib
                         val = Convert.ToUInt32(dataStr, 16);
                         dataInfo.Value = val;
                         reportStr += ", " + val.ToString();
-                        counter++;
                     }
                     catch (Exception ex)
                     {
@@ -178,8 +127,30 @@ namespace ServiceAreaClientLib
                     }
 				}
 			}
-			return reportStr;
-        }
+
+			// 现在只把"正向(吸收)有功电能"即耗电量, 存到数据库表里
+			string[] arr = reportStr.Split(',');
+			string valueStr = arr[arr.Length - 4].Trim();
+			int iValue;
+			if (!int.TryParse(valueStr, out iValue))
+			{
+				return null;
+			}
+			// 读数值要乘以放大倍率
+			float value = iValue * deviceInfo.Magnification;
+
+			// 然后还要除以量纲得到浮点型小数值
+			fValue = value / deviceInfo.Magnitude;
+
+			// 电表的设备种类编码是001
+			string deviceTypeStr = "001";
+			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, total_flg" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
+								+ deviceSnStr + @"'," + fValue.ToString() + ", " + total_flg.ToString() + @")";
+
+			return insertStr;
+		}
 
     }
 }
