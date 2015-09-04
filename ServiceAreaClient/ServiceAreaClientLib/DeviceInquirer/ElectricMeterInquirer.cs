@@ -95,6 +95,11 @@ namespace ServiceAreaClientLib
 			string reportStr = "";
 			fValue = 0;
 			List<DataUnitInfo> dataInfoList = ElectricMeterDataSetting.GetElectricMeterDataSetting();
+			int total_flg = 0;	// 数据库表中用以标识该电表是否为"总表"的标志, 如果是总表, 那么不在表示用电量占比的饼图和柱状图中显示其用电量;
+			if (-1 != deviceInfo.DeviceName.IndexOf(@"总表"))
+			{
+				total_flg = 1;
+			}
 
 			foreach (var dataInfo in dataInfoList)
 			{
@@ -141,8 +146,8 @@ namespace ServiceAreaClientLib
 			string deviceTypeStr = "001";
 			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
 			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
-								+ deviceSnStr + @"'," + fValue.ToString() + @")";
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, total_flg" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
+								+ deviceSnStr + @"'," + fValue.ToString() + ", " + total_flg.ToString() + @")";
 
 			return insertStr;
 		}

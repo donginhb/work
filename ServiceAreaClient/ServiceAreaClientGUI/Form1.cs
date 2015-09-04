@@ -118,15 +118,6 @@ namespace ServiceAreaClient
 			set { _db_table_list = value; }
 		}
 
-		// 用以监听消息的线程
-		Thread _listenerThread;
-
-		public Thread ListenerThread
-		{
-			get { return _listenerThread; }
-			set { _listenerThread = value; }
-		}
-
 		int _portListener = 1983;
 
 		public int PortListener
@@ -345,8 +336,8 @@ namespace ServiceAreaClient
 				InquiryStart();
 				SaveIniFile();
 				// 启动一个线程, 监听1982端口
-				ListenerThread = new Thread(new ThreadStart(ListenerMain));
-				ListenerThread.Start();
+				Thread listenerThd = new Thread(new ThreadStart(ListenerMain));
+				listenerThd.Start();
 				UIEnable(false);
 			}
 			else
