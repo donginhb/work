@@ -54,16 +54,22 @@ namespace UpdaterClient
 		#endregion
 		static void Main(string[] args)
 		{
+			if (args.Length > 0)
+			{
+				Console.WriteLine(args[0]);
+				Host = args[0];
+			}
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Host), PortTransData);
 			Socket sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			try
 			{
+				Thread.Sleep(3000);
 				sServer.Connect(ipep);
 
 				// 向服务器发消息表示更新开始准备好
 				string sndStr = "Update Start Ready";
-				byte[] sndBytes = Encoding.Unicode.GetBytes(sndStr);
+				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
 				sServer.Send(sndBytes);
 				Console.WriteLine("更新开始就绪送信");
 
@@ -73,8 +79,8 @@ namespace UpdaterClient
 
                 sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sServer.Connect(ipep);
-                sndStr = "更新文件接收OK";
-                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sndStr = "Update File Receive OK";
+                sndBytes = Encoding.ASCII.GetBytes(sndStr);
                 sServer.Send(sndBytes);
                 Console.WriteLine(sndStr);
                 Thread.Sleep(1000);
@@ -83,22 +89,22 @@ namespace UpdaterClient
 
 				// 复制更新文件
 				File.Copy(TempFileName, UpdateFileName, true);
-                sndStr = "更新文件复制OK";
-                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sndStr = "Update File Copy OK";
+                sndBytes = Encoding.ASCII.GetBytes(sndStr);
                 sServer.Send(sndBytes);
                 Console.WriteLine(sndStr);
 				Thread.Sleep(1000);
 
                 // 删除临时文件
                 File.Delete(TempFileName);
-                sndStr = "临时文件删除OK";
-                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+				sndStr = "Temporary File Delete OK";
+                sndBytes = Encoding.ASCII.GetBytes(sndStr);
                 sServer.Send(sndBytes);
                 Console.WriteLine(sndStr);
                 Thread.Sleep(1000);
 
-                sndStr = "开始启动更新后的目标程序...";
-                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sndStr = "Start Loading the Updated Program...";
+                sndBytes = Encoding.ASCII.GetBytes(sndStr);
                 sServer.Send(sndBytes);
                 Console.WriteLine(sndStr);
 				// 重新启动程序
@@ -106,8 +112,8 @@ namespace UpdaterClient
 				exep.StartInfo.FileName = UpdateFileName;
 				exep.Start();
 
-                sndStr = "UpdaterClient Close";
-                sndBytes = Encoding.Unicode.GetBytes(sndStr);
+                sndStr = "UpdaterClient.exe Close";
+                sndBytes = Encoding.ASCII.GetBytes(sndStr);
                 sServer.Send(sndBytes);
                 sServer.Close();
             }

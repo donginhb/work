@@ -133,7 +133,7 @@ namespace UpdaterServer
 					{
 						break;
 					}
-					string recvStr = Encoding.Unicode.GetString(recvBytes, 0, bytes);
+					string recvStr = Encoding.ASCII.GetString(recvBytes, 0, bytes);
 					Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);
                     if (recvStr.ToLower().Equals("form close"))
                     {
@@ -160,8 +160,11 @@ namespace UpdaterServer
                     {
                         byte[] recvBytes = new byte[1024];
                         int bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
-
-                        string recvStr = Encoding.Unicode.GetString(recvBytes, 0, bytes);
+						if (0 == bytes)
+						{
+							break;
+						}
+                        string recvStr = Encoding.ASCII.GetString(recvBytes, 0, bytes);
                         Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);	// 把客户端传来的信息显示出来
 
                         if (recvStr.Equals("Update Start Ready"))
@@ -171,7 +174,7 @@ namespace UpdaterServer
                             cSocket.Close();
                             break;
                         }
-                        else if (recvStr.Equals("UpdaterClient Close"))
+                        else if (recvStr.Equals("UpdaterClient.exe Close"))
                         {
                             cSocket.Close();
                             return;

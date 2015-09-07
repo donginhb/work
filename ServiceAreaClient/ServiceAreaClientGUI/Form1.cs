@@ -947,29 +947,33 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 程序更新事件处理
 		/// </summary>
-		void OnUpdateProgram(Socket s)
+		void OnUpdateProgram(Socket s, IPAddress ipAddr)
 		{
-			string sndStr = "停止查询";
-            byte[] sndBytes = Encoding.Unicode.GetBytes(sndStr);
+			string sndStr = "Inquiry Stop";
+            byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
 			s.Send(sndBytes);
 			// 停止查询
 			InquiryStop();
-			sndStr = "启动更新程序";
-            sndBytes = Encoding.Unicode.GetBytes(sndStr);
+			Thread.Sleep(1000);
+			sndStr = "Start UpdateClient.exe";
+            sndBytes = Encoding.ASCII.GetBytes(sndStr);
 			s.Send(sndBytes);
 			// 启动更新程序
 			System.Diagnostics.Process exep = new System.Diagnostics.Process();
 			exep.StartInfo.FileName = "UpdaterClient.exe";
-			exep.StartInfo.Arguments = "127.0.0.1";
+			exep.StartInfo.Arguments = ipAddr.ToString();
 			exep.Start();
-			sndStr = "程序退出,关闭窗体";
-            sndBytes = Encoding.Unicode.GetBytes(sndStr);
+			Thread.Sleep(1000);
+			sndStr = "ServiceAreaClient.exe Exit";
+            sndBytes = Encoding.ASCII.GetBytes(sndStr);
 			s.Send(sndBytes);
+			Thread.Sleep(1000);
             sndStr = "Form Close";
-            sndBytes = Encoding.Unicode.GetBytes(sndStr);
+            sndBytes = Encoding.ASCII.GetBytes(sndStr);
             s.Send(sndBytes);
 			// 自身退出关闭Form
 			this.BeginInvoke(new MethodInvoker(() => { this.Close(); }));
+			Thread.Sleep(1000);
 		}
 
 		void ListenerMain()
@@ -996,7 +1000,7 @@ namespace ServiceAreaClient
 					// 更新程序
 					if (recvStr.ToLower().Trim().Equals("update program"))
 					{
-						OnUpdateProgram(cSocket);
+						OnUpdateProgram(cSocket, clientip.Address);
 						break;
 					}
 					else if (recvStr.ToLower().Trim().Equals("abort"))
