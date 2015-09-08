@@ -27,6 +27,12 @@ namespace ServiceAreaClient
             UIInit();
 		}
 
+		public Form1(string args)
+		{
+			InitializeComponent();
+			UIInit();
+		}
+
 		#region 全部字段
 
 		ElectricMeterInquirer _electricMeterInquirer = null;
@@ -983,8 +989,8 @@ namespace ServiceAreaClient
 
 			try
 			{
-			    sSocket.Bind(ipep);													// 绑定
-			    sSocket.Listen(10);													// 监听
+			    sSocket.Bind(ipep);												// 绑定
+			    sSocket.Listen(10);												// 监听
 			    while (true)
 			    {
 					// 等待从监听端口收到消息
