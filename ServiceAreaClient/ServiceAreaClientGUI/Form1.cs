@@ -967,7 +967,7 @@ namespace ServiceAreaClient
 			// 启动更新程序
 			System.Diagnostics.Process exep = new System.Diagnostics.Process();
 			exep.StartInfo.FileName = "UpdaterClient.exe";
-			exep.StartInfo.Arguments = ipAddr.ToString() + ", " + cmdStr;
+            exep.StartInfo.Arguments = "\"" + ipAddr.ToString() + "," + cmdStr + "\"";
 			exep.Start();
 			Thread.Sleep(1000);
 			sndStr = "ServiceAreaClient.exe Exit";
@@ -1004,7 +1004,8 @@ namespace ServiceAreaClient
 					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
 
 					// 更新程序
-					if (	recvStr.ToLower().Trim().Equals("update program")
+					if (	recvStr.ToLower().Trim().Equals("update exe")
+                        ||  recvStr.ToLower().Trim().Equals("update dll")
 						||	recvStr.ToLower().Trim().Equals("update setting")
 						||	recvStr.ToLower().Trim().Equals("update config")	)
 					{

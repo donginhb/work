@@ -59,9 +59,10 @@ namespace UpdaterServer
 			{
 				Console.WriteLine("0: Exit");
 				Console.WriteLine("1: Say Hello");
-				Console.WriteLine("2: Update Program");
-				Console.WriteLine("3: Update Setting");
-				Console.WriteLine("4: Update Config");
+				Console.WriteLine("2: Update EXE");
+                Console.WriteLine("3: Update DLL");
+				Console.WriteLine("4: Update Setting");
+				Console.WriteLine("5: Update Config");
 
 				string cmdStr = Console.ReadLine();
 				if (cmdStr.Equals("0"))
@@ -75,19 +76,26 @@ namespace UpdaterServer
 				}
 				else if (cmdStr.Equals("2"))
 				{
-					UpdateProgram();
-					Console.WriteLine("Update Program结束. 按任意键继续...");
+					UpdateEXE();
+					Console.WriteLine("Update EXE结束. 按任意键继续...");
 					Console.ReadKey();
 				}
-				else if (cmdStr.Equals("3"))
+                else if (cmdStr.Equals("3"))
+                {
+                    UpdateDLL();
+                    Console.WriteLine("Update DLL结束. 按任意键继续...");
+                    Console.ReadKey();
+                }
+				else if (cmdStr.Equals("4"))
 				{
 					UpdateSetting();
 					Console.WriteLine("Update Setting结束, 按任意键继续...");
 					Console.ReadKey();
 				}
-				else if (cmdStr.Equals("4"))
+				else if (cmdStr.Equals("5"))
 				{
-					Console.WriteLine("未完成, 按任意键继续...");
+                    UpdateConfig();
+					Console.WriteLine("Update Config结束, 按任意键继续...");
 					Console.ReadKey();
 				}
 				else
@@ -100,10 +108,15 @@ namespace UpdaterServer
 
 		#region 内部方法
 
-		static void UpdateProgram()
+		static void UpdateEXE()
 		{
-			UpdateFile("Update Program");
+			UpdateFile("Update EXE");
 		}
+
+        static void UpdateDLL()
+        {
+            UpdateFile("Update DLL");
+        }
 
 		static void UpdateSetting()
 		{
@@ -125,7 +138,7 @@ namespace UpdaterServer
 
 			Console.WriteLine("更新开始: " + clientIpAddr.ToString());
 			Thread.Sleep(1000);
-			// 首先以客户端的身份连接ServiceAreaClient的消息监听线程, 并向其发送更新指示"Update Program"
+			// 首先以客户端的身份连接ServiceAreaClient的消息监听线程, 并向其发送更新指示
 			IPEndPoint ipep = new IPEndPoint(clientIpAddr, PortListener);
 			Socket cSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
