@@ -54,10 +54,29 @@ namespace UpdaterClient
 		#endregion
 		static void Main(string[] args)
 		{
+			string cmdStr = "";
 			if (args.Length > 0)
 			{
-				Console.WriteLine(args[0]);
-				Host = args[0];
+				string paraStr = args[0];
+				Console.WriteLine(paraStr);
+				string[] paras = paraStr.Split(',');
+				if (paras.Length >= 2)
+				{
+					Host = paras[0];
+					cmdStr = paras[1];
+					if (cmdStr.Trim().ToLower().Equals("update program"))
+					{
+						UpdateFileName = "ServiceAreaClient.exe";
+					}
+					else if (cmdStr.Trim().ToLower().Equals("update setting"))
+					{
+						UpdateFileName = "data.xml";
+					}
+					else if (cmdStr.Trim().ToLower().Equals("update config"))
+					{
+						UpdateFileName = "config.ini";
+					}
+				}
 			}
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Host), PortTransData);
 			Socket sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

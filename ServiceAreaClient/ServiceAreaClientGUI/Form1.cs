@@ -947,7 +947,7 @@ namespace ServiceAreaClient
 		/// <summary>
 		/// 程序更新事件处理
 		/// </summary>
-		void OnUpdateProgram(Socket s, IPAddress ipAddr)
+		void UpdateProcess(Socket s, IPAddress ipAddr, string cmdStr)
 		{
 			string sndStr = "Inquiry Stop";
             byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
@@ -961,7 +961,7 @@ namespace ServiceAreaClient
 			// 启动更新程序
 			System.Diagnostics.Process exep = new System.Diagnostics.Process();
 			exep.StartInfo.FileName = "UpdaterClient.exe";
-			exep.StartInfo.Arguments = ipAddr.ToString();
+			exep.StartInfo.Arguments = ipAddr.ToString() + ", " + cmdStr;
 			exep.Start();
 			Thread.Sleep(1000);
 			sndStr = "ServiceAreaClient.exe Exit";
@@ -998,9 +998,11 @@ namespace ServiceAreaClient
 					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
 
 					// 更新程序
-					if (recvStr.ToLower().Trim().Equals("update program"))
+					if (	recvStr.ToLower().Trim().Equals("update program")
+						||	recvStr.ToLower().Trim().Equals("update setting")
+						||	recvStr.ToLower().Trim().Equals("update config")	)
 					{
-						OnUpdateProgram(cSocket, clientip.Address);
+						UpdateProcess(cSocket, clientip.Address, recvStr);
 						break;
 					}
 					else if (recvStr.ToLower().Trim().Equals("abort"))

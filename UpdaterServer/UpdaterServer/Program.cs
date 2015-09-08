@@ -60,31 +60,32 @@ namespace UpdaterServer
 				Console.WriteLine("0: Exit");
 				Console.WriteLine("1: Say Hello");
 				Console.WriteLine("2: Update Program");
-				Console.WriteLine("3: Update Setting XML");
-				Console.WriteLine("4: Update Config INI");
+				Console.WriteLine("3: Update Setting");
+				Console.WriteLine("4: Update Config");
 
-				string cmd = Console.ReadLine();
-				if (cmd.Equals("0"))
+				string cmdStr = Console.ReadLine();
+				if (cmdStr.Equals("0"))
 				{
 					break;
 				}
-				else if (cmd.Equals("1"))
+				else if (cmdStr.Equals("1"))
 				{
 					Console.WriteLine("未完成, 按任意键继续...");
 					Console.ReadKey();
 				}
-				else if (cmd.Equals("2"))
+				else if (cmdStr.Equals("2"))
 				{
 					UpdateProgram();
 					Console.WriteLine("Update Program结束. 按任意键继续...");
 					Console.ReadKey();
 				}
-				else if (cmd.Equals("3"))
+				else if (cmdStr.Equals("3"))
 				{
-					Console.WriteLine("未完成, 按任意键继续...");
+					UpdateSetting();
+					Console.WriteLine("Update Setting结束, 按任意键继续...");
 					Console.ReadKey();
 				}
-				else if (cmd.Equals("4"))
+				else if (cmdStr.Equals("4"))
 				{
 					Console.WriteLine("未完成, 按任意键继续...");
 					Console.ReadKey();
@@ -100,6 +101,21 @@ namespace UpdaterServer
 		#region 内部方法
 
 		static void UpdateProgram()
+		{
+			UpdateFile("Update Program");
+		}
+
+		static void UpdateSetting()
+		{
+			UpdateFile("Update Setting");
+		}
+
+		static void UpdateConfig()
+		{
+			UpdateFile("Update Config");
+		}
+
+		static void UpdateFile(String cmdStr)
 		{
 			// ① 获得输入的对端IP地址
 			IPAddress clientIpAddr = GetTargetIpAddr();
@@ -121,10 +137,10 @@ namespace UpdaterServer
 				Thread.Sleep(1000);
 
 				// 向客户端发送更新指示
-				string sndStr = "Update Program";
+				string sndStr = cmdStr;
 				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
 				cSocket.Send(sndBytes);
-				Console.WriteLine("\"Update Program\"送信成功!");
+				Console.WriteLine("\"" + cmdStr + "\" 送信成功!");
 				while (true)
 				{
 					byte[] recvBytes = new byte[1024];
@@ -148,13 +164,13 @@ namespace UpdaterServer
 				sSocket.Bind(ipep);												// 绑定
 				sSocket.Listen(10);												// 监听
 
-				Console.WriteLine(@"等待客户端更新程序的连接...");
+				Console.WriteLine(@"等待对端UpdaterClient的连接...");
 
                 while (true)
                 {
                     cSocket = sSocket.Accept();							        // 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
                     IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
-                    Console.WriteLine(@"与客户端更新程序建立连接: " + clientip.Address + @" 端口号: " + clientip.Port);
+					Console.WriteLine(@"与对端UpdaterClient建立连接: " + clientip.Address + @" 端口号: " + clientip.Port);
 
                     while (true)
                     {
@@ -169,8 +185,9 @@ namespace UpdaterServer
 
                         if (recvStr.Equals("Update Start Ready"))
                         {
-                            UpdateProcess(clientIpAddr, cSocket);
-                            Console.WriteLine("客户端: " + clientip.Address + "更新OK!");
+							// 更新文件传输(发送)
+							FileDataSend(UpdateFileName, cSocket);
+                            Console.WriteLine("---> " + clientip.Address + " 文件发送完成!");
                             cSocket.Close();
                             break;
                         }
@@ -201,13 +218,6 @@ namespace UpdaterServer
                     sSocket.Close();
                 }
             }
-		}
-
-		static void UpdateProcess(IPAddress ipAddr, Socket cSocket)
-		{
-
-            // 开始进行更新文件的传输
-            FileDataSend(UpdateFileName, cSocket);
 		}
 
 		static string GetModulePath()
