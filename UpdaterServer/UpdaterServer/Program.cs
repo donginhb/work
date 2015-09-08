@@ -71,7 +71,8 @@ namespace UpdaterServer
 				}
 				else if (cmdStr.Equals("1"))
 				{
-					Console.WriteLine("未完成, 按任意键继续...");
+					SayHello();
+					Console.WriteLine("Say Hello结束. 按任意键继续...");
 					Console.ReadKey();
 				}
 				else if (cmdStr.Equals("2"))
@@ -107,6 +108,55 @@ namespace UpdaterServer
 		}
 
 		#region 内部方法
+
+		static void SayHello()
+		{
+			// ① 获得输入的对端IP地址
+			IPAddress clientIpAddr = GetTargetIpAddr();
+
+			IPEndPoint ipep = new IPEndPoint(clientIpAddr, PortListener);
+			Socket cSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			string cmdStr = "Hello There!";
+			try
+			{
+				cSocket.Connect(ipep);
+				Console.WriteLine("Connect成功!");
+				Thread.Sleep(1000);
+
+				// 向客户端发送更新指示
+				string sndStr = cmdStr;
+				byte[] sndBytes = Encoding.ASCII.GetBytes(sndStr);
+				cSocket.Send(sndBytes);
+				Console.WriteLine("\"" + cmdStr + "\" 送信成功!");
+				while (true)
+				{
+					byte[] recvBytes = new byte[1024];
+					int bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);
+					if (0 == bytes)
+					{
+						break;
+					}
+					string recvStr = Encoding.ASCII.GetString(recvBytes, 0, bytes);
+					Console.WriteLine(clientIpAddr.ToString() + " : {0}", recvStr);
+					if (recvStr.ToLower().Equals("form close"))
+					{
+						break;
+					}
+				}
+				cSocket.Close();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+			finally
+			{
+				if (cSocket.Connected)
+				{
+					cSocket.Close();
+				}
+			}
+		}
 
 		static void UpdateEXE()
 		{
