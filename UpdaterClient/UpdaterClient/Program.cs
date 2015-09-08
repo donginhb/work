@@ -34,7 +34,7 @@ namespace UpdaterClient
 		}
 
 		// 更新对象文件名
-		static string _updateFileName = "ServiceAreaClient.exe";
+        static string _updateFileName = @".\ServiceAreaClient.exe";
 
 		public static string UpdateFileName
 		{
@@ -51,6 +51,15 @@ namespace UpdaterClient
 			set { Program._tempFileName = value; }
 		}
 
+        // 可执行文件名
+        static string _exeFileName = @".\ServiceAreaClient.exe";
+
+        public static string ExeFileName
+        {
+            get { return Program._exeFileName; }
+            set { Program._exeFileName = value; }
+        }
+
 		#endregion
 		static void Main(string[] args)
 		{
@@ -58,16 +67,24 @@ namespace UpdaterClient
 			if (args.Length > 0)
 			{
 				string paraStr = args[0];
-				Console.WriteLine(paraStr);
+                Console.WriteLine(args[0]);
+                if (args.Length > 1)
+                {
+                    Console.WriteLine(args[1]);
+                }
 				string[] paras = paraStr.Split(',');
 				if (paras.Length >= 2)
 				{
 					Host = paras[0];
 					cmdStr = paras[1];
-					if (cmdStr.Trim().ToLower().Equals("update program"))
+					if (cmdStr.Trim().ToLower().Equals("update exe"))
 					{
 						UpdateFileName = "ServiceAreaClient.exe";
 					}
+                    else if (cmdStr.Trim().ToLower().Equals("update dll"))
+                    {
+                        UpdateFileName = "ServiceAreaClientLib.dll";
+                    }
 					else if (cmdStr.Trim().ToLower().Equals("update setting"))
 					{
 						UpdateFileName = "data.xml";
@@ -128,7 +145,7 @@ namespace UpdaterClient
                 Console.WriteLine(sndStr);
 				// 重新启动程序
 				System.Diagnostics.Process exep = new System.Diagnostics.Process();
-				exep.StartInfo.FileName = UpdateFileName;
+                exep.StartInfo.FileName = ExeFileName;
 				exep.Start();
 
                 sndStr = "UpdaterClient.exe Close";
