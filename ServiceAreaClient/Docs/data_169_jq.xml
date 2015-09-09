@@ -23,17 +23,17 @@
       <DeviceAddr>24</DeviceAddr>
       <IP>10.62.66.224</IP>
       <Port>26</Port>
-      <Magnification>1</Magnification>
+      <Magnification>6</Magnification>
     </Row_2>
-    <Row_3 Checked="false">
+    <Row_3 Checked="true">
       <Name>西区李先生牛肉面</Name>
       <SpotNumber>001</SpotNumber>
       <DeviceAddr>18</DeviceAddr>
       <IP>10.62.66.228</IP>
       <Port>26</Port>
-      <Magnification>1</Magnification>
+      <Magnification>100</Magnification>
     </Row_3>
-    <Row_4 Checked="false">
+    <Row_4 Checked="true">
       <Name>西区路灯</Name>
       <SpotNumber>002</SpotNumber>
       <DeviceAddr>19</DeviceAddr>
@@ -41,7 +41,7 @@
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_4>
-    <Row_5 Checked="false">
+    <Row_5 Checked="true">
       <Name>西区公厕</Name>
       <SpotNumber>017</SpotNumber>
       <DeviceAddr>21</DeviceAddr>
@@ -51,13 +51,13 @@
     </Row_5>
   </listView1>
   <listView2>
-    <Row_0 Checked="false">
+    <Row_0 Checked="true">
       <Name>东区卫生间人流</Name>
       <SpotNumber>020</SpotNumber>
       <RequestString1>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
       <RequestString2>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct2.count</RequestString2>
     </Row_0>
-    <Row_1 Checked="false">
+    <Row_1 Checked="true">
       <Name>西区卫生间客流</Name>
       <SpotNumber>017</SpotNumber>
       <RequestString1>http://10.62.66.227/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
@@ -65,7 +65,7 @@
     </Row_1>
   </listView2>
   <listView3>
-    <Row_0 Checked="false">
+    <Row_0 Checked="true">
       <Name>东区客房</Name>
       <SpotNumber>009</SpotNumber>
       <DeviceAddr>00000000</DeviceAddr>
@@ -73,7 +73,7 @@
       <Port>26</Port>
       <Adjustment>0</Adjustment>
     </Row_0>
-    <Row_1 Checked="false">
+    <Row_1 Checked="true">
       <Name>东区餐厅</Name>
       <SpotNumber>012</SpotNumber>
       <DeviceAddr>00000007</DeviceAddr>
@@ -81,7 +81,7 @@
       <Port>26</Port>
       <Adjustment>0</Adjustment>
     </Row_1>
-    <Row_2 Checked="false">
+    <Row_2 Checked="true">
       <Name>东区服务大厅</Name>
       <SpotNumber>013</SpotNumber>
       <DeviceAddr>00000008</DeviceAddr>
@@ -115,7 +115,7 @@
     </Row_5>
   </listView3>
   <listView4>
-    <Row_0 Checked="false">
+    <Row_0 Checked="true">
       <Name>西区餐厅</Name>
       <SpotNumber>010</SpotNumber>
       <DeviceAddr>2</DeviceAddr>
@@ -123,15 +123,15 @@
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_0>
-    <Row_1 Checked="false">
+    <Row_1 Checked="true">
       <Name>西区公厕</Name>
       <SpotNumber>017</SpotNumber>
-      <DeviceAddr>4</DeviceAddr>
+      <DeviceAddr>5</DeviceAddr>
       <IP>10.62.66.229</IP>
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_1>
-    <Row_2 Checked="false">
+    <Row_2 Checked="true">
       <Name>西区开水机</Name>
       <SpotNumber>018</SpotNumber>
       <DeviceAddr>3</DeviceAddr>
@@ -139,7 +139,7 @@
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_2>
-    <Row_3 Checked="false">
+    <Row_3 Checked="true">
       <Name>东区餐厅</Name>
       <SpotNumber>012</SpotNumber>
       <DeviceAddr>6</DeviceAddr>
@@ -147,7 +147,7 @@
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_3>
-    <Row_4 Checked="false">
+    <Row_4 Checked="true">
       <Name>东区公厕</Name>
       <SpotNumber>020</SpotNumber>
       <DeviceAddr>7</DeviceAddr>
@@ -155,7 +155,7 @@
       <Port>26</Port>
       <Magnification>1</Magnification>
     </Row_4>
-    <Row_5 Checked="false">
+    <Row_5 Checked="true">
       <Name>东区开水机</Name>
       <SpotNumber>021</SpotNumber>
       <DeviceAddr>8</DeviceAddr>
@@ -165,7 +165,7 @@
     </Row_5>
   </listView4>
   <listView5>
-    <Row_0 Checked="false">
+    <Row_0 Checked="true">
       <Name>东区锅炉进水水温</Name>
       <SpotNumber>014</SpotNumber>
       <DeviceAddr>8</DeviceAddr>
@@ -173,7 +173,7 @@
       <Port>26</Port>
       <Adjustment>0</Adjustment>
     </Row_0>
-    <Row_1 Checked="false">
+    <Row_1 Checked="true">
       <Name>东区锅炉回水水温</Name>
       <SpotNumber>015</SpotNumber>
       <DeviceAddr>9</DeviceAddr>
