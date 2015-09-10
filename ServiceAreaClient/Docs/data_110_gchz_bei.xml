@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ListViewContents>
+  <listView1>
+    <Row_0 Checked="false">
+      <Name>南区总表</Name>
+      <SpotNumber>002</SpotNumber>
+      <DeviceAddr>11</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>100</Magnification>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>南区地热泵</Name>
+      <SpotNumber>004</SpotNumber>
+      <DeviceAddr>13</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>100</Magnification>
+    </Row_1>
+    <Row_2 Checked="false">
+      <Name>南区餐厅后厨</Name>
+      <SpotNumber>022</SpotNumber>
+      <DeviceAddr>16</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_2>
+    <Row_3 Checked="false">
+      <Name>南区餐厅前厅</Name>
+      <SpotNumber>021</SpotNumber>
+      <DeviceAddr>17</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_3>
+    <Row_4 Checked="false">
+      <Name>北区总表</Name>
+      <SpotNumber>001</SpotNumber>
+      <DeviceAddr>10</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>100</Magnification>
+    </Row_4>
+    <Row_5 Checked="false">
+      <Name>北区地热泵</Name>
+      <SpotNumber>003</SpotNumber>
+      <DeviceAddr>12</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>100</Magnification>
+    </Row_5>
+    <Row_6 Checked="false">
+      <Name>北区餐厅前厅</Name>
+      <SpotNumber>019</SpotNumber>
+      <DeviceAddr>14</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_6>
+    <Row_7 Checked="false">
+      <Name>北区餐厅后厨</Name>
+      <SpotNumber>020</SpotNumber>
+      <DeviceAddr>15</DeviceAddr>
+      <IP>192.168.0.104</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_7>
+  </listView1>
+  <listView2>
+    <Row_0 Checked="false">
+      <Name>北区客流</Name>
+      <SpotNumber>023</SpotNumber>
+      <RequestString1>http://192.168.0.102/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
+      <RequestString2>http://192.168.0.102/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>南区客流</Name>
+      <SpotNumber>024</SpotNumber>
+      <RequestString1>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
+      <RequestString2>http://192.168.0.79/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct1.count</RequestString2>
+    </Row_1>
+  </listView2>
+  <listView3>
+    <Row_0 Checked="false">
+      <Name>南区服务大厅</Name>
+      <SpotNumber>012</SpotNumber>
+      <DeviceAddr>00000000</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>南区餐厅</Name>
+      <SpotNumber>010</SpotNumber>
+      <DeviceAddr>00000003</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_1>
+    <Row_2 Checked="false">
+      <Name>南区客房</Name>
+      <SpotNumber>014</SpotNumber>
+      <DeviceAddr>00000004</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_2>
+    <Row_3 Checked="false">
+      <Name>北区服务大厅</Name>
+      <SpotNumber>011</SpotNumber>
+      <DeviceAddr>00000000</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_3>
+    <Row_4 Checked="false">
+      <Name>北区餐厅</Name>
+      <SpotNumber>009</SpotNumber>
+      <DeviceAddr>00000001</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_4>
+    <Row_5 Checked="false">
+      <Name>北区客房</Name>
+      <SpotNumber>013</SpotNumber>
+      <DeviceAddr>00000002</DeviceAddr>
+      <IP>192.168.0.101</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_5>
+  </listView3>
+  <listView4>
+    <Row_0 Checked="false">
+      <Name>南区开水机</Name>
+      <SpotNumber>017</SpotNumber>
+      <DeviceAddr>9</DeviceAddr>
+      <IP>192.168.0.105</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>南区室外洗手池</Name>
+      <SpotNumber>018</SpotNumber>
+      <DeviceAddr>10</DeviceAddr>
+      <IP>192.168.0.105</IP>
+      <Port>26</Port>
+      <Magnification>1</Magnification>
+    </Row_1>
+  </listView4>
+  <listView5>
+    <Row_0 Checked="false">
+      <Name>南区地热泵进水</Name>
+      <SpotNumber>006</SpotNumber>
+      <DeviceAddr>6</DeviceAddr>
+      <IP>192.168.0.103</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_0>
+    <Row_1 Checked="false">
+      <Name>南区地热泵回水</Name>
+      <SpotNumber>008</SpotNumber>
+      <DeviceAddr>7</DeviceAddr>
+      <IP>192.168.0.103</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_1>
+    <Row_2 Checked="false">
+      <Name>北区地热泵进水</Name>
+      <SpotNumber>005</SpotNumber>
+      <DeviceAddr>4</DeviceAddr>
+      <IP>192.168.0.103</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_2>
+    <Row_3 Checked="false">
+      <Name>北区地热泵回水</Name>
+      <SpotNumber>007</SpotNumber>
+      <DeviceAddr>5</DeviceAddr>
+      <IP>192.168.0.103</IP>
+      <Port>26</Port>
+      <Adjustment>0</Adjustment>
+    </Row_3>
+  </listView5>
+</ListViewContents>

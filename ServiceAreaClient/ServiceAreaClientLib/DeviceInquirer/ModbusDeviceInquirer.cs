@@ -68,6 +68,15 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		protected System.Timers.Timer _timer;
 
+		// 数据库(插入)命令列表
+		List<string> _dbCmdList;
+
+		public List<string> DbCmdList
+		{
+			get { return _dbCmdList; }
+			set { _dbCmdList = value; }
+		}
+
 		/// <summary>
 		/// 查询开始
 		/// </summary>
