@@ -52,10 +52,10 @@
   </listView1>
   <listView2>
     <Row_0 Checked="true">
-      <Name>东区卫生间人流</Name>
+      <Name>东区卫生间客流</Name>
       <SpotNumber>020</SpotNumber>
-      <RequestString1>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString1>
-      <RequestString2>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct2.count</RequestString2>
+      <RequestString1>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct2.count</RequestString1>
+      <RequestString2>http://10.62.66.222/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count</RequestString2>
     </Row_0>
     <Row_1 Checked="true">
       <Name>西区卫生间客流</Name>
