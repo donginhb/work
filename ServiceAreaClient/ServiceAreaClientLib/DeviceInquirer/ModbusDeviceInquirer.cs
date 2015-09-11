@@ -80,7 +80,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		protected System.Timers.Timer _timer;
 
 		// 数据库(插入)命令列表
-		List<DbCmd> _dbCmdList;
+		List<DbCmd> _dbCmdList = new List<DbCmd>();
 
 		public List<DbCmd> DbCmdList
 		{
@@ -136,6 +136,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			{
 				AppendUITextBox("\r\n>------------------------------->");
 				AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
+                DbCmdList = new List<DbCmd>();
 				// 对列表中的各个设备, 逐一进行查询
 				Task[] taskArr = new Task[DeviceList.Count];
 				for (int i = 0; i < DeviceList.Count; i++)
