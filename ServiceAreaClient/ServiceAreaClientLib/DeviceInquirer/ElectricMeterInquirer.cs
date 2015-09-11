@@ -69,15 +69,24 @@ namespace ServiceAreaClientLib
                 // 上报给服务器
 				float fValue;
 				string insertStr = GetReportString(rd, deviceInfo, out fValue);
-				if (	null != insertStr
-					&&	Report2Server(insertStr, deviceInfo)	)
+				if (null == insertStr)
 				{
+					return;
+				}
+				lock (DbCmdList)
+				{
+					DbCmd cmd = new DbCmd(insertStr, deviceInfo.DeviceName);
+					DbCmdList.Add(cmd);
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
 				}
-				else
-				{
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
-				}
+				//if (Report2Server(insertStr, deviceInfo))
+				//{
+				//	AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
+				//}
+				//else
+				//{
+				//	AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+				//}
             }
             catch (Exception ex)
             {

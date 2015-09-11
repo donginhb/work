@@ -6,10 +6,21 @@ using System.Threading.Tasks;
 
 using System.Threading;
 using System.Net;
+using System.IO;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
-	public delegate void UpdateEventHandler();
+	public struct DbCmd
+	{
+		public string cmdStr;
+		public string deviceName;
+
+		public DbCmd(string cmd, string device)
+		{
+			cmdStr = cmd;
+			deviceName = device;
+		}
+	}
 
 	public class ModbusDeviceInquirer
 	{
@@ -69,13 +80,21 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		protected System.Timers.Timer _timer;
 
 		// 数据库(插入)命令列表
-		List<string> _dbCmdList;
+		List<DbCmd> _dbCmdList;
 
-		public List<string> DbCmdList
+		public List<DbCmd> DbCmdList
 		{
 			get { return _dbCmdList; }
 			set { _dbCmdList = value; }
 		}
+
+		const string _disconnectBufferFileName = "DisconnectBuffer.txt";
+
+		public string DisconnectBufferFileName
+		{
+			get { return _disconnectBufferFileName; }
+		} 
+
 
 		/// <summary>
 		/// 查询开始
@@ -118,15 +137,75 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				AppendUITextBox("\r\n>------------------------------->");
 				AppendUITextBox(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
 				// 对列表中的各个设备, 逐一进行查询
+				Task[] taskArr = new Task[DeviceList.Count];
 				for (int i = 0; i < DeviceList.Count; i++)
 				{
 					ModbusDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceName);
-					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
-					inquiryThread.Start();
+					// Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
+					taskArr[i] = new Task(delegate() { InquiryTask(di); });
+					// inquiryThread.Start();
+					taskArr[i].Start();
 					System.Threading.Thread.Sleep(500);
 				}
+				Task.WaitAll(taskArr);
+				ReportToDataBase();
 			}
+		}
+
+		protected void ReportToDataBase()
+		{
+			try
+			{
+				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+				{
+					// 直接写入数据库
+					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+					foreach (DbCmd cmd in DbCmdList)
+					{
+						mysql_object.ExecuteMySqlCommand(cmd.cmdStr);
+						DbCmdList.Remove(cmd);
+					}
+				}
+				else if (E_DB_CONNECT_MODE.RELAY == Db_connect_mode)
+				{
+					// 通过中继服务器
+					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+					foreach (DbCmd cmd in DbCmdList)
+					{
+						reporter.Send(Encoding.ASCII.GetBytes(cmd.cmdStr));
+					}
+					reporter.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
+			finally
+			{
+				if (0 != DbCmdList.Count)
+				{
+					// 说明有未成功写入数据库的项
+					foreach (DbCmd cmd in DbCmdList)
+					{
+						AppendUITextBox("	" + cmd.deviceName + " : 数据库保存失败!");
+					}
+					// 这时要缓存到本地文件里, 等以后连上数据库以后再上传这部分数据
+					SaveToLocalFile(DbCmdList);
+				}
+			}
+		}
+
+		protected void SaveToLocalFile(List<DbCmd> cmdList)
+		{
+			StreamWriter sw = new StreamWriter(DisconnectBufferFileName, true);
+			foreach (DbCmd cmd in cmdList)
+			{
+				sw.WriteLine(cmd.cmdStr);
+			}
+			sw.Close();
 		}
 
 		protected bool Report2Server(string insertStr, ModbusDeviceInfo deviceInfo)
