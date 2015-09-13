@@ -91,12 +91,17 @@ namespace ServiceAreaClientLib
 									+ deviceInfo.Adjustment.ToString() + ") = " + fValue.ToString());
 				// 上报给服务器
 				string insertStr = GetReportString(dateTimeStr, fValue, deviceInfo);
-				if ( Report2Server(insertStr, deviceInfo) )
+                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
+				if ( Report2Server(insertStr) )
                 {
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
+                    // 数据库保存成功
+                    CheckLocalBufferFile();
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存成功!");
                 }
 				else
 				{
+                    // 数据库保存失败
+                    SaveToLocalFile(insertStr);
 					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
 				}
 				// TODO:保存到本地

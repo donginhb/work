@@ -73,20 +73,19 @@ namespace ServiceAreaClientLib
 				{
 					return;
 				}
-				lock (DbCmdList)
-				{
-					DbCmd cmd = new DbCmd(insertStr, deviceInfo.DeviceName);
-					DbCmdList.Add(cmd);
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
-				}
-				//if (Report2Server(insertStr, deviceInfo))
-				//{
-				//	AppendUITextBox("	" + deviceInfo.DeviceName + " : 保存读数值: " + fValue.ToString());
-				//}
-				//else
-				//{
-				//	AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
-				//}
+                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
+                if (Report2Server(insertStr))
+                {
+                    // 数据库保存成功
+                    CheckLocalBufferFile();
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存成功!");
+                }
+                else
+                {
+                    // 数据库保存失败
+                    SaveToLocalFile(insertStr);
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+                }
             }
             catch (Exception ex)
             {

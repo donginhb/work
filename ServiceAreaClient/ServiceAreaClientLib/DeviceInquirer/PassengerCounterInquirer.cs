@@ -9,54 +9,10 @@ using System.Net;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
-	public class PassengerCounterInquirer
+	public class PassengerCounterInquirer : DeviceInquirer
 	{
 		// 要查询的设备列表
         List<PassengerCounterInfo> _deviceList;
-
-		// 数据库服务器情报
-		ServerInfo _dbServerInfo;
-
-		public ServerInfo DbServerInfo
-		{
-			get { return _dbServerInfo; }
-			set { _dbServerInfo = value; }
-		}
-
-		// 中继服务器情报
-		private ServerInfo _relayServerInfo;
-
-		protected ServerInfo RelayServerInfo
-		{
-			get { return _relayServerInfo; }
-			set { _relayServerInfo = value; }
-		}
-
-		private E_DB_CONNECT_MODE _db_connect_mode;
-
-		public E_DB_CONNECT_MODE Db_connect_mode
-		{
-			get { return _db_connect_mode; }
-			set { _db_connect_mode = value; }
-		}
-
-		// 要更新的UI textBox控件
-		System.Windows.Forms.TextBox _tbxControl = null;
-
-		public System.Windows.Forms.TextBox TbxControl
-		{
-			get { return _tbxControl; }
-			set { _tbxControl = value; }
-		}
-
-		// 循环查询周期(单位为分钟)
-		int _cyclePeriod = 10;
-
-		public int CyclePeriod
-		{
-			get { return _cyclePeriod; }
-			set { _cyclePeriod = value; }
-		}
 
         internal List<PassengerCounterInfo> DeviceList
         {
@@ -72,8 +28,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			RelayServerInfo = relayServer;
 			Db_connect_mode = dbConnectMode;
         }
-
-		System.Timers.Timer _timer;
 
 		/// <summary>
 		/// 查询开始
@@ -144,10 +98,18 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
 
 				string insertStr = GetInsertString(dateTimeStr, t0.Result, t1.Result, deviceInfo);
-                if ( !Report2Server(insertStr, deviceInfo) )
+                if (Report2Server(insertStr))
                 {
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+                    // 数据库保存成功
+                    CheckLocalBufferFile();
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存成功!");
 				}
+                else
+                {
+                    // 数据库保存失败
+                    SaveToLocalFile(insertStr);
+                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
+                }
 			}
 			catch (Exception ex)
 			{
@@ -163,34 +125,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 			return resultStr;
 		}
-
-        // 报告给服务器(写入数据库表)
-		bool Report2Server(string insertStr, PassengerCounterInfo deviceInfo)
-        {
-			try
-			{
-                if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
-                {
-                    DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-                    mysql_object.ExecuteMySqlCommand(insertStr);
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " 数据库写入OK!");
-                }
-                else
-                {
-                    // 通过中继服务器
-                    TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-                    reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-                    reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-					reporter.Close();
-                }
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Trace.WriteLine(ex.ToString());
-				return false;
-			}
-			return true;
-        }
 
         public static string GetReportString(string resultStr)
         {
