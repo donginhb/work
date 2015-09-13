@@ -156,26 +156,32 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		protected void ReportToDataBase()
 		{
+			Stack<int> successIdxs = new Stack<int>();
 			try
 			{
 				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
 				{
 					// 直接写入数据库
+					int idx = 0;
 					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 					foreach (DbCmd cmd in DbCmdList)
 					{
 						mysql_object.ExecuteMySqlCommand(cmd.cmdStr);
-						DbCmdList.Remove(cmd);
+						successIdxs.Push(idx);
+						idx++;
 					}
 				}
 				else if (E_DB_CONNECT_MODE.RELAY == Db_connect_mode)
 				{
 					// 通过中继服务器
+					int idx = 0;
 					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
 					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
 					foreach (DbCmd cmd in DbCmdList)
 					{
 						reporter.Send(Encoding.ASCII.GetBytes(cmd.cmdStr));
+						successIdxs.Push(idx);
+						idx++;
 					}
 					reporter.Close();
 				}
@@ -186,6 +192,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 			finally
 			{
+				for (int i = 0; i < successIdxs.Count; i++)
+				{
+					int idx = successIdxs.Pop();
+					DbCmdList.RemoveAt(idx);
+				}
 				if (0 != DbCmdList.Count)
 				{
 					// 说明有未成功写入数据库的项
@@ -195,6 +206,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					}
 					// 这时要缓存到本地文件里, 等以后连上数据库以后再上传这部分数据
 					SaveToLocalFile(DbCmdList);
+					DbCmdList.Clear();
 				}
 			}
 		}
