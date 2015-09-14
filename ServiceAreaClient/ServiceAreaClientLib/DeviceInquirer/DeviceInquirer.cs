@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.IO;
+using System.Threading;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
@@ -56,11 +57,12 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
         protected System.Timers.Timer _timer;
 
-        const string _disconnectBufferFileName = "DisconnectBuffer.txt";
+		// 断网时, 临时缓存数据用的本地文件
+        const string _localBufFileName = "DisconnectBuffer.txt";
 
-        public string DisconnectBufferFileName
+        public string LocalBufFileName
         {
-            get { return _disconnectBufferFileName; }
+            get { return _localBufFileName; }
         }
 
         // 读写本地缓存文件时, 用的lock对象
@@ -70,19 +72,19 @@ namespace ServiceAreaClientLib.DeviceInquirer
         {
             lock (bufferLock)
             {
-                StreamWriter sw = new StreamWriter(DisconnectBufferFileName, true);
+                StreamWriter sw = new StreamWriter(LocalBufFileName, true);
                 sw.WriteLine(cmdStr);
                 sw.Close();
             }
         }
 
-        protected void CheckLocalBufferFile()
+        protected void CheckLocalBufferFile(string deviceName)
         {
-            lock (bufferLock)
-            {
-                if (File.Exists(DisconnectBufferFileName))
-                {
-                    StreamReader sr = new StreamReader(DisconnectBufferFileName);
+			if (File.Exists(LocalBufFileName))
+			{
+				lock (bufferLock)
+				{
+                    StreamReader sr = new StreamReader(LocalBufFileName);
                     string rdLine = "";
                     List<string> cmdList = new List<string>();
                     while (null != (rdLine = sr.ReadLine()))
@@ -93,11 +95,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
                         }
                     }
                     sr.Close();
-                    File.Delete(DisconnectBufferFileName);
+                    File.Delete(LocalBufFileName);
                     List<string> failList = new List<string>();
                     foreach (string cmd in cmdList)
                     {
-                        if (!Report2Server(cmd))
+                        if (!Report2Server(cmd, deviceName))
                         {
                             failList.Add(cmd);
                         }
@@ -105,7 +107,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
                     // 失败的话, 再存回本地缓存文件
                     if (0 != failList.Count)
                     {
-                        StreamWriter sw = new StreamWriter(DisconnectBufferFileName, true);
+                        StreamWriter sw = new StreamWriter(LocalBufFileName, true);
                         foreach (string cmd in failList)
                         {
                             sw.WriteLine(cmd);
@@ -116,8 +118,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
             }
         }
 
-        protected bool Report2Server(string insertStr)
+        protected bool Report2Server(string insertStr, string deviceName)
         {
+			// 用于数据库写入成功/失败后续处理的子线程
+			Thread th;
             try
             {
                 if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
@@ -138,14 +142,48 @@ namespace ServiceAreaClientLib.DeviceInquirer
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.WriteLine(ex.ToString());
-                return false;
+				// 数据库保存失败
+				AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
+				th = new Thread(delegate() { SaveToLocalFile(insertStr); });
+				th.Start();
+				return false;
             }
             finally
             {
                 ;
             }
-            return true;
+			// 数据库保存成功
+			AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+			th = new Thread(delegate() { CheckLocalBufferFile(deviceName); });
+			th.Start();
+			return true;
         }
+
+		public delegate void UiUpdateDelegate(string txtStr);
+
+		/// <summary>
+		/// 更新UI TextBox控件内容
+		/// </summary>
+		protected void AppendUITextBox(string txtStr)
+		{
+			if (null == _tbxControl)
+			{
+				return;
+			}
+			if (_tbxControl.InvokeRequired)
+			{
+				UiUpdateDelegate updateDel = new UiUpdateDelegate(AppendUITextBox);
+				_tbxControl.BeginInvoke(updateDel, new object[] { txtStr });
+			}
+			else
+			{
+				if (_tbxControl.Text.Length >= _tbxControl.MaxLength - 1000)
+				{
+					_tbxControl.Text = _tbxControl.Text.Substring(_tbxControl.Text.Length - 100);
+				}
+				_tbxControl.AppendText(txtStr + "\r\n");
+			}
+		}
 
     }
 }

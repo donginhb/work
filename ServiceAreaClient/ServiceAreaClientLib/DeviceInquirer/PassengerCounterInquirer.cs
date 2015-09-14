@@ -98,18 +98,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
 
 				string insertStr = GetInsertString(dateTimeStr, t0.Result, t1.Result, deviceInfo);
-                if (Report2Server(insertStr))
-                {
-                    // 数据库保存成功
-                    CheckLocalBufferFile();
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存成功!");
-				}
-                else
-                {
-                    // 数据库保存失败
-                    SaveToLocalFile(insertStr);
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
-                }
+				Report2Server(insertStr, deviceInfo.DeviceName);
 			}
 			catch (Exception ex)
 			{

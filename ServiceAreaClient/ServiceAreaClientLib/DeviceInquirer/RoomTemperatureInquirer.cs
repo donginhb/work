@@ -92,19 +92,7 @@ namespace ServiceAreaClientLib
 				// 上报给服务器
 				string insertStr = GetReportString(dateTimeStr, fValue, deviceInfo);
                 AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
-				if ( Report2Server(insertStr) )
-                {
-                    // 数据库保存成功
-                    CheckLocalBufferFile();
-                    AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存成功!");
-                }
-				else
-				{
-                    // 数据库保存失败
-                    SaveToLocalFile(insertStr);
-					AppendUITextBox("	" + deviceInfo.DeviceName + " : 数据库保存失败!");
-				}
-				// TODO:保存到本地
+				Report2Server(insertStr, deviceInfo.DeviceName);
 			}
 			catch (Exception ex)
 			{
