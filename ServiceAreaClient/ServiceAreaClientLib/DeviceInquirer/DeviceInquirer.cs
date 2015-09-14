@@ -72,48 +72,62 @@ namespace ServiceAreaClientLib.DeviceInquirer
         {
             lock (bufferLock)
             {
-                StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-                sw.WriteLine(cmdStr);
-                sw.Close();
+				try
+				{
+					StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+					sw.WriteLine(cmdStr);
+					sw.Close();
+				}
+				catch (Exception ex)
+				{
+					System.Diagnostics.Trace.WriteLine(ex.ToString());
+				}
             }
         }
 
-        protected void CheckLocalBufferFile(string deviceName)
+        protected void CheckLocalBufferFile()
         {
 			if (File.Exists(LocalBufFileName))
 			{
 				lock (bufferLock)
 				{
-                    StreamReader sr = new StreamReader(LocalBufFileName);
-                    string rdLine = "";
-                    List<string> cmdList = new List<string>();
-                    while (null != (rdLine = sr.ReadLine()))
-                    {
-                        if (string.Empty != rdLine.Trim())
-                        {
-                            cmdList.Add(rdLine);
-                        }
-                    }
-                    sr.Close();
-                    File.Delete(LocalBufFileName);
-                    List<string> failList = new List<string>();
-                    foreach (string cmd in cmdList)
-                    {
-                        if (!Report2Server(cmd, deviceName))
-                        {
-                            failList.Add(cmd);
-                        }
-                    }
-                    // 失败的话, 再存回本地缓存文件
-                    if (0 != failList.Count)
-                    {
-                        StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-                        foreach (string cmd in failList)
-                        {
-                            sw.WriteLine(cmd);
-                        }
-                        sw.Close();
-                    }
+					try
+					{
+						StreamReader sr = new StreamReader(LocalBufFileName);
+						string rdLine = "";
+						List<string> cmdList = new List<string>();
+						while (null != (rdLine = sr.ReadLine()))
+						{
+							if (string.Empty != rdLine.Trim())
+							{
+								cmdList.Add(rdLine);
+							}
+						}
+						sr.Close();
+						File.Delete(LocalBufFileName);
+						List<string> failList = new List<string>();
+						foreach (string cmd in cmdList)
+						{
+							if (!Report2Server(cmd, string.Empty))
+							{
+								failList.Add(cmd);
+							}
+						}
+						// 失败的话, 再存回本地缓存文件
+						if (0 != failList.Count)
+						{
+							StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+							foreach (string cmd in failList)
+							{
+								sw.WriteLine(cmd);
+							}
+							sw.Close();
+						}
+					}
+					catch (Exception ex)
+					{
+						System.Diagnostics.Trace.WriteLine(ex.ToString());
+					}
                 }
             }
         }
@@ -143,9 +157,18 @@ namespace ServiceAreaClientLib.DeviceInquirer
             {
                 System.Diagnostics.Trace.WriteLine(ex.ToString());
 				// 数据库保存失败
-				AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
-				th = new Thread(delegate() { SaveToLocalFile(insertStr); });
-				th.Start();
+				if (string.Empty != deviceName)
+				{
+					AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
+					th = new Thread(delegate() { SaveToLocalFile(insertStr); });
+					th.Start();
+				}
+				else
+				{
+					// 如果是[string.Empty], 说明是补发缓存的数据
+					// 这时如果失败在外层调用处一并写回缓存文件(不在这里写)
+					AppendUITextBox("	缓存数据补发失败 : " + insertStr);
+				}
 				return false;
             }
             finally
@@ -153,9 +176,17 @@ namespace ServiceAreaClientLib.DeviceInquirer
                 ;
             }
 			// 数据库保存成功
-			AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
-			th = new Thread(delegate() { CheckLocalBufferFile(deviceName); });
-			th.Start();
+			if (string.Empty != deviceName)
+			{
+				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+				th = new Thread(delegate() { CheckLocalBufferFile(); });
+				th.Start();
+			}
+			else
+			{
+				// 如果是[string.Empty], 说明是补发缓存的数据
+				AppendUITextBox("	缓存数据补发成功 : " + insertStr);
+			}
 			return true;
         }
 

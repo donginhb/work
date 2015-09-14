@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
+using System.Threading;
 
 namespace ServiceAreaServer
 {
@@ -20,7 +22,10 @@ namespace ServiceAreaServer
 			set { _dbServerInfo = value; }
 		}
 
-        static int _port = 1981;
+		// 端口号:1981 用于ServiceAreaClient向ServiceAreaServer(中继服务端)发送采集数据report
+		// 端口号:1982 用于UpdaterServer向UpdaterClient传送更新文件
+		// 端口号:1983 用于ServiceAreaClient监听接收消息
+		static int _port = 1981;
 
         public static int Port
         {
@@ -44,7 +49,8 @@ namespace ServiceAreaServer
 			{
 				try
 				{
-					Console.WriteLine("Waiting for a client");
+					Console.WriteLine("ServiceArea Relay Server(20150914)");
+					Console.WriteLine("Waiting for a client...");
 					Socket cSocket = sSocket.Accept();							// 当有可用的客户端连接尝试时执行，并返回一个新的socket,用于与客户端之间的通信
 					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
 					Console.WriteLine("Connect with client:" + clientip.Address + " at port:" + clientip.Port);
@@ -57,14 +63,7 @@ namespace ServiceAreaServer
 					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
 
 					// 处理客户端发来的消息
-					if (ClientMsgProcess(recvStr))
-					{
-						Console.WriteLine("☆☆☆ Process OK! ☆☆☆");
-					}
-					else
-					{
-						Console.WriteLine("※※※ Process Fail! ※※※");
-					}
+					ClientMsgProcess(recvStr, false);
 					cSocket.Close();
 				}
 				catch (Exception ex)
@@ -78,8 +77,17 @@ namespace ServiceAreaServer
 			//sSocket.Close();
 		}
 
-		private static bool ClientMsgProcess(string clientMsg)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="clientMsg"></param>
+		/// <param name="isReSend">标识是否是重发</param>
+		/// <returns></returns>
+		private static bool ClientMsgProcess(string clientMsg, bool isReSend)
 		{
+			// 用于数据库写入成功/失败后续处理的子线程
+			Thread th;
+
 			// 执行MySQL命令
 			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
 			try
@@ -89,8 +97,21 @@ namespace ServiceAreaServer
 			catch (Exception ex)
 			{
                 Console.WriteLine(ex.ToString());
+				Console.WriteLine("※※※ Save To DB Fail! ※※※");
+				if (!isReSend)
+				{
+					// 如果不是补发缓存的数据, 失败了要存到本地缓存文件里
+					th = new Thread(delegate() { SaveToLocalFile(clientMsg); });
+					th.Start();
+				}
 				return false;
 			}
+			if (!isReSend)
+			{
+				th = new Thread(delegate() { CheckLocalBufferFile(); });
+				th.Start();
+			}
+			Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
 			return true;
 		}
 
@@ -116,5 +137,81 @@ namespace ServiceAreaServer
             }
             Port = port;
 		}
+
+		// 断网时, 临时缓存数据用的本地文件
+		const string _localBufFileName = "DisconnectBuffer.txt";
+
+		public static string LocalBufFileName
+		{
+			get { return _localBufFileName; }
+		}
+
+		// 读写本地缓存文件时, 用的lock对象
+		protected static object bufferLock = new object();
+
+		protected static void SaveToLocalFile(string cmdStr)
+		{
+			lock (bufferLock)
+			{
+				try
+				{
+					StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+					sw.WriteLine(cmdStr);
+					sw.Close();
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+			}
+		}
+
+		protected static void CheckLocalBufferFile()
+		{
+			if (File.Exists(LocalBufFileName))
+			{
+				lock (bufferLock)
+				{
+					try
+					{
+						StreamReader sr = new StreamReader(LocalBufFileName);
+						string rdLine = "";
+						List<string> cmdList = new List<string>();
+						while (null != (rdLine = sr.ReadLine()))
+						{
+							if (string.Empty != rdLine.Trim())
+							{
+								cmdList.Add(rdLine);
+							}
+						}
+						sr.Close();
+						File.Delete(LocalBufFileName);
+						List<string> failList = new List<string>();
+						foreach (string cmd in cmdList)
+						{
+							if (!ClientMsgProcess(cmd, true))
+							{
+								failList.Add(cmd);
+							}
+						}
+						// 失败的话, 再存回本地缓存文件
+						if (0 != failList.Count)
+						{
+							StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+							foreach (string cmd in failList)
+							{
+								sw.WriteLine(cmd);
+							}
+							sw.Close();
+						}
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
+				}
+			}
+		}
+
 	}
 }
