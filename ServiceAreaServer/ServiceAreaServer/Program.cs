@@ -33,6 +33,16 @@ namespace ServiceAreaServer
             set { Program._port = value; }
         }
 
+		// 标记与数据库的连接状态
+		private static bool _dataBaseConnected = false;
+
+		public static bool DataBaseConnected
+		{
+			get { return Program._dataBaseConnected; }
+			set { Program._dataBaseConnected = value; }
+		}
+
+
 		static void Main(string[] args)
 		{
 			// 读设定文件
@@ -63,7 +73,7 @@ namespace ServiceAreaServer
 					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
 
 					// 处理客户端发来的消息
-					ClientMsgProcess(recvStr, false);
+					ClientMsgProcess(recvStr);
 					cSocket.Close();
 				}
 				catch (Exception ex)
@@ -83,35 +93,40 @@ namespace ServiceAreaServer
 		/// <param name="clientMsg"></param>
 		/// <param name="isReSend">标识是否是重发</param>
 		/// <returns></returns>
-		private static bool ClientMsgProcess(string clientMsg, bool isReSend)
+		private static bool ClientMsgProcess(string clientMsg)
 		{
-			// 用于数据库写入成功/失败后续处理的子线程
-			Thread th;
-
 			// 执行MySQL命令
-			DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+			if (WriteToDB(clientMsg))
+			{
+				// 数据库保存成功
+				DataBaseConnected = true;
+				Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
+				return true;
+			}
+			else
+			{
+				// 数据库保存失败
+				DataBaseConnected = false;
+				Thread th = new Thread(delegate() { SaveToLocalFile(clientMsg); });
+				th.Start();
+				Console.WriteLine("※※※ Save To DB Fail! ※※※");
+				return false;
+			}
+		}
+
+		static bool WriteToDB(string cmdStr)
+		{
 			try
 			{
-				mysql_object.ExecuteMySqlCommand(clientMsg);
+				// 执行MySQL命令
+				DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+				mysql_object.ExecuteMySqlCommand(cmdStr);
 			}
 			catch (Exception ex)
 			{
-                Console.WriteLine(ex.ToString());
-				Console.WriteLine("※※※ Save To DB Fail! ※※※");
-				if (!isReSend)
-				{
-					// 如果不是补发缓存的数据, 失败了要存到本地缓存文件里
-					th = new Thread(delegate() { SaveToLocalFile(clientMsg); });
-					th.Start();
-				}
+				Console.WriteLine(ex.ToString());
 				return false;
 			}
-			if (!isReSend)
-			{
-				th = new Thread(delegate() { CheckLocalBufferFile(); });
-				th.Start();
-			}
-			Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
 			return true;
 		}
 
@@ -166,8 +181,13 @@ namespace ServiceAreaServer
 			}
 		}
 
-		protected static void CheckLocalBufferFile()
+		protected static void CheckLocalBuffer()
 		{
+			if (DataBaseConnected)
+			{
+				// 只有在前一次数据库连接为切断状态时才进行处理
+				return;
+			}
 			if (File.Exists(LocalBufFileName))
 			{
 				lock (bufferLock)
@@ -189,7 +209,7 @@ namespace ServiceAreaServer
 						List<string> failList = new List<string>();
 						foreach (string cmd in cmdList)
 						{
-							if (!ClientMsgProcess(cmd, true))
+							if (!ClientMsgProcess(cmd))
 							{
 								failList.Add(cmd);
 							}

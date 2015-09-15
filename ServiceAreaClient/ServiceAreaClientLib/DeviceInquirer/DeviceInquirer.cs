@@ -194,6 +194,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					DataBaseConnected = true;
 				}
 				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+				return true;
 			}
             else
             {
@@ -207,7 +208,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				th.Start();
 				return false;
             }
-			return true;
         }
 
 		public delegate void UiUpdateDelegate(string txtStr);
