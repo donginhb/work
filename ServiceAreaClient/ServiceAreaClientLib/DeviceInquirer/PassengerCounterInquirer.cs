@@ -115,27 +115,41 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			return resultStr;
 		}
 
-        public static string GetReportString(string resultStr)
+        public static string GetReportString(string resultStr, string requestStr)
         {
 			string reportStr = "";
-			string findKey = "count=";
-			int idx;
-			if (-1 != (idx = resultStr.LastIndexOf(findKey)) )
+			int idx = requestStr.LastIndexOf("=");
+			string findKey = "";
+			int value;
+			if (-1 != idx)
 			{
-				int value;
-				string subStr = resultStr.Substring(idx + findKey.Length).Trim();
-				if (int.TryParse(subStr, out value))
+				findKey = requestStr.Substring(idx + 1).Trim() + "=";
+				string[] rdLines = resultStr.Split('\n');
+				foreach (string line in rdLines)
 				{
-					reportStr = ", " + subStr;
+					if ("" == line.Trim())
+					{
+						continue;
+					}
+					if (-1 != (idx = line.IndexOf(findKey)))
+					{
+						string subStr = line.Substring(idx + findKey.Length).Trim();
+						if (int.TryParse(subStr, out value))
+						{
+							reportStr = ", " + subStr;
+							break;
+						}
+					}
 				}
 			}
+
 			return reportStr;
         }
 
 		public static string GetInsertString(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
 		{
-			string reportStr0 = GetReportString(resultStr0);
-			string reportStr1 = GetReportString(resultStr1);
+			string reportStr0 = GetReportString(resultStr0, deviceInfo.RequestString1);
+			string reportStr1 = GetReportString(resultStr1, deviceInfo.RequestString2);
 			// 摄像头的设备种类编码是003
 			string deviceTypeStr = "003";
 			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备

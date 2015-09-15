@@ -160,8 +160,8 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				if (string.Empty != deviceName)
 				{
 					AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
-					th = new Thread(delegate() { SaveToLocalFile(insertStr); });
-					th.Start();
+					//th = new Thread(delegate() { SaveToLocalFile(insertStr); });
+					//th.Start();
 				}
 				else
 				{
@@ -179,8 +179,8 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			if (string.Empty != deviceName)
 			{
 				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
-				th = new Thread(delegate() { CheckLocalBufferFile(); });
-				th.Start();
+				//th = new Thread(delegate() { CheckLocalBufferFile(); });
+				//th.Start();
 			}
 			else
 			{

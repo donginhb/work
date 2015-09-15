@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 namespace ConnectTest
 {
@@ -14,58 +15,53 @@ namespace ConnectTest
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Hello World!");
+			string outStr = "";
+			string requestStr = @"http://10.62.72.116/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count";
 			try
 			{
-                // 水表
-				Connect("10.62.1.206", 26);
-                // 锅炉温度
-                // Connect("10.62.1.204", 26);
+				Task<string> t0 = GetResultStringAsync(requestStr);
+				outStr = t0.Result;
+				StreamWriter sw = new StreamWriter("dump.txt", false);
+				sw.Write(outStr);
+				sw.Close();
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
 			}
-			Console.WriteLine("Connect Success!");
-
+			string resultStr = GetReportString(outStr);
+			//Console.WriteLine(resultStr);
 
 			Console.ReadLine();
 		}
 
-		public static void Connect(string host, int port)
+		async static Task<string> GetResultStringAsync(string requestStr)
 		{
-			IPAddress ip = IPAddress.Parse(host);
-			IPEndPoint ipe = new IPEndPoint(ip, port);
+			WebClient wc = new WebClient();
+			string resultStr = await wc.DownloadStringTaskAsync(new Uri(requestStr));
 
-			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			socket.Connect(ipe);
+			return resultStr;
+		}
 
-//			byte[] sendBytes = { 0x10, 0x07, 0x00, 0x00, 0x00, 0x01, 0x0a };
-            // 水表
-            byte[] tmpBytes = { 0x08, 0x03, 0x02, 0x02, 0x00, 0x02 };
-            // 锅炉温度
-            //byte[] tmpBytes = { 0x08, 0x03, 0x00, 0x01, 0x00, 0x01 };
-
-            UInt16 crc16 = CRC16(tmpBytes, 6);
-            byte crcLowByte = (byte)(crc16 & 0x00FF);
-            byte crcHighByte = (byte)((crc16 & 0xFF00) >> 8);
-            // 水表
-            byte[] sendBytes = { 0x08, 0x03, 0x02, 0x02, 0x00, 0x02, crcLowByte, crcHighByte };
-            // 锅炉水温
-            //byte[] sendBytes = { 0x08, 0x03, 0x00, 0x01, 0x00, 0x01, crcLowByte, crcHighByte };
-
-			for (int i = 0; i < 1; i++)
+		public static string GetReportString(string resultStr)
+		{
+			string reportStr = "";
+			string findKey = "count=";
+			int idx;
+			int value = 0;
+			string subStr = "";
+			if (-1 != (idx = resultStr.LastIndexOf(findKey)))
 			{
-				socket.Send(sendBytes);
-
-				byte[] rcvBytes = new byte[1024];
-				int bytes = socket.Receive(rcvBytes, rcvBytes.Length, 0);
-				string outStr = System.Text.Encoding.ASCII.GetString(rcvBytes);
-
-				Console.WriteLine("Receive " + bytes.ToString() + " bytes!");
-				Console.WriteLine(outStr);
-
-				System.Threading.Thread.Sleep(800);
+				subStr = resultStr.Substring(idx + findKey.Length).Trim();
+				if (int.TryParse(subStr, out value))
+				{
+					reportStr = ", " + subStr;
+				}
 			}
+			Console.WriteLine("idx = " + idx.ToString() + " value = " + value.ToString() + ", subStr.Length = " + subStr.Length.ToString());
+			subStr = subStr.Substring(0, 100);
+			Console.WriteLine(subStr);
+			return reportStr;
 		}
 
         public static UInt16 CRC16(Byte[] dat, int count)
