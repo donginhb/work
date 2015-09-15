@@ -68,7 +68,16 @@ namespace ServiceAreaClientLib.DeviceInquirer
         // 读写本地缓存文件时, 用的lock对象
         protected static object bufferLock = new object();
 
-        protected void SaveToLocalFile(string cmdStr)
+		// 标记与数据库的连接状态
+		private static bool _dataBaseConnected = false;
+
+		protected static bool DataBaseConnected
+		{
+			get { return DeviceInquirer._dataBaseConnected; }
+			set { DeviceInquirer._dataBaseConnected = value; }
+		}
+
+        protected void SaveToLocalBuffer(string cmdStr)
         {
             lock (bufferLock)
             {
@@ -85,8 +94,16 @@ namespace ServiceAreaClientLib.DeviceInquirer
             }
         }
 
-        protected void CheckLocalBufferFile()
+		/// <summary>
+		/// 在断网时检查本地缓存文件, 尝试补发缓存的数据
+		/// </summary>
+        protected void CheckLocalBuffer()
         {
+			if (DataBaseConnected)
+			{
+				// 只有在前一次数据库连接为切断状态时才进行处理
+				return;
+			}
 			if (File.Exists(LocalBufFileName))
 			{
 				lock (bufferLock)
@@ -104,16 +121,23 @@ namespace ServiceAreaClientLib.DeviceInquirer
 							}
 						}
 						sr.Close();
-						File.Delete(LocalBufFileName);
 						List<string> failList = new List<string>();
+						int idx = 0;
 						foreach (string cmd in cmdList)
 						{
-							if (!Report2Server(cmd, string.Empty))
+							if (!WriteToDB(cmd))
 							{
+								if (0 == idx)
+								{
+									// 第一个就失败, 表明仍然断网, 网络没有恢复, 接下来没有必要挨个试了
+									return;
+								}
 								failList.Add(cmd);
 							}
+							idx++;
 						}
-						// 失败的话, 再存回本地缓存文件
+						// 能走到这说明至少有补发成功的了, 删掉原来的文件, 如果有失败的, 写回本地缓存文件里
+						File.Delete(LocalBufFileName);
 						if (0 != failList.Count)
 						{
 							StreamWriter sw = new StreamWriter(LocalBufFileName, true);
@@ -132,61 +156,58 @@ namespace ServiceAreaClientLib.DeviceInquirer
             }
         }
 
+		protected bool WriteToDB(string cmdStr)
+		{
+			try
+			{
+				if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
+				{
+					// 直接写入数据库
+					DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
+					mysql_object.ExecuteMySqlCommand(cmdStr);
+				}
+				else if (E_DB_CONNECT_MODE.RELAY == Db_connect_mode)
+				{
+					// 通过中继服务器
+					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
+					reporter.Send(Encoding.ASCII.GetBytes(cmdStr));
+					reporter.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				return false;
+			}
+			return true;
+		}
+
         protected bool Report2Server(string insertStr, string deviceName)
         {
-			// 用于数据库写入成功/失败后续处理的子线程
-			Thread th;
-            try
+			// 检查有没有缓存数据
+			CheckLocalBuffer();
+            if (WriteToDB(insertStr))
+			{
+				// 数据库保存成功
+				lock (this)
+				{
+					DataBaseConnected = true;
+				}
+				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+			}
+            else
             {
-                if (E_DB_CONNECT_MODE.DIRECT == Db_connect_mode)
-                {
-                    // 直接写入数据库
-                    DBConnectMySQL mysql_object = new DBConnectMySQL(DbServerInfo);
-                    mysql_object.ExecuteMySqlCommand(insertStr);
-                }
-                else if (E_DB_CONNECT_MODE.RELAY == Db_connect_mode)
-                {
-                    // 通过中继服务器
-                    TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-                    reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-                    reporter.Send(Encoding.ASCII.GetBytes(insertStr));
-                    reporter.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
 				// 数据库保存失败
-				if (string.Empty != deviceName)
+				lock (this)
 				{
-					AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
-					//th = new Thread(delegate() { SaveToLocalFile(insertStr); });
-					//th.Start();
+					DataBaseConnected = false;
 				}
-				else
-				{
-					// 如果是[string.Empty], 说明是补发缓存的数据
-					// 这时如果失败在外层调用处一并写回缓存文件(不在这里写)
-					AppendUITextBox("	缓存数据补发失败 : " + insertStr);
-				}
+				AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
+				Thread th = new Thread(delegate() { SaveToLocalBuffer(insertStr); });
+				th.Start();
 				return false;
             }
-            finally
-            {
-                ;
-            }
-			// 数据库保存成功
-			if (string.Empty != deviceName)
-			{
-				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
-				//th = new Thread(delegate() { CheckLocalBufferFile(); });
-				//th.Start();
-			}
-			else
-			{
-				// 如果是[string.Empty], 说明是补发缓存的数据
-				AppendUITextBox("	缓存数据补发成功 : " + insertStr);
-			}
 			return true;
         }
 
