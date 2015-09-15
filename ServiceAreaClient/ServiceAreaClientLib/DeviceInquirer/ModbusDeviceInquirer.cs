@@ -34,6 +34,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				// 对列表中的各个设备, 逐一进行查询
 				for (int i = 0; i < DeviceList.Count; i++)
 				{
+					if (0 == i)
+					{
+						// 检查有没有缓存数据
+						CheckLocalBuffer();
+					}
 					ModbusDeviceInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });

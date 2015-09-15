@@ -186,8 +186,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
         protected bool Report2Server(string insertStr, string deviceName)
         {
-			// 检查有没有缓存数据
-			CheckLocalBuffer();
             if (WriteToDB(insertStr))
 			{
 				// 数据库保存成功
