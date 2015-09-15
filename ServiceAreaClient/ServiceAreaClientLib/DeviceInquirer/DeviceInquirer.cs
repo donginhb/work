@@ -147,6 +147,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 							}
 							sw.Close();
 						}
+						Thread.Sleep(200);
 					}
 					catch (Exception ex)
 					{
