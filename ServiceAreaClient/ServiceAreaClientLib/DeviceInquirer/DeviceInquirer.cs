@@ -237,5 +237,39 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
+		virtual public void DoInquiry()
+		{
+			AppendUITextBox("这可是基类的虚方法呀呀呀!!!!");
+		}
+
+		protected void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			_timer.Start();
+			DoInquiry();
+		}
+
+		/// <summary>
+		/// 查询开始
+		/// </summary>
+		public void StartInquiry()
+		{
+			// 启动timer
+			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
+			_timer.AutoReset = false;
+			_timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
+			_timer.Start();
+			// 开始第一次查询
+			DoInquiry();
+		}
+
+		public void StopInquiry()
+		{
+			if (null != _timer)
+			{
+				_timer.Stop();
+				_tbxControl = null;
+			}
+		}
+
     }
 }

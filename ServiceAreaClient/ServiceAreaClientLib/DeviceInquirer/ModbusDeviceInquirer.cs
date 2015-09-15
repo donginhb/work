@@ -21,40 +21,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			set { _deviceList = value; }
 		}
 
-		/// <summary>
-		/// 查询开始
-		/// </summary>
-		public void StartInquiry()
-		{
-			// 启动timer
-			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
-			_timer.AutoReset = false;
-			_timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
-			_timer.Start();
-			// 开始第一次查询
-			DoInquiry();
-		}
-
-		public void StopInquiry()
-		{
-			if (null != _timer)
-			{
-				_timer.Stop();
-                DeviceList.Clear();
-				_tbxControl = null;
-			}
-		}
-
-		protected void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-		{
-			_timer.Start();
-			DoInquiry();
-		}
-
         /// <summary>
         /// 查询执行
         /// </summary>
-        public void DoInquiry()
+        override public void DoInquiry()
         {
 			if ((null != DeviceList)
 				&& (0 != DeviceList.Count))

@@ -29,40 +29,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			Db_connect_mode = dbConnectMode;
         }
 
-		/// <summary>
-		/// 查询开始
-		/// </summary>
-		public void StartInquiry()
-		{
-			// 启动timer
-			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
-			_timer.AutoReset = false;
-			_timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
-			_timer.Start();
-			// 开始第一次查询
-			DoInquiry();
-		}
-
-		public void StopInquiry()
-		{
-			if (null != _timer)
-			{
-				_timer.Stop();
-                DeviceList.Clear();
-				_tbxControl = null;
-			}
-		}
-
-		void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-		{
-			_timer.Start();
-			DoInquiry();
-		}
-
         /// <summary>
         /// 查询执行
         /// </summary>
-        public void DoInquiry()
+        override public void DoInquiry()
         {
             if (    (null != DeviceList)
                 &&  (0 != DeviceList.Count) )
@@ -159,32 +129,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 									+ dateTimeStr + @"'," + deviceSnStr + reportStr0 + reportStr1 + @")";
 
 			return insertStr;
-		}
-
-		public delegate void UiUpdateDelegate(string txtStr);
-
-		/// <summary>
-		/// 更新UI TextBox控件内容
-		/// </summary>
-		void AppendUITextBox(string txtStr)
-		{
-			if (null == _tbxControl)
-			{
-				return;
-			}
-			if (_tbxControl.InvokeRequired)
-			{
-				UiUpdateDelegate updateDel = new UiUpdateDelegate(AppendUITextBox);
-				_tbxControl.BeginInvoke(updateDel, new object[] { txtStr });
-			}
-			else
-			{
-                if (_tbxControl.Text.Length >= _tbxControl.MaxLength - 1000)
-                {
-                    _tbxControl.Text = _tbxControl.Text.Substring(_tbxControl.Text.Length - 100);
-                }
-				_tbxControl.AppendText(txtStr + "\r\n");
-			}
 		}
 
 	}
