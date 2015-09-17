@@ -344,6 +344,10 @@ namespace ServiceAreaServer
 		static List<string> LoadLocalBufferData()
 		{
 			List<string> rtDataList = new List<string>();
+			if (!File.Exists(LocalBufFileName))
+			{
+				return rtDataList;
+			}
 			lock (bufferLock)
 			{
 				try
