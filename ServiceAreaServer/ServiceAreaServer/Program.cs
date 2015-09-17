@@ -42,6 +42,20 @@ namespace ServiceAreaServer
 			set { Program._dataBaseConnected = value; }
 		}
 
+		// 当某次写入数据库失败时, 以后用来尝试写入数据库, 检查连接是否恢复的数据内容
+		// 一般是断网时第一条被缓存的数据
+		private static string _attemptDataStr = string.Empty;
+
+		public static string AttemptDataStr
+		{
+			get { return Program._attemptDataStr; }
+			set { Program._attemptDataStr = value; }
+		}
+
+		static Queue<string> bufferQueue = new Queue<string>();
+
+		// 用于定期想磁盘文件(断网时缓冲数据用)写入的timer
+		static System.Timers.Timer bufferTimer;
 
 		static void Main(string[] args)
 		{
@@ -95,22 +109,127 @@ namespace ServiceAreaServer
 		/// <returns></returns>
 		private static bool ClientMsgProcess(string clientMsg)
 		{
-			// 执行MySQL命令
-			if (WriteToDB(clientMsg))
-			{
-				// 数据库保存成功
-				DataBaseConnected = true;
-				Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
-				return true;
+			if (false == DataBaseConnected)
+			{																	// 如果处于DB未连接状态
+				if (string.Empty == AttemptDataStr)
+				{																// 检查当前有无尝试写入字串
+					string str = CheckLocalBuffer();							// 没有的话从缓存文件中load第一条
+					if (string.Empty != str)
+					{
+						AttemptDataStr = str;
+					}
+					else
+					{															// 缓存文件也没有就用新收到的数据
+						AttemptDataStr = clientMsg;
+					}
+				}
+				// 用尝试字串去尝试写入DB
+				if (WriteToDB(AttemptDataStr))
+				{
+					// 如果成功, 说明与DB的连接成功或者断网后恢复了, load所有之前缓存的数据, 准备送出去
+					// 先送缓存数据(去掉第一条已送出的)
+					List<string> bufferList = LoadLocalBufferData();
+					List<string> failList = new List<string>();					// 送失败的列表
+					foreach (string dataStr in bufferList)
+					{
+						if (dataStr.Equals(AttemptDataStr))
+						{
+							continue;
+						}
+						if (!WriteToDB(dataStr))
+						{
+							failList.Add(dataStr);
+						}
+					}
+					// 再发缓存Queue内未写入文件的数据
+					lock (bufferQueue)
+					{
+						int count = bufferQueue.Count;
+						for (int i = 0; i < count; i++)
+						{
+							string dataStr = bufferQueue.Dequeue();
+							if (!WriteToDB(dataStr))
+							{
+								failList.Add(dataStr);
+							}
+						}
+					}
+					// 最后发新收到的数据, 如果新收到的数据以作为尝试字串发出去了就不要再发了
+					if ((AttemptDataStr != clientMsg)
+						&& !WriteToDB(clientMsg)	)
+					{
+						failList.Add(clientMsg);
+					}
+					AttemptDataStr = string.Empty;
+					// 最后迁入连接状态
+					if (0 == failList.Count)
+					{
+						// 都成功送出去了说明DB连接恢复了
+						DataBaseConnected = true;
+						// 清除缓存文件
+						DeleteLocalFile();
+						return true;
+					}
+					else
+					{
+						// 有失败的已然还是未连接状态, 将失败的写入本地缓存文件
+						foreach (string dataStr in failList)
+						{
+							SaveToLocalFile(dataStr);
+						}
+						failList.Clear();
+						return false;
+					}
+				}
+				else
+				{
+					// 如果失败
+					// 把新收到的数据压入Queue, 定期写入磁盘文件
+					// 如果Queue是空的要起timer(用于定期向磁盘文件写入)
+					lock (bufferQueue)
+					{
+						bufferQueue.Enqueue(clientMsg);
+						if (1 == bufferQueue.Count)
+						{
+							// 如果是第一条, 起timer每分钟定时写入磁盘文件
+							bufferTimer = new System.Timers.Timer(1000 * 60);
+							bufferTimer.Elapsed += bufferTimer_Elapsed;
+							bufferTimer.Start();
+						}
+					}
+				}
+				return false;
 			}
 			else
+			{																	// 处于DB连接状态
+				// 执行MySQL命令
+				if (WriteToDB(clientMsg))
+				{
+					// 数据库保存成功
+					Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
+					return true;
+				}
+				else
+				{
+					// 数据库保存失败
+					DataBaseConnected = false;
+					bufferQueue.Enqueue(clientMsg);
+					Console.WriteLine("※※※ Save To DB Fail! ※※※");
+					return false;
+				}
+			}
+		}
+
+		static void bufferTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			lock (bufferQueue)
 			{
-				// 数据库保存失败
-				DataBaseConnected = false;
-				Thread th = new Thread(delegate() { SaveToLocalFile(clientMsg); });
-				th.Start();
-				Console.WriteLine("※※※ Save To DB Fail! ※※※");
-				return false;
+				int count = bufferQueue.Count;
+				for (int i = 0; i < count; i++)
+				{
+					string dataStr = bufferQueue.Dequeue();
+					SaveToLocalFile(dataStr);
+				}
 			}
 		}
 
@@ -164,7 +283,7 @@ namespace ServiceAreaServer
 		// 读写本地缓存文件时, 用的lock对象
 		protected static object bufferLock = new object();
 
-		protected static void SaveToLocalFile(string cmdStr)
+		static void SaveToLocalFile(string cmdStr)
 		{
 			lock (bufferLock)
 			{
@@ -181,13 +300,23 @@ namespace ServiceAreaServer
 			}
 		}
 
-		protected static void CheckLocalBuffer()
+		static void DeleteLocalFile()
 		{
-			if (DataBaseConnected)
+			lock (bufferLock)
 			{
-				// 只有在前一次数据库连接为切断状态时才进行处理
-				return;
+				try
+				{
+					File.Delete(LocalBufFileName);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
 			}
+		}
+
+		static string CheckLocalBuffer()
+		{
 			if (File.Exists(LocalBufFileName))
 			{
 				lock (bufferLock)
@@ -195,34 +324,12 @@ namespace ServiceAreaServer
 					try
 					{
 						StreamReader sr = new StreamReader(LocalBufFileName);
-						string rdLine = "";
-						List<string> cmdList = new List<string>();
-						while (null != (rdLine = sr.ReadLine()))
-						{
-							if (string.Empty != rdLine.Trim())
-							{
-								cmdList.Add(rdLine);
-							}
-						}
+						string rdLine = sr.ReadLine();
 						sr.Close();
-						File.Delete(LocalBufFileName);
-						List<string> failList = new List<string>();
-						foreach (string cmd in cmdList)
+						if (null != rdLine
+							&& string.Empty != rdLine.Trim())
 						{
-							if (!ClientMsgProcess(cmd))
-							{
-								failList.Add(cmd);
-							}
-						}
-						// 失败的话, 再存回本地缓存文件
-						if (0 != failList.Count)
-						{
-							StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-							foreach (string cmd in failList)
-							{
-								sw.WriteLine(cmd);
-							}
-							sw.Close();
+							return rdLine;
 						}
 					}
 					catch (Exception ex)
@@ -231,7 +338,37 @@ namespace ServiceAreaServer
 					}
 				}
 			}
+			return string.Empty;
 		}
 
+		static List<string> LoadLocalBufferData()
+		{
+			List<string> rtDataList = new List<string>();
+			lock (bufferLock)
+			{
+				try
+				{
+					StreamReader sr = new StreamReader(LocalBufFileName);
+					do
+					{
+						string rdLine = sr.ReadLine();
+						if (null == rdLine)
+						{
+							break;
+						}
+						if (string.Empty != rdLine.Trim())
+						{
+							rtDataList.Add(rdLine.Trim());
+						}
+					} while (true);
+					sr.Close();
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+			}
+			return rtDataList;
+		}
 	}
 }
