@@ -1,0 +1,872 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+// Generated Help ID header file
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.hm"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Japanese resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(932)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\CourseLoader.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CourseLoader.ico"
+IDI_INFO                ICON    DISCARDABLE     "res\\icon1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR_HOT         BITMAP  DISCARDABLE     "res\\hottoolbar.bmp"
+IDB_TOOLBAR_COLD        BITMAP  DISCARDABLE     "res\\coldtoolbar.bmp"
+IDB_UNKNOWN             BITMAP  DISCARDABLE     "RES\\UNKNOWN.BMP"
+IDB_NOTE_DIS            BITMAP  DISCARDABLE     "RES\\NOTE_DIS.BMP"
+IDB_NOTE_EN             BITMAP  DISCARDABLE     "RES\\NOTE_EN.BMP"
+IDB_OPEN                BITMAP  DISCARDABLE     "res\\Open.bmp"
+IDB_CHECK               BITMAP  DISCARDABLE     "res\\unknown1.bmp"
+IDB_UNCHECK             BITMAP  DISCARDABLE     "res\\check1.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSOR_DRAG_DROP    CURSOR  DISCARDABLE     "RES\\CURSOR1.CUR"
+IDC_CURSOR_DRAG_SIDE    CURSOR  DISCARDABLE     "RES\\CURSOR_D.CUR"
+IDC_HAND                CURSOR  DISCARDABLE     "res\\hand.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "コースアップローダーについて"
+FONT 9, "MS UI Gothic"
+BEGIN
+    LTEXT           "コースアップローダー 5.0.0",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2008",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,18,WS_GROUP
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
+END
+
+IDD_COURSELOADER_DIALOG DIALOGEX 0, 0, 383, 366
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "コースアップローダー"
+MENU IDR_MAIN
+FONT 10, "MS UI Gothic"
+BEGIN
+    LISTBOX         IDC_LIST_COURSE,7,25,180,62,LBS_OWNERDRAWFIXED | 
+                    LBS_HASSTRINGS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    PUSHBUTTON      " SCORMのインフォメーションを入力する",
+                    IDC_BUTTON_INPUT_INFO,37,91,119,15
+    PUSHBUTTON      "全て選択",IDC_BUTTON_SELECT_ALL,37,109,58,15
+    PUSHBUTTON      "全て選択しない",IDC_BUTTON_DESELECT_ALL,100,109,56,15
+    PUSHBUTTON      "作成の種類を設定",IDC_BUTTON_SET_TYPE,305,109,69,15
+    CONTROL         "SCORM 1.2.7 規格でアップロード",IDC_RADIO_SCORM,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,16,168,202,13
+    CONTROL         " SCORM 1.2.7 規格無しでアップロード:",
+                    IDC_RADIO_NO_SCORM,"Button",BS_AUTORADIOBUTTON,16,234,
+                    202,13
+    CONTROL         "メディアファイルを直接 FTPサーバーにアップロードする",
+                    IDC_RADIO_SCORM_FTP,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,30,217,202,13
+    CONTROL         "次のフォルダに作成します。後は手動でサーバーにアップロードする",
+                    IDC_RADIO_SCORM_LOCAL,"Button",BS_AUTORADIOBUTTON,30,184,
+                    309,13
+    CONTROL         "設定のサーバーに作成します。ユーザーが直接インターネットでコースを見る",
+                    IDC_RADIO_FTP,"Button",BS_AUTORADIOBUTTON | WS_GROUP,30,
+                    247,287,13
+    CONTROL         "次のフォルダに作成します。サーバーを使わずに直接見る:",
+                    IDC_RADIO_FTP_LOCAL,"Button",BS_AUTORADIOBUTTON,30,262,
+                    186,13
+    CONTROL         "次のフォルダに作成します。後は手動でサーバーにアップロードする:",
+                    IDC_RADIO_FTP_MANUAL,"Button",BS_AUTORADIOBUTTON,30,278,
+                    203,13
+    EDITTEXT        IDC_EDIT_PATH_SCORM,211,199,134,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PATH_DIRECT,233,260,134,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PATH_LOAD_LATER,233,277,134,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "作成開始",IDC_LOAD,249,346,60,15
+    PUSHBUTTON      "閉じる",IDCANCEL,316,346,60,15
+    PUSHBUTTON      "Button1",IDOK,0,128,6,7,NOT WS_VISIBLE
+    LTEXT           "コース作成:",IDC_STATIC,7,11,47,9
+    LTEXT           "作成形式:",IDC_STATIC,192,11,47,9
+    CONTROL         "",IDC_STATIC_GRID,"Static",SS_BLACKRECT | NOT 
+                    WS_VISIBLE,194,25,180,79
+    GROUPBOX        "作成先",IDC_STATIC,7,159,369,143
+    CONTROL         "Progress1",IDC_PROGRESS1,"msctls_progress32",PBS_SMOOTH | 
+                    NOT WS_VISIBLE | WS_BORDER,7,346,232,15
+    GROUPBOX        "LMS",IDC_STATIC,7,307,369,36
+    CONTROL         "aEnrich LMS",IDC_RAD_AENRICH,"Button",
+                    BS_AUTORADIOBUTTON,46,328,55,10
+    CONTROL         "Default",IDC_RAD_DEFAULT,"Button",BS_AUTORADIOBUTTON,46,
+                    317,38,10
+    CONTROL         "iLearning LMS v 5.x",IDC_RAD_ORACLE,"Button",
+                    BS_AUTORADIOBUTTON,268,317,76,10
+    CONTROL         "iLearning LMS Old",IDC_RAD_ORACLEOLD,"Button",
+                    BS_AUTORADIOBUTTON,268,328,74,10
+    CONTROL         "Enhance SCORM Mode",IDC_CHECK_ENHANCE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,111,322,86,10
+    GROUPBOX        "",IDC_STATIC,36,311,168,29
+    GROUPBOX        "",IDC_STATIC,258,311,93,28
+    GROUPBOX        "ZIP Level",IDC_STATIC,196,126,180,32
+    CONTROL         "Best Speed",IDC_RAD_ZIP1,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,198,140,53,10
+    CONTROL         "Default",IDC_RAD_ZIP6,"Button",BS_AUTORADIOBUTTON,259,
+                    140,38,10
+    CONTROL         "Best Compression",IDC_RAD_ZIP9,"Button",
+                    BS_AUTORADIOBUTTON,303,140,72,10
+    GROUPBOX        "Media Streaming Protocol",IDC_STATIC,10,126,174,32
+    CONTROL         "MMS",IDC_RAD_MMS,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
+                    16,135,31,10
+    CONTROL         "RTSP",IDC_RAD_RTSP,"Button",BS_AUTORADIOBUTTON,16,147,
+                    31,10
+    CONTROL         "HTTP",IDC_RAD_HTTP,"Button",BS_AUTORADIOBUTTON,52,135,
+                    72,10
+    CONTROL         "Without Media Server (Relative Path)",IDC_RAD_HTTPNM,
+                    "Button",BS_AUTORADIOBUTTON,52,147,129,10
+    CONTROL         "Compress Media File to ZIP",IDC_MEDIA_IN_ZIP,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,85,200,114,10
+    GROUPBOX        "",IDC_STATIC,22,178,347,36
+END
+
+IDD_DIALOG_MEDIA_SRV_FTP DIALOG DISCARDABLE  0, 0, 235, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "メディアサーバー"
+FONT 9, "MS UI Gothic"
+BEGIN
+    RTEXT           "FTPサーバー:",IDC_STATIC,22,23,53,11
+    RTEXT           "ログイン名:",IDC_STATIC,22,40,53,11
+    RTEXT           "ログインパスワード:",IDC_STATIC,22,57,53,11
+    EDITTEXT        IDC_EDIT_MSRV_IP,83,21,132,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_MSRV_LOGIN_NAME,83,38,132,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_MSRV_PASSWORD,83,55,132,13,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    RTEXT           "サブディレクトリ:",IDC_STATIC,22,74,53,11
+    EDITTEXT        IDC_EDIT_MSRV_DIRECTORY,83,72,132,13,ES_AUTOHSCROLL
+    GROUPBOX        "FTP",IDC_STATIC,8,8,219,103
+    LTEXT           "メディアファイルの位置:",IDC_STATIC,8,122,61,10
+    EDITTEXT        IDC_EDIT_MSRV_ALIAS,104,120,123,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_MMS,73,120,27,12,ES_RIGHT | ES_READONLY
+    RTEXT           "接続ポート:",IDC_STATIC,15,91,60,11
+    EDITTEXT        IDC_EDIT_MSRV_PORT,83,89,132,13,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_WEB_SRV_FTP DIALOG DISCARDABLE  0, 0, 235, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Webサーバー"
+FONT 9, "MS UI Gothic"
+BEGIN
+    RTEXT           "FTPサーバー:",IDC_STATIC,22,23,53,11
+    RTEXT           "ログイン名:",IDC_STATIC,22,40,53,11
+    RTEXT           "ログインパスワード:",IDC_STATIC,16,57,59,11
+    EDITTEXT        IDC_EDIT_WEBSRV_IP,83,21,132,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_WEBSRV_LOGIN_NAME,83,38,132,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_WEBSRV_PASSWORD,83,55,132,13,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    RTEXT           "サブディレクトリ:",IDC_STATIC,22,74,53,11
+    EDITTEXT        IDC_EDIT_WEBSRV_DIRECTORY,83,72,132,13,ES_AUTOHSCROLL
+    GROUPBOX        "FTP",IDC_STATIC,8,8,220,102
+    LTEXT           "コースURL:",IDC_STATIC,24,120,32,10
+    EDITTEXT        IDC_EDIT_COURSE_URL,58,118,104,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COURSENAME,166,118,62,12,ES_READONLY
+    RTEXT           "接続ポート:",IDC_STATIC,15,91,60,11
+    EDITTEXT        IDC_EDIT_WEBSRV_PORT,83,89,132,13,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_PROGRESS DIALOGEX 0, 0, 269, 54
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Dialog"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    CONTROL         "Animate1",IDC_ANIMATE,"SysAnimate32",ACS_CENTER | 
+                    ACS_AUTOPLAY | WS_TABSTOP,7,7,32,40,WS_EX_CLIENTEDGE
+    CTEXT           "Static",IDC_STATIC_MSG,45,13,217,10
+    PUSHBUTTON      "キャンセル",IDCANCEL,129,33,48,14
+END
+
+IDD_DIALOG_SQL DIALOGEX 0, 0, 248, 188
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 10, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,191,167,50,14
+    EDITTEXT        IDC_EDITSQL,7,7,234,147,ES_MULTILINE | ES_WANTRETURN | 
+                    WS_VSCROLL,0,HIDC_EDITSQL
+END
+
+IDD_DIALOG_TRANS_COURSE DIALOG DISCARDABLE  0, 0, 255, 53
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "未転送のコースを転送する"
+FONT 9, "MS UI Gothic"
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,200,31,48,14
+    PUSHBUTTON      "OK",IDOK,147,31,48,14
+    LTEXT           "転送したいコース:",IDC_STATIC,7,10,52,13
+    COMBOBOX        IDC_COMBO_COURSE,59,8,190,93,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DIALOG_ASK_COURSE DIALOGEX 0, 0, 209, 116
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "同じ名前のコースがFTPサーバーにあります。"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,154,94,48,14
+    RTEXT           "コース出力",ID_STATIC,7,9,37,11,0,0,HID_STATIC
+    PUSHBUTTON      "OK",IDOK,97,94,48,14
+    CONTROL         "既存のコースに上書き",IDC_RADIO_OVERWRITE,"Button",
+                    BS_AUTORADIOBUTTON,22,41,105,13
+    CONTROL         "次の名前で作成する:",IDC_RADIO_NEW_NAME,"Button",
+                    BS_AUTORADIOBUTTON,22,58,164,11
+    EDITTEXT        IDC_EDIT_NAME,50,72,152,12,ES_AUTOHSCROLL
+    LTEXT           "FTPサーバーに既存しています。選択してください:",
+                    IDC_STATIC_EXIST,7,23,195,11,0,0,HIDC_STATIC_EXIST
+    EDITTEXT        IDC_EDIT_COURSE,51,7,151,12,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_DIALOG_OPTION DIALOG DISCARDABLE  0, 0, 187, 103
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "オプション設定"
+FONT 9, "MS UI Gothic"
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,130,82,50,14
+    DEFPUSHBUTTON   "OK",IDOK,73,82,50,14
+    LTEXT           "リンクテキスト:",IDC_STATIC,24,27,36,13
+    EDITTEXT        IDC_EDIT_LINK,63,25,117,15,ES_AUTOHSCROLL
+    CONTROL         "スクリーンキャプチャーメディアファイル",
+                    IDC_CHECK_CONV_DEMO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,11,56,169,11
+    CONTROL         "FTP は PASSIV モードで転送",IDC_CHECK_PASSIVE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,11,69,169,11
+    RTEXT           "デフォルトの会社名:",IDC_STATIC,5,10,55,13
+    EDITTEXT        IDC_EDIT_ORG,63,7,117,15,ES_AUTOHSCROLL
+    CONTROL         "SCORM 1.2 規格をデフォルトでアップロード",
+                    IDC_CHECK_DEFAULT_SCORN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,11,43,169,11
+END
+
+IDD_DIALOG_LAUNCH_OK DIALOGEX 0, 0, 178, 58
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "通知"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "閉じる",IDCANCEL,102,36,48,14
+    PUSHBUTTON      "結果をプレビュー",ID_VIEW_RESULT,31,36,60,14
+    LTEXT           "コースを作成しました",IDC_STATIC_EXIST,40,12,130,11,0,0,
+                    HIDC_STATIC_EXIST
+    ICON            IDI_INFO,IDC_STATIC,7,7,20,20
+END
+
+IDD_DIALOG_REGEN_INDEX DIALOG DISCARDABLE  0, 0, 242, 49
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "インデックスファイルは既に存在します"
+FONT 9, "MS UI Gothic"
+BEGIN
+    LTEXT           "リモートサーバーにインデックスファイルが既存しています。選択してクリックしてください:",
+                    IDC_STATIC,7,7,228,10
+    PUSHBUTTON      "元のファイルを保留",IDC_BUTTON_RESERVE,7,28,61,14
+    PUSHBUTTON      "直接上書き",IDC_BUTTON_OVERWRITE,90,28,61,14
+    PUSHBUTTON      "選択して上書き",IDC_BUTTON_SELECT,175,28,60,14
+END
+
+IDD_DIALOG_TYPE_SELECTING DIALOG DISCARDABLE  0, 0, 199, 142
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "作成形式の選択"
+FONT 9, "MS UI Gothic"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,117,50,16
+    PUSHBUTTON      "キャンセル",IDCANCEL,142,117,50,16
+    LTEXT           "作成形式を選択してください:",IDC_STATIC,7,7,185,12
+    LISTBOX         IDC_LIST_TYPE,7,21,185,83,LBS_OWNERDRAWFIXED | 
+                    LBS_HASSTRINGS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    PUSHBUTTON      "すべて選択",IDC_BUTTON_SELECTALL,7,117,53,16
+END
+
+IDD_DIALOG_COURSE_DUP DIALOGEX 0, 0, 209, 116
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "オプション設定"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,154,94,48,14
+    RTEXT           "コース作成",ID_STATIC,7,9,37,11,0,0,HID_STATIC
+    PUSHBUTTON      "OK",IDOK,97,94,48,14
+    CONTROL         "既存のコースに上書き保存",IDC_RADIO_OVERWRITE,"Button",
+                    BS_AUTORADIOBUTTON,22,41,180,13
+    CONTROL         "次の名前で作成:",IDC_RADIO_NEW_NAME,"Button",
+                    BS_AUTORADIOBUTTON,22,58,164,11
+    EDITTEXT        IDC_EDIT_NAME,50,72,152,12,ES_AUTOHSCROLL
+    LTEXT           "保存先フォルダに存在します。選択してください:",
+                    IDC_STATIC_EXIST,7,23,195,11,0,0,HIDC_STATIC_EXIST
+    EDITTEXT        IDC_EDIT_COURSE,51,7,151,12,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_DIALOG_VIEW_SEL DIALOG DISCARDABLE  0, 0, 223, 54
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "コースを見る"
+FONT 9, "MS UI Gothic"
+BEGIN
+    PUSHBUTTON      "閉じる",IDCANCEL,113,32,48,14
+    PUSHBUTTON      "ビュー",IDVIEW,54,32,48,14
+    LTEXT           "ビューしたいコースを選択してください:",IDC_STATIC,7,9,
+                    99,11
+    COMBOBOX        IDC_COMBO_COURSE,106,7,110,135,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DIALOG_TYPE_SET DIALOG DISCARDABLE  0, 0, 319, 270
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "アップロードのタイプを設定"
+FONT 9, "MS UI Gothic"
+BEGIN
+    COMBOBOX        IDC_COMBO_TYPE,50,7,185,147,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "新規",IDC_BUTTON_NEW_TYPE,242,7,31,13
+    PUSHBUTTON      "名前変更",IDC_BUTTON_RENAME_TYPE,279,7,31,13
+    EDITTEXT        IDC_EDIT_DEFAULT_PROFILE,76,83,220,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    PUSHBUTTON      "エンコードの名前変更",IDC_BUTTON_RENAME,21,211,62,14
+    PUSHBUTTON      "エンコード削除",IDC_BUTTON_DELETE,85,211,52,14
+    PUSHBUTTON      "閉じる",IDCANCEL,262,246,48,14
+    RTEXT           "エンコード方式:",IDC_STATIC_SCREEN_TYPE,24,84,47,11
+    CONTROL         "",IDC_STATIC_GRID,"Static",SS_BLACKRECT | NOT 
+                    WS_VISIBLE,21,99,276,110
+    LTEXT           "タイプ名:",IDC_STATIC,8,9,37,11
+    CONTROL         "変換せずにコースのメディアファイルを使う",
+                    IDC_RADIO_ORIGINAL,"Button",BS_AUTORADIOBUTTON,8,28,130,
+                    9
+    CONTROL         "次の設定で各メディアファイルを変換",IDC_RADIO_CONVERT,
+                    "Button",BS_AUTORADIOBUTTON,154,28,131,9
+    PUSHBUTTON      "タイプ削除",IDC_BUTTON_DEL_TYPE,8,246,46,14
+    COMBOBOX        IDC_COMBO_CODEC,76,65,220,53,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    RTEXT           "オーディオ Codec:",IDC_STATIC_CODEC,20,68,50,11
+    EDITTEXT        IDC_EDIT_SCREEN_PROFILE,76,83,220,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    CONTROL         "Tab1",IDC_TAB,"SysTabControl32",0x0,8,47,303,188
+END
+
+IDD_DIALOG_ASK_TYPE DIALOG DISCARDABLE  0, 0, 210, 51
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "アップロードのタイプを入力"
+FONT 9, "MS UI Gothic"
+BEGIN
+    PUSHBUTTON      "キャンセル",IDCANCEL,155,29,48,14
+    PUSHBUTTON      "OK",IDOK,97,29,48,14
+    EDITTEXT        IDC_EDIT_TYPE,55,7,148,12,ES_AUTOHSCROLL
+    LTEXT           "アップロード形式:",IDC_STATIC,7,9,48,12
+END
+
+IDD_DIALOG_INPUT_PROFILE DIALOG DISCARDABLE  0, 0, 187, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "エンコード名を入力してください"
+FONT 9, "MS UI Gothic"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,80,29,48,14
+    PUSHBUTTON      "キャンセル",IDCANCEL,132,29,48,14
+    LTEXT           "エンコード名:",IDC_STATIC,7,9,36,11
+    EDITTEXT        IDC_EDIT_PROFILE,46,7,134,12,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_INPUT_INFO DIALOG DISCARDABLE  0, 0, 223, 218
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "SCORM　情報を入力する"
+FONT 9, "MS UI Gothic"
+BEGIN
+    PUSHBUTTON      "閉じる",IDCANCEL,166,197,50,14
+    LISTBOX         IDC_LIST_COURSE,7,19,209,64,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "コース名:",IDC_STATIC,7,7,87,10
+    GROUPBOX        "SCORM",IDC_STATIC,7,91,209,102
+    RTEXT           "コースタイトル:",IDC_STATIC,12,108,38,8
+    EDITTEXT        IDC_EDIT_TITLE,56,106,146,12,ES_AUTOHSCROLL
+    RTEXT           "コース説明:",IDC_STATIC,12,175,38,8
+    RTEXT           "サブタイトル:",IDC_STATIC,12,124,38,8
+    EDITTEXT        IDC_EDIT_SUB_TITLE,56,122,146,12,ES_AUTOHSCROLL
+    RTEXT           "出版単位:",IDC_STATIC,12,141,38,8
+    EDITTEXT        IDC_EDIT_ORG,56,139,146,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DESC,56,173,146,12,ES_AUTOHSCROLL
+    RTEXT           "キーワード:",IDC_STATIC,12,159,38,8
+    EDITTEXT        IDC_EDIT_KEYWORD,56,156,146,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "OK",IDOnOK,105,197,50,14
+    CTEXT           "*",IDC_STATIC,202,161,8,8,SS_CENTERIMAGE
+    CTEXT           "*",IDC_STATIC,202,144,8,8,SS_CENTERIMAGE
+    CTEXT           "*",IDC_STATIC,202,110,8,8,SS_CENTERIMAGE
+    CTEXT           "*",IDC_STATIC,202,127,8,8,SS_CENTERIMAGE
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 5,0,0,229
+ PRODUCTVERSION 5,0,0,229
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x21L
+#else
+ FILEFLAGS 0x20L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "EKDI\0"
+            VALUE "FileDescription", "CourseLauncher\0"
+            VALUE "FileVersion", "5, 0, 0, 229\0"
+            VALUE "InternalName", "CourseLoader\0"
+            VALUE "LegalCopyright", "Copyright (C) 2008\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "CourseLauncher.exe\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "CourseLauncher\0"
+            VALUE "ProductVersion", "5, 0, 0, 229\0"
+            VALUE "SpecialBuild", "5, 0, 0, 229\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_COURSELOADER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 376
+        TOPMARGIN, 11
+        BOTTOMMARGIN, 361
+    END
+
+    IDD_DIALOG_MEDIA_SRV_FTP, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 227
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 133
+    END
+
+    IDD_DIALOG_WEB_SRV_FTP, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 228
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 133
+    END
+
+    IDD_DIALOG_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 262
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 47
+    END
+
+    IDD_DIALOG_SQL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 241
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+    END
+
+    IDD_DIALOG_TRANS_COURSE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 248
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 45
+    END
+
+    IDD_DIALOG_ASK_COURSE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 202
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+
+    IDD_DIALOG_OPTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+
+    IDD_DIALOG_LAUNCH_OK, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 171
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 50
+    END
+
+    IDD_DIALOG_REGEN_INDEX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 42
+    END
+
+    IDD_DIALOG_TYPE_SELECTING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 192
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 133
+    END
+
+    IDD_DIALOG_COURSE_DUP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 202
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+
+    IDD_DIALOG_VIEW_SEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 216
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 46
+    END
+
+    IDD_DIALOG_TYPE_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 310
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 260
+    END
+
+    IDD_DIALOG_ASK_TYPE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 203
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 43
+    END
+
+    IDD_DIALOG_INPUT_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 43
+    END
+
+    IDD_DIALOG_INPUT_INFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 216
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAIN MENU DISCARDABLE 
+BEGIN
+    POPUP "コース(&C)"
+    BEGIN
+        MENUITEM "コースの転送を続行...",       ID_TRANSMIT
+        MENUITEM "最後に発行したコースの閲覧",  ID_VIEW_COURSE
+        MENUITEM SEPARATOR
+        MENUITEM "終了(&E)",                    ID_EXIT
+    END
+    POPUP "設定(&S)"
+    BEGIN
+        MENUITEM "作成形式設定(&P)",            ID_TYPE_SETTING
+        MENUITEM "サーバー設定(&S)",            ID_SERVER_SETTING
+        MENUITEM "オプション設定(&O)",          ID_OPTION
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "製品について(&A)",            ID_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&コースアップローダーについて..."
+    IDS_FAIL_TO_COPY        " <%s> から <%s> へのファイルのコピーに失敗しました。"
+    IDS_FAIL_TO_CREATE_DIR  "フォルダ <%s> の作成に失敗しました"
+    IDS_SURE_TO_LAUNCH      "コースの作成に時間がかかります。続行しますか？"
+    IDS_SEL_COURSE_FIRST    "コースを選択してください"
+    IDS_INVALID_URL         "FTPサーバーのアドレス <%s> が不正です！"
+    IDS_EXCEPTION           "FTPサーバーへのアクセスに失敗しました。ネットワーク環境設定を確認してください。"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_COURSE_DUP          "入力したコースは既に存在しています。再入力してください"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_FAIL_TO_CONVERT_ASF "ファイル <%s> から <%s> への変換に失敗しました"
+    IDS_SRV_SETTING_CAPTION "サーバー設定"
+//    IDS_SET_MEDIA_SRV_ALIAS "コースをアップロードする前に、<メディアファイル位置>を設定してください"	//del 2013/9/20 kagata PPT2013
+	IDS_SET_MEDIA_SRV_ALIAS "コースをアップロードする前に「はい」を押して、\n<メディアサーバーの設定>を行ってください。\n\n手動でサーバーにアップロードする場合は、\n必要ありませんので「いいえ」を押して\nこの画面を閉じてください。"		//add 2013/9/20 kagata PPT2013
+    IDS_APPNAME             "コースアップローダー"
+    IDS_FAIL_TO_CONNECT_INTERNET 
+                            "FTPサーバーへのアクセスに失敗しました。ネットワーク環境設定を確認してください"
+    IDS_FAIL_TO_CHANGE_DIR  "FTPサーバー <%s> 上のディレクトリ <%s> の変更に失敗しました"
+    IDS_FAIL_TO_CREATE_FTP_DIR 
+                            "FTPサーバー <%s> 上のディレクト <%s> の作成に失敗しました"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERROR_COM_EASY_UTIL "<IEasyUtility>が見つかりません"
+    IDS_ERROR_COM_WMX_UTILITY "<IWMXUtility>が見つかりません"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CANCEL              "キャンセル"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_GEN_MEDIA_FILE      "コース<%s>のメディアファイルを作成"
+    IDS_PROCESSING          "処理中..."
+    IDS_COPY_FILE           " <%s>ファイルをコピー..."
+    IDS_CONVERT_FILE        "ファイル <%s>変換..."
+    IDS_CONNECT_TO_FTP      "FTPサーバー <%s>にアクセス"
+    IDS_COPY_FILE_TO_FTP    "ファイル <%s>を転送"
+    IDS_TRANSMIT_FILE       "コース <%s>を転送"
+    IDS_FAIL_TO_FIND_FILE   "ファイル <%s>が見つかりません"
+    IDS_FAIL_TO_WRITE_DB    "データベースにエントリーを書き込みできません"
+    IDS_CHECK_FREQ_FIRST    "<ビデオ周波数>と<オーディオ周波数>を確認してください。"
+    IDS_DESCRIPTION         "説明"
+    IDS_VIDEO_FREQ          "ビデオ周波数"
+    IDS_AUDIO_FREQ          "オーディオ周波数"
+    IDS_FRAME_RATE          "フレームレート"
+    IDS_WEB_FTP_NOT_SET     "Webサーバーが設定されていません。設定してください。"
+    IDS_MEDIA_FTP_NOT_SET   "メディアサーバーが設定されていません。設定してください。"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_FAIL_TO_PUT_FILE    "FTPサーバー <%s> へのアップロードに失敗しました。"
+    IDS_SURE_TO_EXIT        "処理を中断しますか？"
+    IDS_TYPE_DESC0          "ハイ・バンド・メディア"
+    IDS_TYPE_DESC1          "ロー･バンド･メディア"
+    IDS_TYPE_DESC2          "オーディオのみ"
+    IDS_NOT_NULL            "データ欄 (%d,%d) は空白にできません"
+    IDS_COURSE_TRANSMITTED  "コースを転送しました"
+    IDS_SELECT_ROW_FIRST    "挿入したい列を選択してください"
+    IDS_DEFAULT_LINK        "リンク"
+    IDS_NOT_TRANS_ANY_COURSE "コースはまだ転送されていません"
+    IDS_SET_COURSE_URL_FIRST "<コースURL>を入力してください"
+    ID_BTN_OPEN_FTP         "フォルダを選択してください"
+    ID_BTN_OPEN_FILE        "フォルダを選択してください"
+    IDS_INPUT_DEST_FIRST    "コピー先のフォルダを入力してください"
+    IDS_DEST_NOT_EXIST      "コピー先のフォルダ <%s> は存在しません"
+    IDS_COURSE_PUBLISHED    "コースのアップロードは完了しました"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "コースアップローダー"
+    IDS_VIDEO_CAPTURE       "標準メディアファイル"
+    IDS_SCREEN_CAPTURE      "スクリーンキャプチャ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROFILE_NAME        "エンコード方式"
+    IDS_LABEL_ATTRIB_VALUE  "属性\\入力値"
+    IDS_MONO                "モノラル"
+    IDS_UNTITLE             "名称未設定"
+    IDS_STEREO              "ステレオ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_VIDEO_BANDWIDTH     "ビデオ帯域幅"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_VIDEO_FPS           "ビデオフレーム/秒"
+    IDS_VIDEO_KEY_PER_SEC   "キーフレーム/秒"
+    IDS_VIDEO_QUALITY       "ビデオ品質"
+    IDS_AUDIO_BANDWIDTH     "オーディオ帯域幅"
+    IDS_AUDIO_SAMPLE_RATE   "サンプリングレート"
+    IDS_EMPTY_TYPE          "名称を入力してください"
+    IDS_DUP_TYPE            "その名称は既に存在しています。再入力してください。"
+    IDS_SURE_DEL            "削除しますか？"
+    IDS_SEL_DEL_FIRST       "削除する列を選択してください。"
+    IDS_SYSTEM_DEFAULT_NOT_DEL 
+                            "このエンコードは既定値なので、削除できません。"
+    IDS_SURE_DEL_PROFILE    "エンコード名 <%s>を削除しますか？"
+    IDS_SEL_RENAME_FIRST    "名前を変更する列を選択してください"
+    IDS_SYSTEM_DEFAULT_NOT_REN 
+                            "このエンコードは既定値なので、名前の変更ができません。"
+    IDS_PROFILE_NAME_NOT_NULL "エンコード名を入力してください。"
+    IDS_SYSTEM_DEFAULT_NOT_ALLOWED 
+                            "既定のエンコードのみが<>でマークされます。両端の<>記号を消してください。"
+    IDS_PROFILE_NAME_EXIST  "このエンコード名は既に存在しています。再入力してください。"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_DEFAULT_PROFILE_NOT_FOUND 
+                            "既定のエンコード名<標準メディアファイル>はシステム上にありません。もう一度設定してください。"
+    IDS_SCREEN_PROFILE_NOT_FOUND 
+                            "既定のエンコード名<スクリーンキャプチャファイル>はシステム上にありません。もう一度設定してください。"
+    IDS_PROFILE_LOW_BAND    "<AM Audio Quality, Low Video Quality(56K)>"
+    IDS_PROFILE_NO_SOUND    "<Audio Only, Near CD Quality(56K)>"
+    IDS_COURSE_MODIFIED     "コース<%s>は修正されていますが、保存されていません。アップロードする前に、メインプログラムに戻って保存してください。"
+//    IDS_ERROR_CONVERT       "ファイルを変換失敗、コースのオンデマンドができません!ブロードバンドの変換は正確であるかどうか確認してください (例えばコースはオーディオのみのに, ビデオの変換までした)"					//del 2013/9/20 kagata PPT2013
+    IDS_ERROR_CONVERT       "コースのアップロードができませんでした。\n作成形式の設定が正確であるかどうか確認してください。\n(例えばコースはオーディオのみで作成しているのに, ビデオの設定も行っている場合などはエラーとなります。)"		//add 2013/9/20 kagata PPT2013
+    ID_BTN_OPEN_SCORM       "開□ SCORM 目□"
+    IDS_SCORM_LANGUAGE      "en"
+    IDS_NOT_ALL_FILLED      "NOT ALL FILLED"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_NONEED              "Don't Need Upload Media File!"
+END
+
+#endif    // Japanese resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(932)
+#endif //_WIN32
+#include "res\CourseLoader.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

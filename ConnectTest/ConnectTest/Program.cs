@@ -29,8 +29,8 @@ namespace ConnectTest
 			{
 				Console.WriteLine(ex.ToString());
 			}
-			string resultStr = GetReportString(outStr);
-			//Console.WriteLine(resultStr);
+			string resultStr = GetReportString(outStr, requestStr);
+			Console.WriteLine(resultStr);
 
 			Console.ReadLine();
 		}
@@ -43,24 +43,34 @@ namespace ConnectTest
 			return resultStr;
 		}
 
-		public static string GetReportString(string resultStr)
+		public static string GetReportString(string resultStr, string requestStr)
 		{
 			string reportStr = "";
-			string findKey = "count=";
-			int idx;
-			int value = 0;
-			string subStr = "";
-			if (-1 != (idx = resultStr.LastIndexOf(findKey)))
+			int idx = requestStr.LastIndexOf("=");
+			string findKey = "";
+			int value;
+			if (-1 != idx)
 			{
-				subStr = resultStr.Substring(idx + findKey.Length).Trim();
-				if (int.TryParse(subStr, out value))
+				findKey = requestStr.Substring(idx + 1).Trim() + "=";
+				string[] rdLines = resultStr.Split('\n');
+				foreach (string line in rdLines)
 				{
-					reportStr = ", " + subStr;
+					if ("" == line.Trim())
+					{
+						continue;
+					}
+					if (-1 != (idx = line.IndexOf(findKey)))
+					{
+						string subStr = line.Substring(idx + findKey.Length).Trim();
+						if (int.TryParse(subStr, out value))
+						{
+							reportStr = ", " + subStr;
+							break;
+						}
+					}
 				}
 			}
-			Console.WriteLine("idx = " + idx.ToString() + " value = " + value.ToString() + ", subStr.Length = " + subStr.Length.ToString());
-			subStr = subStr.Substring(0, 100);
-			Console.WriteLine(subStr);
+
 			return reportStr;
 		}
 

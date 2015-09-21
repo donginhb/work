@@ -1,0 +1,130 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CourseLoader - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x404 /fo"Release/CourseLoader.res" /d "NDEBUG" /d "_AFXDLL" "D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\CourseLoader.rc"" 
+Creating temporary file "G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP10.tmp" with contents
+[
+/nologo /MD /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_CHT" /D "_AFXDLL" /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\BmpApi.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\BmpBtn.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\Cmkapi.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\ColGrid.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\CourseLoader.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\CourseLoaderDlg.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\CScorm.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\DataBrowseWnd.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgAskCourseDup.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgAskType.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgCourseDupFTP.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgInputProfileName.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgInputScornInfo.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgLaunchOK.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgOption.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgProgress.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgRegenIndex.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgSelType.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgSQL.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgTransCourse.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgTypeSet.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\DlgViewSelect.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\EncodeApi.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\Grdapi.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\Gridctrl.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\PageMediaServer.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\PageWebServer.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\ProgressWnd.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\SheetSetting.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\CourseLauncher.cht\TextProgressCtrl.cpp"
+"D:\MCGSOURCE\MCG5.0\eLearningProj_Wu\eLearning.Cht\Uigrid.cpp"
+]
+Creating command line "cl.exe @G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP10.tmp" 
+Creating temporary file "G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP11.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/CourseLauncher.pdb" /machine:I386 /out:"..\eLearningTitle.Cht\Bin\CourseLauncher.exe" 
+.\Release\BmpApi.obj
+.\Release\BmpBtn.obj
+.\Release\Cmkapi.obj
+.\Release\ColGrid.obj
+.\Release\CourseLoader.obj
+.\Release\CourseLoaderDlg.obj
+.\Release\CScorm.obj
+.\Release\DataBrowseWnd.obj
+.\Release\DlgAskCourseDup.obj
+.\Release\DlgAskType.obj
+.\Release\DlgCourseDupFTP.obj
+.\Release\DlgInputProfileName.obj
+.\Release\DlgInputScornInfo.obj
+.\Release\DlgLaunchOK.obj
+.\Release\DlgOption.obj
+.\Release\DlgProgress.obj
+.\Release\DlgRegenIndex.obj
+.\Release\DlgSelType.obj
+.\Release\DlgSQL.obj
+.\Release\DlgTransCourse.obj
+.\Release\DlgTypeSet.obj
+.\Release\DlgViewSelect.obj
+.\Release\EncodeApi.obj
+.\Release\Grdapi.obj
+.\Release\Gridctrl.obj
+.\Release\PageMediaServer.obj
+.\Release\PageWebServer.obj
+.\Release\ProgressWnd.obj
+.\Release\SheetSetting.obj
+.\Release\TextProgressCtrl.obj
+.\Release\Uigrid.obj
+.\Release\CourseLoader.res
+..\ZipArchive\Release\ZipArchive.lib
+]
+Creating command line "link.exe @G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP11.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+BmpApi.cpp
+BmpBtn.cpp
+Cmkapi.cpp
+ColGrid.cpp
+CourseLoader.cpp
+CourseLoaderDlg.cpp
+CScorm.cpp
+DataBrowseWnd.cpp
+DlgAskCourseDup.cpp
+DlgAskType.cpp
+DlgCourseDupFTP.cpp
+DlgInputProfileName.cpp
+DlgInputScornInfo.cpp
+DlgLaunchOK.cpp
+DlgOption.cpp
+DlgProgress.cpp
+DlgRegenIndex.cpp
+DlgSelType.cpp
+DlgSQL.cpp
+DlgTransCourse.cpp
+Generating Code...
+Compiling...
+DlgTypeSet.cpp
+DlgViewSelect.cpp
+EncodeApi.cpp
+Grdapi.cpp
+Gridctrl.cpp
+PageMediaServer.cpp
+PageWebServer.cpp
+ProgressWnd.cpp
+SheetSetting.cpp
+TextProgressCtrl.cpp
+Uigrid.cpp
+Generating Code...
+Linking...
+LINK : warning LNK4089: all references to "OLEPRO32.DLL" discarded by /OPT:REF
+
+
+
+<h3>Results</h3>
+CourseLauncher.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

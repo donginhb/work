@@ -1,0 +1,57 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CourseLoader - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP2F.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/CourseLauncher_express.pdb" /machine:I386 /out:"..\elearningtitle.Cht\bin\CourseLauncher_express.exe" 
+.\Release\BmpApi.obj
+.\Release\BmpBtn.obj
+.\Release\Cmkapi.obj
+.\Release\ColGrid.obj
+.\Release\CourseLoader.obj
+.\Release\CourseLoaderDlg.obj
+.\Release\CScorm.obj
+.\Release\DataBrowseWnd.obj
+.\Release\DlgAskCourseDup.obj
+.\Release\DlgAskType.obj
+.\Release\DlgCourseDupFTP.obj
+.\Release\DlgInputProfileName.obj
+.\Release\DlgInputScornInfo.obj
+.\Release\DlgLaunchOK.obj
+.\Release\DlgOption.obj
+.\Release\DlgProgress.obj
+.\Release\DlgRegenIndex.obj
+.\Release\DlgSelType.obj
+.\Release\DlgSQL.obj
+.\Release\DlgTransCourse.obj
+.\Release\DlgTypeSet.obj
+.\Release\DlgViewSelect.obj
+.\Release\EncodeApi.obj
+.\Release\Grdapi.obj
+.\Release\Gridctrl.obj
+.\Release\PageMediaServer.obj
+.\Release\PageWebServer.obj
+.\Release\ProgressWnd.obj
+.\Release\SheetSetting.obj
+.\Release\TextProgressCtrl.obj
+.\Release\Uigrid.obj
+.\Release\CourseLoader.res
+..\ZipArchive\Release\ZipArchive.lib
+]
+Creating command line "link.exe @G:\DOCUME~1\MCG\LOCALS~1\Temp\RSP2F.tmp"
+<h3>Output Window</h3>
+Linking...
+LINK : warning LNK4089: all references to "OLEPRO32.DLL" discarded by /OPT:REF
+
+
+
+<h3>Results</h3>
+CourseLauncher_express.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>
