@@ -1,6 +1,0 @@
-// Microsoft Developer Studio generated Help ID include file.
-// Used by CourseLoader.rc
-//
-#define HIDC_EDITSQL                    0x808203f5    // IDD_DIALOG_SQL [English (U.S.)]
-#define HIDC_STATIC_EXIST               0x80d5045c    // IDD_DIALOG_ASK_COURSE [English (U.S.)]
-#define HID_STATIC                      0x80d5ffff    // IDD_DIALOG_ASK_COURSE [English (U.S.)]
