@@ -1,0 +1,15 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {90678C8F-19AA-4725-874C-3D749A8F6D3C} = s 'EasyCapture Class'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+			}
+			TypeLib = s '{F45DD281-F34D-47AD-906F-890E8F8DDEFE}'
+			Version = s '1.0'
+		}
+	}
+}

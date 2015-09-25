@@ -1,0 +1,83 @@
+// ComCapture.idl : ComCapture の IDL ソース
+//
+
+// このファイルは、タイプ ライブラリ (ComCapture.tlb) およびマーシャリング コードを
+// 作成するために MIDL ツールによって処理されます。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+typedef enum {
+	CAPTUREDEVICETYPE_AUDIO=0,
+	CAPTUREDEVICETYPE_VIDEO=1
+	// CAPTUREDEVICETYPE_DV=2,
+	// CAPTUREDEVICETYPE_ANALOGVIDEO=3
+} CAPTUREDEVICETYPE;
+
+typedef enum {
+	// CAPTURESESSION_CAM=0,
+	// CAPTURESESSION_DV=1,
+	// CAPTURESESSION_ANALOG=2,
+	// CAPTURESESSION_AUDIO=3,
+	// CAPTURESESSION_SCREEN=4,
+	// CAPTURESESSION_PHOTONSCREEN=5,
+	CAPTURESESSION_CAM=0,
+	CAPTURESESSION_AUDIO=1,
+	CAPTURESESSION_SCREEN=2,
+	CAPTURESESSION_IPCAM=3
+} CAPTURESESSION;
+
+[
+	object,
+	uuid(E6D0286B-CEDE-4B43-8764-099AEBAAC38B),
+	dual,
+	helpstring("IEasyCapture Interface"),
+	nonextensible,
+	pointer_default(unique)
+]
+interface IEasyCapture : IDispatch{
+		[id(1), helpstring("method Open")] HRESULT Open(long lReserved);
+		[id(2), helpstring("method Close")] HRESULT Close();
+		[id(3), helpstring("method DeviceTableUpdate")] HRESULT DeviceTableUpdate();
+		[id(4), helpstring("method DeviceTableGetCount")] HRESULT DeviceTableGetCount([in]CAPTUREDEVICETYPE eType, [out]long *plCount);	
+		[id(5), helpstring("method DeviceTableGetName")] HRESULT DeviceTableGetName([in]CAPTUREDEVICETYPE eType, [in]long lIndex, [out]BSTR *pbstr);
+		[id(6), helpstring("method DeviceOpen")] HRESULT DeviceOpen([in]CAPTURESESSION eSession, [in]long lVideoIndex, [in]long lAudioIndex);
+		[id(7), helpstring("method DeviceClose")] HRESULT DeviceClose();		
+		[id(11), helpstring("method DeviceFormatTableGetCount")] HRESULT DeviceFormatTableGetCount([in]CAPTUREDEVICETYPE eType, [in]long lDeviceIndex, [out]long *plCount);	
+		[id(12), helpstring("method DeviceFormatTableGetFormat")] HRESULT DeviceFormatTableGetFormat([in]CAPTUREDEVICETYPE eType, [in]long lDeviceIndex, [in]long lFormatIndex, [out]BSTR *pbstr);
+		[id(13), helpstring("method VideoFrameRateTableGetCount")] HRESULT VideoFrameRateTableGetCount([in]long lDeviceIndex, [out]long *plCount);	
+		[id(14), helpstring("method VideoFrameRateTableGetFrameRate")] HRESULT VideoFrameRateTableGetFrameRate([in]long lDeviceIndex, [in]long lFrameRateIndex, [out]BSTR *pbstr);
+		[id(15), helpstring("method IPCameraOpen")] HRESULT IPCameraOpen([in]BSTR bstrURL, [in]BSTR bstrLogin, [in]BSTR bstrPassword);
+		[id(21), helpstring("method PreviewPrepare")] HRESULT PreviewPrepare();
+		[id(23), helpstring("method CapturePrepare")] HRESULT CapturePrepare([in]BSTR bstrFile, [in]BSTR bstrProfile, [in]long lAudioTimeshift, [in]VARIANT_BOOL vbSyncPreview);
+		[id(25), helpstring("method DoStart")] HRESULT DoStart();
+		[id(26), helpstring("method DoStop")] HRESULT DoStop();
+		[id(27), helpstring("method DoPause")] HRESULT DoPause();
+		[id(28), helpstring("method DoResume")] HRESULT DoResume();
+		[id(29), helpstring("method DisplayOpen")] HRESULT DisplayOpen([in]long lwnd, [in]long xx, [in]long yy, [in]long lWidth, [in]long lHeight);
+		[id(30), helpstring("method DisplayClose")] HRESULT DisplayClose();		
+		[id(31), helpstring("method SetupUserMsgHandler")] HRESULT SetupUserMsgHandler([in]long lWnd);
+		[id(32), helpstring("method SendIDScript")] HRESULT SendIDScript([in]BSTR bstrID);
+		[id(33), helpstring("method GetRecordVolumeLevel")] HRESULT GetRecordVolumeLevel([out]long *plLevel);
+		[id(34), helpstring("method GetCurrentCount")] HRESULT GetCurrentCount([out]long *plCurrentCount);
+		[id(56), helpstring("method IsDigitalCamActive")] HRESULT IsDigitalCamActive([out]VARIANT_BOOL *pvb);
+		[id(57), helpstring("method DeviceTableSearchName")] HRESULT DeviceTableSearchName([in]CAPTUREDEVICETYPE eType, [in]BSTR bstrName, [out]long *plIndex);
+};
+[
+	uuid(F45DD281-F34D-47AD-906F-890E8F8DDEFE),
+	version(1.0),
+	helpstring("ComCapture 1.0 Type Library")
+]
+library ComCaptureLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(90678C8F-19AA-4725-874C-3D749A8F6D3C),		
+		helpstring("EasyCapture Class")
+	]
+	coclass EasyCapture
+	{
+		[default] interface IEasyCapture;
+	};
+};
+

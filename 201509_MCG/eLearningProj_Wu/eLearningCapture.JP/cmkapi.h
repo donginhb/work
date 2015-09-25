@@ -1,0 +1,13 @@
+BOOL WINAPI FileExists(const char* filename);
+BOOL WINAPI GetFiles(CString strDir, CString strExt, CStringArray& strArray);
+BOOL WINAPI SureDeleteFile(LPCTSTR strPath);
+BOOL WINAPI GetTokStr(const char* pSource, CString& StrDest, int& Start, CString Delimeter);
+BOOL WINAPI DelFiles(CString strPath, CString strExt);
+BOOL WINAPI LoadFile(LPCTSTR strFileName, CStringArray& strArray, BOOL bNoEmpty);
+BOOL WINAPI SaveFile(LPCTSTR strFileName, CStringArray& strArray, BOOL bNoEmpty);
+CString WINAPI GetDir(LPCTSTR szPath);
+CString WINAPI GetSysPath();
+LONGLONG WINAPI GetVolFreeSpace(CString strVol); 
+void WINAPI SortArray(CStringArray& strArray);
+CString WINAPI GetFilePath(LPCTSTR szPath);
+CString	 WINAPI GetCoursePath(BOOL bConfig = FALSE);

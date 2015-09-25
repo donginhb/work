@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{22EE0381-082A-2861-3082-965FF18E84AA}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>C:\Program Files\Microsoft SDKs\Windows\v7.1A\Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MinSpace</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_JAPANESE;_EN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\CourseLoader.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release\CourseLoader.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\CourseLoader.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>..\elearningtitle.Jp\bin\CourseLauncher.exe</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_JAPANESE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\CourseLoader.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug\CourseLoader.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\CourseLoader.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>..\elearningtitle.Jp\bin\CourseLauncher.exe</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\eLearning.Jp\BmpApi.cpp" />
+    <ClCompile Include="..\eLearning.Jp\BmpBtn.cpp" />
+    <ClCompile Include="Cmkapi.cpp" />
+    <ClCompile Include="..\eLearning.JP\ColGrid.cpp" />
+    <ClCompile Include="CourseLoader.cpp" />
+    <ClCompile Include="CourseLoaderDlg.cpp" />
+    <ClCompile Include="CScorm.cpp" />
+    <ClCompile Include="..\eLearning.Jp\DataBrowseWnd.cpp" />
+    <ClCompile Include="DlgAskCourseDup.cpp" />
+    <ClCompile Include="DlgAskType.cpp" />
+    <ClCompile Include="DlgCourseDupFTP.cpp" />
+    <ClCompile Include="DlgInputProfileName.cpp" />
+    <ClCompile Include="DlgInputScornInfo.cpp" />
+    <ClCompile Include="DlgLaunchOK.cpp" />
+    <ClCompile Include="DlgOption.cpp" />
+    <ClCompile Include="DlgProgress.cpp" />
+    <ClCompile Include="DlgRegenIndex.cpp" />
+    <ClCompile Include="DlgSelType.cpp" />
+    <ClCompile Include="DlgSQL.cpp" />
+    <ClCompile Include="DlgTransCourse.cpp" />
+    <ClCompile Include="DlgTypeSet.cpp" />
+    <ClCompile Include="DlgViewSelect.cpp" />
+    <ClCompile Include="EncodeApi.cpp" />
+    <ClCompile Include="..\eLearning.Jp\Grdapi.cpp" />
+    <ClCompile Include="..\eLearning.Jp\Gridctrl.cpp" />
+    <ClCompile Include="PageMediaServer.cpp" />
+    <ClCompile Include="PageWebServer.cpp" />
+    <ClCompile Include="..\eLearning.JP\ProgressWnd.cpp" />
+    <ClCompile Include="SheetSetting.cpp" />
+    <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="TextProgressCtrl.cpp" />
+    <ClCompile Include="..\eLearning.Jp\Uigrid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CourseLoader.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\eLearning.Jp\BmpApi.h" />
+    <ClInclude Include="..\eLearning.Jp\BmpBtn.h" />
+    <ClInclude Include="Cmkapi.h" />
+    <ClInclude Include="..\eLearning.Jp\ColGrid.h" />
+    <ClInclude Include="CourseLoader.h" />
+    <ClInclude Include="CourseLoaderDlg.h" />
+    <ClInclude Include="CScorm.h" />
+    <ClInclude Include="..\eLearning.Jp\DataBrowseWnd.h" />
+    <ClInclude Include="DlgAskCourseDup.h" />
+    <ClInclude Include="DlgAskType.h" />
+    <ClInclude Include="DlgCourseDupFTP.h" />
+    <ClInclude Include="DlgInputProfileName.h" />
+    <ClInclude Include="DlgInputScornInfo.h" />
+    <ClInclude Include="DlgLaunchOK.h" />
+    <ClInclude Include="DlgOption.h" />
+    <ClInclude Include="DlgProgress.h" />
+    <ClInclude Include="DlgRegenIndex.h" />
+    <ClInclude Include="DlgSelType.h" />
+    <ClInclude Include="DlgSQL.h" />
+    <ClInclude Include="DlgTransCourse.h" />
+    <ClInclude Include="DlgTypeSet.h" />
+    <ClInclude Include="DlgViewSelect.h" />
+    <ClInclude Include="EncodeApi.h" />
+    <ClInclude Include="..\eLearning.Jp\Grdapi.h" />
+    <ClInclude Include="..\eLearning.Jp\GRIDCTRL.H" />
+    <ClInclude Include="PageMediaServer.h" />
+    <ClInclude Include="PageWebServer.h" />
+    <ClInclude Include="..\eLearning.Jp\ProgressWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="SheetSetting.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="TextProgressCtrl.h" />
+    <ClInclude Include="..\eLearning.Jp\Uigrid.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\check1.bmp" />
+    <CustomBuild Include="res\coldtoolbar.bmp" />
+    <CustomBuild Include="res\CourseLoader.ico" />
+    <CustomBuild Include="res\CourseLoader.rc2">
+      <FileType>RC</FileType>
+    </CustomBuild>
+    <CustomBuild Include="res\CURSOR1.CUR" />
+    <CustomBuild Include="res\CURSOR_D.CUR" />
+    <CustomBuild Include="res\hand.cur" />
+    <CustomBuild Include="res\hottoolbar.bmp" />
+    <CustomBuild Include="res\icon1.ico" />
+    <CustomBuild Include="res\NOTE_DIS.BMP" />
+    <CustomBuild Include="res\NOTE_EN.BMP" />
+    <CustomBuild Include="res\Open.bmp" />
+    <CustomBuild Include="res\Toolbar.bmp" />
+    <CustomBuild Include="res\UNKNOWN.BMP" />
+    <CustomBuild Include="res\unknown1.bmp" />
+    <CustomBuild Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ZipArchive\Debug\ZipArchive.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

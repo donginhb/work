@@ -1,0 +1,638 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>eLearning_jp_pro</ProjectName>
+    <SccProjectName />
+    <SccLocalPath />
+    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{274BAB91-58BD-D6E6-F0B3-5116CEB69F44}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\elearningtitle.jp\bin\</OutDir>
+    <IntDir>.\Debug.jp.pro\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\LTWIN11\INCLUDE;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\LTWIN11\LIB;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release.jp.pro\</OutDir>
+    <IntDir>.\Release.jp.pro\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LOG;_PRO;_JAPANESE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug.jp.pro\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug.jp.pro\eLearning.jp.pro.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug.jp.pro\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug.jp.pro\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug.jp.pro\eLearning.jp.pro.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug.jp.pro\eLearning.jp.pro.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>..\elearningtitle.jp\bin\MCG.exe</OutputFile>
+      <AdditionalDependencies>strmiids.lib;wmvcore.lib;wmstub.lib;Netapi32.lib;ltkrn_n.lib;ltfil_n.lib;ltdis_n.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;Propsys.lib;mf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MinSpace</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_PRO;_JAPANESE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release.jp.pro\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release.jp.pro\eLearning.jp.pro.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release.jp.pro\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release.jp.pro\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release.jp.pro\eLearning.jp.pro.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release.jp.pro\eLearning.jp.pro.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>..\elearningtitle.jp\bin\MCG.exe</OutputFile>
+      <AdditionalDependencies>ltfil_n.lib;ltkrn_n.lib;ltdis_n.lib;ltwvc_n.lib;strmiids.lib;wmvcore.lib;wmstub.lib;Netapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="adapter.cpp" />
+    <ClCompile Include="AudioWnd.cpp" />
+    <ClCompile Include="BasicCheckListBox.cpp" />
+    <ClCompile Include="BasicSheet.cpp" />
+    <ClCompile Include="BitmapMenu.cpp" />
+    <ClCompile Include="BmpApi.cpp" />
+    <ClCompile Include="BmpBtn.cpp" />
+    <ClCompile Include="BmpStatic.cpp" />
+    <ClCompile Include="CaptionAll.cpp" />
+    <ClCompile Include="CaptureDevApi.cpp" />
+    <ClCompile Include="Cmkapi.cpp" />
+    <ClCompile Include="ColGrid.cpp" />
+    <ClCompile Include="ColorButton.cpp" />
+    <ClCompile Include="ColorWnd.cpp" />
+    <ClCompile Include="ColourPopup.cpp" />
+    <ClCompile Include="CourseLayout.cpp" />
+    <ClCompile Include="CourseSheetDefaultLayout.cpp" />
+    <ClCompile Include="DataBrowseWnd.cpp" />
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="DlgAbout.cpp" />
+    <ClCompile Include="DlgAdjustVolAndVideo.cpp" />
+    <ClCompile Include="DlgMP4Info.cpp" />
+    <ClCompile Include="DlgAuFixSet.cpp" />
+    <ClCompile Include="DlgAuFixWarning.cpp" />
+    <ClCompile Include="DlgBackupCourse.cpp" />
+    <ClCompile Include="DlgBackupMaintain.cpp" />
+    <ClCompile Include="DlgBackupOneCourse.cpp" />
+    <ClCompile Include="DlgCheckOut.cpp" />
+    <ClCompile Include="DlgCourseDup.cpp" />
+    <ClCompile Include="DlgCourseFolder.cpp" />
+    <ClCompile Include="DlgDefaultProfileSet.cpp" />
+    <ClCompile Include="DlgDevNotInstalled.cpp" />
+    <ClCompile Include="DlgEditMark.cpp" />
+    <ClCompile Include="DlgExportCourse.cpp" />
+    <ClCompile Include="DlgGotoSlide.cpp" />
+    <ClCompile Include="DlgImportCourse.cpp" />
+    <ClCompile Include="DlgInputCaption.cpp" />
+    <ClCompile Include="DlgInputCourse.cpp" />
+    <ClCompile Include="DlgInputOutlookName.cpp" />
+    <ClCompile Include="DlgInputProfileName.cpp" />
+    <ClCompile Include="DlgNewCourse.cpp" />
+    <ClCompile Include="DlgNewCourseFromMedia.cpp" />
+    <ClCompile Include="DlgNoteEdit.cpp" />
+    <ClCompile Include="DlgOpenCourse.cpp" />
+    <ClCompile Include="DlgProgress.cpp" />
+    <ClCompile Include="DlgRegister.cpp" />
+    <ClCompile Include="DlgRestoreCourse.cpp" />
+    <ClCompile Include="DlgScreenCapture.cpp" />
+    <ClCompile Include="DlgScreenProfileSet.cpp" />
+    <ClCompile Include="DlgSelDevice.cpp" />
+    <ClCompile Include="DlgSelectCourse.cpp" />
+    <ClCompile Include="DlgSelectCourseVolume.cpp" />
+    <ClCompile Include="DlgSelectEffect.cpp" />
+    <ClCompile Include="DlgSelHTMPresent.cpp" />
+    <ClCompile Include="DlgSelVideoSrc.cpp" />
+    <ClCompile Include="DlgTreeSelect.cpp" />
+    <ClCompile Include="DlgUseQuota.cpp" />
+    <ClCompile Include="DlgVersionOutOfDate.cpp" />
+    <ClCompile Include="DlgMP4Rec.cpp" />
+    <ClCompile Include="DrawWnd.cpp" />
+    <ClCompile Include="EditAllowed.cpp" />
+    <ClCompile Include="EffectManageWnd.cpp" />
+    <ClCompile Include="eLearning.cpp" />
+    <ClCompile Include="eLearningAPI.cpp" />
+    <ClCompile Include="eLearningDoc.cpp" />
+    <ClCompile Include="eLearningView.cpp" />
+    <ClCompile Include="EncodeApi.cpp" />
+    <ClCompile Include="excel9_ctrl.cpp" />
+    <ClCompile Include="FileApi.cpp" />
+    <ClCompile Include="FileName.cpp" />
+    <ClCompile Include="FontCombo.cpp" />
+    <ClCompile Include="Grdapi.cpp" />
+    <ClCompile Include="Gridctrl.cpp" />
+    <ClCompile Include="HtmlWnd.cpp" />
+    <ClCompile Include="ImageCell.cpp" />
+    <ClCompile Include="ImageContainer.cpp" />
+    <ClCompile Include="ImageCtrl.cpp" />
+    <ClCompile Include="ImageSetContainer.cpp" />
+    <ClCompile Include="JPGApi.cpp" />
+    <ClCompile Include="KeyFramePanel.cpp" />
+    <ClCompile Include="MacSliderCtrl.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MasterDlg.cpp" />
+    <ClCompile Include="MediaUtils.cpp" />
+    <ClCompile Include="MovieWnd.cpp" />
+    <ClCompile Include="NewWizDialog.cpp" />
+    <ClCompile Include="NewWizPage.cpp" />
+    <ClCompile Include="Noteedit.cpp" />
+    <ClCompile Include="NumberEdit.cpp" />
+    <ClCompile Include="office_ctrl.cpp" />
+    <ClCompile Include="PageBackupDir.cpp" />
+    <ClCompile Include="PageDefaultCaption.cpp" />
+    <ClCompile Include="PageDefaultImage.cpp" />
+    <ClCompile Include="PageDefaultLayout.cpp" />
+    <ClCompile Include="PageDefaultOption.cpp" />
+    <ClCompile Include="PageDefaultOutlook.cpp" />
+    <ClCompile Include="PageInputName.cpp" />
+    <ClCompile Include="PageMisc.cpp" />
+    <ClCompile Include="PageMSrv.cpp" />
+    <ClCompile Include="PageProfileSetting.cpp" />
+    <ClCompile Include="PageRecordOption.cpp" />
+    <ClCompile Include="PageScreenProfile.cpp" />
+    <ClCompile Include="PageSelDevice.cpp" />
+    <ClCompile Include="PageSelFreq.cpp" />
+    <ClCompile Include="PageSelHTML.cpp" />
+    <ClCompile Include="PageSelLayout.cpp" />
+    <ClCompile Include="PageSelPPT.cpp" />
+    <ClCompile Include="PageSelTV.cpp" />
+    <ClCompile Include="PointerWnd.cpp" />
+    <ClCompile Include="PPT10Ctrl.cpp" />
+    <ClCompile Include="PPT15Ctrl.cpp" />
+    <ClCompile Include="PPT9Ctrl.cpp" />
+    <ClCompile Include="PPTPanel.cpp" />
+    <ClCompile Include="PPTSyncWnd.cpp" />
+    <ClCompile Include="PPTWnd.cpp" />
+    <ClCompile Include="ProgressWnd.cpp" />
+    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="RelatedInformation.cpp" />
+    <ClCompile Include="s_msppt10.cpp" />
+    <ClCompile Include="s_msppt15.cpp" />
+    <ClCompile Include="s_msppt9.cpp" />
+    <ClCompile Include="SetupPage.cpp" />
+    <ClCompile Include="SheetDefaultLayout.cpp" />
+    <ClCompile Include="SheetOption.cpp" />
+    <ClCompile Include="ShellPidl.cpp" />
+    <ClCompile Include="ShellTree.cpp" />
+    <ClCompile Include="SingleInstanceApp.cpp" />
+    <ClCompile Include="SliderWnd.cpp" />
+    <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="TextProgressCtrl.cpp" />
+    <ClCompile Include="TimeLineCtrl.cpp" />
+    <ClCompile Include="TimeLinePanel.cpp" />
+    <ClCompile Include="TipWnd.cpp" />
+    <ClCompile Include="ToolPaleteVideoEdit.cpp" />
+    <ClCompile Include="ToolTipWnd.cpp" />
+    <ClCompile Include="Uigrid.cpp" />
+    <ClCompile Include="UndoRedoObj.cpp" />
+    <ClCompile Include="VideoEffectWnd.cpp" />
+    <ClCompile Include="VideoWnd.cpp" />
+    <ClCompile Include="WebGrab.cpp" />
+    <ClCompile Include="wndLogo.cpp" />
+    <ClCompile Include="WndTimeRecord.cpp" />
+    <ClCompile Include="WndToolBar.cpp" />
+    <ClCompile Include="word9_ctrl.cpp" />
+    <ClCompile Include="DataBrowseWnd1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="elearning.rc" />
+    <ResourceCompile Include="elearning_express.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="adapter.h" />
+    <ClInclude Include="AudioWnd.h" />
+    <ClInclude Include="BasicCheckListBox.h" />
+    <ClInclude Include="BasicSheet.h" />
+    <ClInclude Include="BitmapMenu.h" />
+    <ClInclude Include="BmpApi.h" />
+    <ClInclude Include="BmpBtn.h" />
+    <ClInclude Include="BmpStatic.h" />
+    <ClInclude Include="CaptionAll.h" />
+    <ClInclude Include="CaptureDevApi.h" />
+    <ClInclude Include="Cmkapi.h" />
+    <ClInclude Include="ColGrid.h" />
+    <ClInclude Include="ColorButton.h" />
+    <ClInclude Include="ColorWnd.h" />
+    <ClInclude Include="ColourPopup.h" />
+    <ClInclude Include="CourseLayout.h" />
+    <ClInclude Include="CourseSheetDefaultLayout.h" />
+    <ClInclude Include="DataBrowseWnd.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="DlgAbout.h" />
+    <ClInclude Include="DlgAdjustVolAndVideo.h" />
+    <ClInclude Include="DlgMP4Info.h" />
+    <ClInclude Include="DlgAuFixSet.h" />
+    <ClInclude Include="DlgAuFixWarning.h" />
+    <ClInclude Include="DlgBackupCourse.h" />
+    <ClInclude Include="DlgBackupMaintain.h" />
+    <ClInclude Include="DlgBackupOneCourse.h" />
+    <ClInclude Include="DlgCheckOut.h" />
+    <ClInclude Include="DlgCourseDup.h" />
+    <ClInclude Include="DlgDefaultProfileSet.h" />
+    <ClInclude Include="DlgDevNotInstalled.h" />
+    <ClInclude Include="DlgEditMark.h" />
+    <ClInclude Include="DlgExportCourse.h" />
+    <ClInclude Include="DlgGotoSlide.h" />
+    <ClInclude Include="DlgImportCourse.h" />
+    <ClInclude Include="DlgInputCaption.h" />
+    <ClInclude Include="DlgInputCourse.h" />
+    <ClInclude Include="DlgInputOutlookName.h" />
+    <ClInclude Include="DlgInputProfileName.h" />
+    <ClInclude Include="DlgNewCourse.h" />
+    <ClInclude Include="DlgNewCourseFromMedia.h" />
+    <ClInclude Include="DlgNoteEdit.h" />
+    <ClInclude Include="DlgOpenCourse.h" />
+    <ClInclude Include="DlgProgress.h" />
+    <ClInclude Include="DlgRegister.h" />
+    <ClInclude Include="DlgRestoreCourse.h" />
+    <ClInclude Include="DlgScreenCapture.h" />
+    <ClInclude Include="DlgScreenProfileSet.h" />
+    <ClInclude Include="DlgSelDevice.h" />
+    <ClInclude Include="DlgSelectCourse.h" />
+    <ClInclude Include="DlgSelectCourseVolume.h" />
+    <ClInclude Include="DlgSelectEffect.h" />
+    <ClInclude Include="DlgSelHTMPresent.h" />
+    <ClInclude Include="DlgSelVideoSrc.h" />
+    <ClInclude Include="DlgTreeSelect.h" />
+    <ClInclude Include="DlgUseQuota.h" />
+    <ClInclude Include="DlgVersionOutOfDate.h" />
+    <ClInclude Include="DlgMP4Rec.h" />
+    <ClInclude Include="DrawWnd.h" />
+    <ClInclude Include="EditAllowed.h" />
+    <ClInclude Include="EffectManageWnd.h" />
+    <ClInclude Include="eLearning.h" />
+    <ClInclude Include="eLearningAPI.h" />
+    <ClInclude Include="eLearningDoc.h" />
+    <ClInclude Include="eLearningView.h" />
+    <ClInclude Include="EncodeApi.h" />
+    <ClInclude Include="excel9_ctrl.h" />
+    <ClInclude Include="FileApi.h" />
+    <ClInclude Include="FileName.h" />
+    <ClInclude Include="FontCombo.h" />
+    <ClInclude Include="Grdapi.h" />
+    <ClInclude Include="GRIDCTRL.H" />
+    <ClInclude Include="HardwarePage.h" />
+    <ClInclude Include="HtmlWnd.h" />
+    <ClInclude Include="ImageCell.h" />
+    <ClInclude Include="ImageContainer.h" />
+    <ClInclude Include="ImageCtrl.h" />
+    <ClInclude Include="ImageSetContainer.h" />
+    <ClInclude Include="JPGApi.h" />
+    <ClInclude Include="KeyFramePanel.h" />
+    <ClInclude Include="LockServer.h" />
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="MacSliderCtrl.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MasterDlg.h" />
+    <ClInclude Include="MediaUtils.h" />
+    <ClInclude Include="MemDC.h" />
+    <ClInclude Include="MovieWnd.h" />
+    <ClInclude Include="mso9.h" />
+    <ClInclude Include="msppt10.h" />
+    <ClInclude Include="msppt9.h" />
+    <ClInclude Include="NewWizDialog.h" />
+    <ClInclude Include="NewWizPage.h" />
+    <ClInclude Include="NOTEEDIT.H" />
+    <ClInclude Include="NumberEdit.h" />
+    <ClInclude Include="office_ctrl.h" />
+    <ClInclude Include="PageBackupDir.h" />
+    <ClInclude Include="PageDefaultCaption.h" />
+    <ClInclude Include="PageDefaultImage.h" />
+    <ClInclude Include="PageDefaultLayout.h" />
+    <ClInclude Include="PageDefaultOption.h" />
+    <ClInclude Include="PageDefaultOutlook.h" />
+    <ClInclude Include="PageInputName.h" />
+    <ClInclude Include="PageMisc.h" />
+    <ClInclude Include="PageMSrv.h" />
+    <ClInclude Include="PageProfileSetting.h" />
+    <ClInclude Include="PageRecordOption.h" />
+    <ClInclude Include="PageScreenProfile.h" />
+    <ClInclude Include="PageSelDevice.h" />
+    <ClInclude Include="PageSelFreq.h" />
+    <ClInclude Include="PageSelHTML.h" />
+    <ClInclude Include="PageSelPPT.h" />
+    <ClInclude Include="PointerWnd.h" />
+    <ClInclude Include="PPt10Ctrl.h" />
+    <ClInclude Include="PPt15Ctrl.h" />
+    <ClInclude Include="PPt9Ctrl.h" />
+    <ClInclude Include="PPTEventSink.h" />
+    <ClInclude Include="PPTPanel.h" />
+    <ClInclude Include="PPTSyncWnd.h" />
+    <ClInclude Include="PPTWnd.h" />
+    <ClInclude Include="PrinterPage.h" />
+    <ClInclude Include="ProgressWnd.h" />
+    <ClInclude Include="Registry.h" />
+    <ClInclude Include="DataBrowseWnd1.h" />
+    <ClInclude Include="RelatedInformation.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="s_msppt10.h" />
+    <ClInclude Include="s_msppt15.h" />
+    <ClInclude Include="s_msppt9.h" />
+    <ClInclude Include="SetupPage.h" />
+    <ClInclude Include="SheetDefaultLayout.h" />
+    <ClInclude Include="SheetOption.h" />
+    <ClInclude Include="ShellPidl.h" />
+    <ClInclude Include="ShellTree.h" />
+    <ClInclude Include="SingleInstanceApp.h" />
+    <ClInclude Include="SliderWnd.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="TextProgressCtrl.h" />
+    <ClInclude Include="TimeLineCtrl.h" />
+    <ClInclude Include="TimeLinePanel.h" />
+    <ClInclude Include="TipWnd.h" />
+    <ClInclude Include="ToolPaleteVideoEdit.h" />
+    <ClInclude Include="ToolTipWnd.h" />
+    <ClInclude Include="Uigrid.h" />
+    <ClInclude Include="UndoRedoObj.h" />
+    <ClInclude Include="VideoEffectWnd.h" />
+    <ClInclude Include="VideoWnd.h" />
+    <ClInclude Include="WebGrab.h" />
+    <ClInclude Include="wndLogo.h" />
+    <ClInclude Include="WndTimeRecord.h" />
+    <ClInclude Include="WndToolBar.h" />
+    <ClInclude Include="word9_ctrl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\add_cp.bmp" />
+    <CustomBuild Include="res\add_demo.bmp" />
+    <CustomBuild Include="res\add_even.bmp" />
+    <CustomBuild Include="res\add_prac.bmp" />
+    <CustomBuild Include="res\add_prec.bmp" />
+    <CustomBuild Include="res\add_wave.bmp" />
+    <CustomBuild Include="res\avi1.bin">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="res\bitmap1.bmp" />
+    <CustomBuild Include="res\BKey.bmp" />
+    <CustomBuild Include="res\BlueKeyFrame.bmp" />
+    <CustomBuild Include="res\bmp00001.bmp" />
+    <CustomBuild Include="res\bmp00002.bmp" />
+    <CustomBuild Include="res\bmp00003.bmp" />
+    <CustomBuild Include="res\bmp00004.bmp" />
+    <CustomBuild Include="res\bmp00005.bmp" />
+    <CustomBuild Include="res\bmp00006.bmp" />
+    <CustomBuild Include="res\bmp00007.bmp" />
+    <CustomBuild Include="res\bmp00008.bmp" />
+    <CustomBuild Include="res\bold1.bmp" />
+    <CustomBuild Include="res\Bottom.bmp" />
+    <CustomBuild Include="res\btnChangePPT.bmp" />
+    <CustomBuild Include="res\btnEditPPT.bmp" />
+    <CustomBuild Include="res\btnRegenPPT.bmp" />
+    <CustomBuild Include="res\capturevideo.bmp" />
+    <CustomBuild Include="res\coldtoolbar.bmp" />
+    <CustomBuild Include="res\cur00001.cur" />
+    <CustomBuild Include="res\cur00002.cur" />
+    <CustomBuild Include="res\Cursor1.cur" />
+    <CustomBuild Include="res\Cursor_d.cur" />
+    <CustomBuild Include="res\cut_stat.bmp" />
+    <CustomBuild Include="res\Delete.bmp" />
+    <CustomBuild Include="res\demo1.bmp" />
+    <CustomBuild Include="res\demo_icon.bmp" />
+    <CustomBuild Include="res\drawmark.bmp" />
+    <CustomBuild Include="res\Edit.bmp" />
+    <CustomBuild Include="res\edit1.bmp" />
+    <CustomBuild Include="res\eLearning.ico" />
+    <CustomBuild Include="res\eLearning.rc2">
+      <FileType>RC</FileType>
+    </CustomBuild>
+    <CustomBuild Include="res\eLearningDoc.ico" />
+    <CustomBuild Include="res\first.bmp" />
+    <CustomBuild Include="res\GKey.bmp" />
+    <CustomBuild Include="res\Go.bmp" />
+    <CustomBuild Include="res\GreenKeyFrame.bmp" />
+    <CustomBuild Include="res\hand.cur" />
+    <CustomBuild Include="res\hottoolbar.bmp" />
+    <CustomBuild Include="res\insert.bmp" />
+    <CustomBuild Include="res\KeyFrame.bmp" />
+    <CustomBuild Include="res\Left.bmp" />
+    <CustomBuild Include="res\LeftBottom.bmp" />
+    <CustomBuild Include="res\LeftUp.bmp" />
+    <CustomBuild Include="res\Mark.bmp" />
+    <CustomBuild Include="res\mark1.bmp" />
+    <CustomBuild Include="res\mcg.bmp" />
+    <CustomBuild Include="res\mix_wave.bmp" />
+    <CustomBuild Include="res\next.bmp" />
+    <CustomBuild Include="res\next1.bmp" />
+    <CustomBuild Include="res\next_Change.bmp" />
+    <CustomBuild Include="res\Next_Page.bmp" />
+    <CustomBuild Include="res\Next_Pos.bmp" />
+    <CustomBuild Include="res\NextPos.bmp" />
+    <CustomBuild Include="res\Note_dis.bmp" />
+    <CustomBuild Include="res\Note_en.bmp" />
+    <CustomBuild Include="res\Open.bmp" />
+    <CustomBuild Include="res\open2.bmp" />
+    <CustomBuild Include="res\pat.bmp" />
+    <CustomBuild Include="res\pausevideo.bmp" />
+    <CustomBuild Include="res\pen1.bmp" />
+    <CustomBuild Include="res\play.bmp" />
+    <CustomBuild Include="res\play1.bmp" />
+    <CustomBuild Include="res\play2.bmp" />
+    <CustomBuild Include="res\play3.bmp" />
+    <CustomBuild Include="res\play5.bmp" />
+    <CustomBuild Include="res\playvideo.bmp" />
+    <CustomBuild Include="res\pointer1.bmp" />
+    <CustomBuild Include="res\PosPointer.bmp" />
+    <CustomBuild Include="res\ppt1.bmp" />
+    <CustomBuild Include="res\prev.bmp" />
+    <CustomBuild Include="res\prev1.bmp" />
+    <CustomBuild Include="res\prev_Change.bmp" />
+    <CustomBuild Include="res\Prev_Page.bmp" />
+    <CustomBuild Include="res\Prev_Pos.bmp" />
+    <CustomBuild Include="res\PrevPos.bmp" />
+    <CustomBuild Include="res\printer.bmp" />
+    <CustomBuild Include="res\red_key1.bmp" />
+    <CustomBuild Include="res\RedKeyFrame.bmp" />
+    <CustomBuild Include="res\rep_Stat.bmp" />
+    <CustomBuild Include="res\Right.bmp" />
+    <CustomBuild Include="res\RightBottom.bmp" />
+    <CustomBuild Include="res\RightUp.bmp" />
+    <CustomBuild Include="res\RKey.bmp" />
+    <CustomBuild Include="res\Select.bmp" />
+    <CustomBuild Include="res\sep.bmp" />
+    <CustomBuild Include="res\set_poin.bmp" />
+    <CustomBuild Include="res\sq_in1.bmp" />
+    <CustomBuild Include="res\sq_out1.bmp" />
+    <CustomBuild Include="res\stopvideo.bmp" />
+    <CustomBuild Include="res\Thumb.bmp" />
+    <CustomBuild Include="res\thumb_body.bmp" />
+    <CustomBuild Include="res\Thumb_head.bmp" />
+    <CustomBuild Include="res\thumb_tail.bmp" />
+    <CustomBuild Include="res\Toolbar.bmp" />
+    <CustomBuild Include="res\Unknown.bmp" />
+    <CustomBuild Include="res\UnMark.bmp" />
+    <CustomBuild Include="res\unmark1.bmp" />
+    <CustomBuild Include="res\Up.bmp" />
+    <CustomBuild Include="res\videoprofile.bmp" />
+    <CustomBuild Include="res\wizard.bmp" />
+    <CustomBuild Include="res\zoom_in.bmp" />
+    <CustomBuild Include="res\zoom_in1.bmp" />
+    <CustomBuild Include="res\zoom_in_pt.bmp" />
+    <CustomBuild Include="res\zoom_in_scale.bmp" />
+    <CustomBuild Include="res\zoom_out.bmp" />
+    <CustomBuild Include="res\zoom_out_pt.bmp" />
+    <CustomBuild Include="res\zoom_out_scale.bmp" />
+    <CustomBuild Include="res\ZoomIn.bmp" />
+    <CustomBuild Include="res\ZoomOut.bmp" />
+    <CustomBuild Include="res\horse.avi">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\eLearningCapture.JP\res\bmp00007.bmp" />
+    <None Include="..\eLearningCapture.JP\res\c1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\c2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\c3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\c4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\c5.bmp" />
+    <None Include="..\eLearningCapture.JP\res\d1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\d2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\d3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\d4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e5.bmp" />
+    <None Include="..\eLearningCapture.JP\res\e6.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f5.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f6.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f7.bmp" />
+    <None Include="..\eLearningCapture.JP\res\f8.bmp" />
+    <None Include="..\eLearningCapture.JP\res\g2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\g3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\g4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\g5.bmp" />
+    <None Include="..\eLearningCapture.JP\res\g6.bmp" />
+    <None Include="..\eLearningCapture.JP\res\h1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\h2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\h3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\i1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\i2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\i3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p1.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p2.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p3.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p4.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p5.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p6.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p7.bmp" />
+    <None Include="..\eLearningCapture.JP\res\p8.bmp" />
+    <None Include="..\eLearningCapture.JP\res\ptr_h4.bmp" />
+    <None Include="res\buttons.bmp" />
+    <None Include="res\edit_larse.bmp" />
+    <None Include="res\edit_small.bmp" />
+    <None Include="res\filelarge.bmp" />
+    <None Include="res\filesmall.bmp" />
+    <None Include="res\file_larse.bmp" />
+    <None Include="res\infovideo.bmp" />
+    <None Include="res\main.bmp" />
+    <None Include="res\o2_all_larse.bmp" />
+    <None Include="res\option_larse.bmp" />
+    <None Include="res\pages_small_hc.bmp" />
+    <None Include="res\ribbon1.mfcribbon-ms" />
+    <None Include="res\sakusei_larse.bmp" />
+    <None Include="res\writelarge.bmp" />
+    <None Include="res\writesmall.bmp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="elearning.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

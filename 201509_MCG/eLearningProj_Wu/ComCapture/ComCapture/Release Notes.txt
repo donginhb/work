@@ -1,0 +1,61 @@
+﻿
+      ComCapture DLL
+
+     -- 前提条件 : VFVideoCapture.dll を登録すること
+     -- 登録方法 : regsvr32.exe ComCapture.dll
+     -- 追加 API : 新規にサポートする API(Format,FrameRate,IPCamera関連)
+                   1. HRESULT DeviceFormatTableGetCount(CAPTUREDEVICETYPE eType, long lDeviceIndex, long *plCount);
+                   2. HRESULT DeviceFormatTableGetFormat(CAPTUREDEVICETYPE eType, long lDeviceIndex, long lFormatIndex, BSTR *pbstr);
+                   3. HRESULT VideoFrameRateTableGetCount(long lDeviceIndex, long *plCount);
+                   4. HRESULT VideoFrameRateTableGetFrameRate(long lDeviceIndex, long lFrameRateIndex, BSTR *pbstr);
+                   5. HRESULT IPCameraOpen(BSTR bstrURL, BSTR bstrLogin, BSTR bstrPassword);
+                   6. HRESULT GetCurrentCount(long *plCurrentCount);
+     -- 変更 API : CapturePrepareのbstrProfileの中身を変更する
+                   1. HRESULT CapturePrepare(BSTR bstrFile, BSTR bstrProfile, VARIANT_BOOL vbSyncPreview);
+                          変更前 : bstrProfileには、WMEncoder方式のBSTR
+                          変更後 : bstrProfileには、パス＋"Course.ini"
+     -- 削除 API : サポートしない API(DV関連)
+                   1. HRESULT ControlOpen(BSTR bstrDevice, long lReserved);
+                   2. HRESULT ControlClose();
+                   3. HRESULT ControlDVGetType(EXTDV_TYPE *plType);
+                   4. HRESULT ControlDVGetTapeInfo(EXTDV_TAPEINFO *pInfo);
+                   5. HRESULT ControlDVGetMode(EXTDV_MODE *peMode);
+                   6. HRESULT ControlDVPutMode(EXTDV_MODE eMode);
+
+● 2014.11.07 ver00.01(初版)
+   1. Pauseは未実装。
+   2. VideoとScreenの同時キャプチャーは未実装。
+   3. SinkuSuperLiteでできたMP4ファイルをチェックし、予想外のものがあるが、まだ未調査。
+   4. SendIDScriptは未実装
+
+● 2014.12.1 ver00.02
+   1. バグ対応：Openする時、myCloseのCoUninitialize()で異常が発生する。
+      修正内容：myCloseでOpen済みの場合、CoUninitialize()をコールするようにする。
+   2. API 追加 : HRESULT GetCurrentCount(long *plCurrentCount);
+                 *plCurrentCount : in milliseconds
+
+● 2015.01.13 ver00.03
+   1. visioforge_sdks_installer_dotnet_setup_trial_net40(32BIT)をvisioforge_sdks_installer_dotnet_setup_trial_x64_net40へ変更した。
+   2. VFVideoCapture.dllのDeviceTableUpdate API処理の変更。
+      DeviceTableUpdateの中の初期化処理をOpenへ移動した。
+      理由：DeviceTableUpdateの中に初期化処理が入ると、頻繁に呼ばれたらフリーズするケースがある。
+   3. フォルダ名前変更。
+   
+● 2015.03.30 ver00.04
+   1. (No.3:音ずれのタイムシフト)についての実装
+   2. (No.4:ライセンス登録)についての実装
+   3. (No.5:音声パラメータチェック)について「更新版_Visioパラメータ_20150326.xlsx」を基準として関係パラメータ修正
+   4. (No.6:ビデオパラメータチェック)について「更新版_Visioパラメータ_20150326.xlsx」を基準として関係パラメータ修正
+   5. No.12(No.10:中央に表示されていない)についての不具合対応
+   6. No.103(No.11:16倍数でない解像度のスクリーンキャプチャ)についての不具合対応
+   7. No.56(No.13:High Profile)についての変更対応
+   
+● 2015.04.6 ver00.05
+   1. プロジェクトをリリースモードへ変更する
+   2. No.119(既存動画から新規作成で取り込んだ動画を再生させると音声しか再生されない箇所がある)について、
+       「更新版_Visioパラメータ_20150403.xlsx」を基準として、次のように変更する。
+        ①ビデオキャプチャー          ：ProfileMain
+        ②オーディオのみキャプチャー  ：ProfileMain
+        ③スクリーンキャプチャー      ：ProfileBaseline
+        ④IPカメラキャプチャー        ：ProfileMain
+

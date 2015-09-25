@@ -1,0 +1,5 @@
+﻿
+      VisioForgeVideoCapture DLL
+
+     -- 前提条件 : VisioForge SDKs .Net 4.0 をインストールすること
+     -- 登録方法 : RegAsm.exe VFVideoCapture.dll /tlb:VFVideoCapture.tlb /codebase

@@ -1,0 +1,33 @@
+<Audio Only, FM Audio Quality(28K)>	0,2,20,0,22,22050,S
+<Audio Only, Near CD Audio Quality(56K)>	0,2,20,0,48,32000,S
+<Audio Only, Near CD Audio Quality(96K)>	0,2,20,0,80,44100,S
+<Audio Only, CD Audio Quality(128K)>	0,2,20,0,96,44100,S
+<Audio Only, CD Audio Quality(192K)>	0,2,20,0,160,44100,S
+<TEL Audio Quality, Super Low Video Quality(28K)>	16,2,20,0,6,8000,M
+<TEL Audio Quality, General Video Quality(56K)>	40,2,20,0,8,8000,M
+<TEL Audio Quality, General Video Quality(64K)>	48,2,20,0,8,8000,M
+<TEL Audio Quality, High Video Quality(96K)>	80,2,20,0,8,8000,M
+<TEL Audio Quality, Super High Video Quality(128K)>	112,2,20,0,8,8000,M
+<TEL Audio Quality, Super High Video Quality(192K)>	176,2,20,0,8,8000,M
+<AM Audio Quality, Low Video Quality(56K)>	32,2,20,0,16,16000,M
+<AM Audio Quality, Low Video Quality(64K)>	40,2,20,0,16,16000,M
+<AM Audio Quality, High Video Quality(96K)>	72,2,20,0,16,16000,M
+<AM Audio Quality, Super High Video Quality(192K)>	168,2,20,0,16,16000,M
+<AM Audio Quality, Super High Video Quality(128K)>	104,2,20,0,16,16000,M
+<FM Audio Quality, Super Low Video Quality(56K)>	16,2,20,0,32,22050,S
+<FM Audio Quality, Low Video Quality(64K)>	24,2,20,0,32,32000,S
+<FM Audio Quality, General Video Quality(96K)>	56,2,20,0,32,32000,S
+<FM Audio Quality, High Video Quality(128K)>	88,2,20,0,32,32000,S
+<FM Audio Quality, Super High Video Quality(192K)>	152,2,20,0,32,32000,S
+<Near CD Audio Quality, Super Low Video Quality(64K)>	16,2,20,0,40,32000,S
+<Near CD Audio Quality, General Video Quality(96K)>	48,2,20,0,40,32000,S
+<Near CD Audio Quality, Super High Video Quality(192K)>	120,2,20,0,64,44100,S
+<Near CD Audio Quality, Low Video Quality(96K)>	24,2,20,0,64,44100,S
+<Near CD Audio Quality, General Video Quality,(128K)>	56,2,20,0,64,44100,S
+<CD Audio Quality, Low Video Quality(128K)>	24,2,20,0,96,44100,S
+<CD Audio Quality, High Video Quality(192K)>	88,2,20,0,96,44100,S
+<CD Audio Quality, Super High Video Quality(512K)>	340,2,20,0,160,44100,S
+<CD Audio Quality, DVD Video Quality(1073K)>	890,2,20,0,160,44100,S
+<CD Audio Quality, DVD Video Quality(2073K)>	1890,2,20,0,160,44100,S
+<Screen Capture Default(192K)>	152,2,20,0,32,32000,S
+HDMI Live Profile(2073K)	1890,30,1,0,160,48000,S

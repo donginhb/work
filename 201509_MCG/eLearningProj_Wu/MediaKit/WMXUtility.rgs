@@ -1,0 +1,26 @@
+HKCR
+{
+	MediaKit.WMXUtility.1 = s 'WMXUtility Class'
+	{
+		CLSID = s '{3FD8AA90-1BB1-4FCB-90A3-0BB11AB9DA9A}'
+	}
+	MediaKit.WMXUtility = s 'WMXUtility Class'
+	{
+		CLSID = s '{3FD8AA90-1BB1-4FCB-90A3-0BB11AB9DA9A}'
+		CurVer = s 'MediaKit.WMXUtility.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {3FD8AA90-1BB1-4FCB-90A3-0BB11AB9DA9A} = s 'WMXUtility Class'
+		{
+			ProgID = s 'MediaKit.WMXUtility.1'
+			VersionIndependentProgID = s 'MediaKit.WMXUtility'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{35069362-A436-41EB-A954-A90BF90FB190}'
+		}
+	}
+}
