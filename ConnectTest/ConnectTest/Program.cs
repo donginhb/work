@@ -15,32 +15,65 @@ namespace ConnectTest
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Hello World!");
-			string outStr = "";
 			string requestStr = @"http://10.62.72.116/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count";
+			int idx = requestStr.LastIndexOf("=");
+			if (-1 == idx)
+			{
+				return;
+			}
+			string findKey = requestStr.Substring(idx + 1).Trim() + "=";
+			string rdStr = "";
+			string reportStr = "";
+
+			HttpWebRequest hwreq = null;
+			WebResponse hwrsp = null;
+			Stream rspStream = null;
+			StreamReader sr = null;
 			try
 			{
-				Task<string> t0 = GetResultStringAsync(requestStr);
-				outStr = t0.Result;
-				StreamWriter sw = new StreamWriter("dump.txt", false);
-				sw.Write(outStr);
-				sw.Close();
+				hwreq = (HttpWebRequest)WebRequest.Create(requestStr);
+				hwrsp = hwreq.GetResponse();
+				rspStream = hwrsp.GetResponseStream();
+				sr = new StreamReader(rspStream);
+				while ( null != (rdStr = sr.ReadLine()) )
+				{
+					// Console.WriteLine(rdStr);
+					if ( -1 != (idx = rdStr.IndexOf(findKey)) )
+					{
+						string subStr = rdStr.Substring(idx + findKey.Length).Trim();
+						int value;
+						if (int.TryParse(subStr, out value))
+						{
+							reportStr = ", " + subStr;
+							Console.WriteLine("reportStr = \"" + reportStr + "\"");
+							break;
+						}
+					}
+				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
 			}
-			string resultStr = GetReportString(outStr, requestStr);
-			Console.WriteLine(resultStr);
+			finally
+			{
+				if (null != hwrsp)
+				{
+					hwrsp.Close();
+				}
+				if (null != rspStream)
+				{
+					rspStream.Close();
+				}
+				if (null != sr)
+				{
+					sr.Close();
+				}
+			}
+			//string resultStr = GetReportString(outStr, requestStr);
+			//Console.WriteLine(resultStr);
 
 			Console.ReadLine();
-		}
-
-		async static Task<string> GetResultStringAsync(string requestStr)
-		{
-			WebClient wc = new WebClient();
-			string resultStr = await wc.DownloadStringTaskAsync(new Uri(requestStr));
-
-			return resultStr;
 		}
 
 		public static string GetReportString(string resultStr, string requestStr)

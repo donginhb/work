@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Threading;
 using System.Net;
+using System.IO;
 
 namespace ServiceAreaClientLib.DeviceInquirer
 {
@@ -66,14 +67,17 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			{
                 string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-				// 异步执行两个查询
-				Task<string> t0 = GetResultStringAsync(deviceInfo.RequestString1);
-				Task<string> t1 = GetResultStringAsync(deviceInfo.RequestString2);
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t0.Result);
-				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + t1.Result);
+				string pc0Str = GetPassengerCountStr(deviceInfo.RequestString1);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + pc0Str);
+				string pc1Str = GetPassengerCountStr(deviceInfo.RequestString2);
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 返回应答: " + pc1Str);
 
-				string insertStr = GetInsertString(dateTimeStr, t0.Result, t1.Result, deviceInfo);
-				Report2Server(insertStr, deviceInfo.DeviceName);
+				if (	string.Empty != pc0Str
+					&&	string.Empty != pc1Str	)
+				{
+					string insertStr = GetInsertString(dateTimeStr, pc0Str, pc1Str, deviceInfo);
+					Report2Server(insertStr, deviceInfo.DeviceName);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -82,49 +86,72 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
         }
 
-		async Task<string> GetResultStringAsync(string requestStr)
+		/// <summary>
+		/// 取得客流数计数器的值
+		/// </summary>
+		/// <param name="reqStr"></param>
+		/// <returns></returns>
+		string GetPassengerCountStr(string reqStr)
 		{
-			WebClient wc = new WebClient();
-			string resultStr = await wc.DownloadStringTaskAsync(new Uri(requestStr));
-
-			return resultStr;
-		}
-
-        public static string GetReportString(string resultStr, string requestStr)
-        {
-			string reportStr = "";
-			int idx = requestStr.LastIndexOf("=");
-			string findKey = "";
-			int value;
-			if (-1 != idx)
+			int idx = reqStr.LastIndexOf("=");
+			if (-1 == idx)
 			{
-				findKey = requestStr.Substring(idx + 1).Trim() + "=";
-				string[] rdLines = resultStr.Split('\n');
-				foreach (string line in rdLines)
+				return string.Empty;
+			}
+			string findKey = reqStr.Substring(idx + 1).Trim() + "=";
+			string rdStr = "";
+			string retStr = string.Empty;
+
+			HttpWebRequest hwreq = null;
+			WebResponse hwrsp = null;
+			Stream rspStream = null;
+			StreamReader sr = null;
+			try
+			{
+				hwreq = (HttpWebRequest)WebRequest.Create(reqStr);
+				hwrsp = hwreq.GetResponse();
+				rspStream = hwrsp.GetResponseStream();
+				sr = new StreamReader(rspStream);
+				while (null != (rdStr = sr.ReadLine()))
 				{
-					if ("" == line.Trim())
+					if (-1 != (idx = rdStr.IndexOf(findKey)))
 					{
-						continue;
-					}
-					if (-1 != (idx = line.IndexOf(findKey)))
-					{
-						string subStr = line.Substring(idx + findKey.Length).Trim();
+						string subStr = rdStr.Substring(idx + findKey.Length).Trim();
+						int value;
 						if (int.TryParse(subStr, out value))
 						{
-							reportStr = ", " + subStr;
+							retStr = subStr;
 							break;
 						}
 					}
 				}
 			}
-
-			return reportStr;
-        }
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
+			finally
+			{
+				if (null != hwrsp)
+				{
+					hwrsp.Close();
+				}
+				if (null != rspStream)
+				{
+					rspStream.Close();
+				}
+				if (null != sr)
+				{
+					sr.Close();
+				}
+			}
+			return retStr;
+		}
 
 		public static string GetInsertString(string dateTimeStr, string resultStr0, string resultStr1, PassengerCounterInfo deviceInfo)
 		{
-			string reportStr0 = GetReportString(resultStr0, deviceInfo.RequestString1);
-			string reportStr1 = GetReportString(resultStr1, deviceInfo.RequestString2);
+			string reportStr0 = ", " + resultStr0;
+			string reportStr1 = ", " + resultStr1;
 			// 摄像头的设备种类编码是003
 			string deviceTypeStr = "003";
 			// 3位服务区编号 + 3位采集点位置编号 + 3位设备种类编号 + 3位设备地址 = 12位设备编号唯一确定一个具体的设备
