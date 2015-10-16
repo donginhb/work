@@ -518,6 +518,12 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.Magnification = fvalue;
 				}
+				// 分组编号
+				deviceInfo.GroupId = 0;	// 默认值是0
+				if (int.TryParse(paraArr[6], out value))
+				{
+					deviceInfo.GroupId = value;
+				}
 				deviceInfo.DbTableName = Db_table_list[0];
 
 				// 电表的量纲默认是100
@@ -659,6 +665,12 @@ namespace ServiceAreaClient
 				if (float.TryParse(paraArr[5], out fvalue))
 				{
 					deviceInfo.Magnification = fvalue;
+				}
+				// 分组编号
+				deviceInfo.GroupId = 0;	// 默认值是0
+				if (int.TryParse(paraArr[6], out value))
+				{
+					deviceInfo.GroupId = value;
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = Db_table_list[3];

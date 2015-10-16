@@ -108,5 +108,17 @@ namespace ServiceAreaClientLib.DeviceInquirer
             get { return _adjustment; }
             set { _adjustment = value; }
         }
+
+		// 分组编号: 用以横向对比时, 区分不同的分组
+		// 默认值(无效值): 0
+		// 电表: 1:开水机, 2:锅炉房, 3:高杆灯, 4:公厕
+		// 水表: 1:开水机, 2:锅炉房, 3:公厕
+		int _groupId = 0;
+
+		public int GroupId
+		{
+			get { return _groupId; }
+			set { _groupId = value; }
+		}
 	}
 }

@@ -107,9 +107,12 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			string reportStr = waterVolumeVal.ToString();
 			// 水表的设备种类编码是002
 			string deviceTypeStr = "002";
-			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0') + deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr + deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
-			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01" + @") VALUES('"
-									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
+			string deviceSnStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0')
+								+ deviceInfo.SpotNumber.PadLeft(3, '0') + deviceTypeStr
+								+ deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+
+			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, group_id" + @") VALUES('"
+									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + ", " + deviceInfo.GroupId.ToString() + @")";
 			return insertStr;
 		}
 
