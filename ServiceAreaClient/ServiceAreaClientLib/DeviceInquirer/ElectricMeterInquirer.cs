@@ -66,15 +66,17 @@ namespace ServiceAreaClientLib
                     return;
                 }
 
-                // 上报给服务器
 				float fValue;
 				string insertStr = GetReportString(rd, deviceInfo, out fValue);
 				if (null == insertStr)
 				{
 					return;
 				}
-                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
-                Report2Server(insertStr, deviceInfo.DeviceName);
+                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = "
+					+ fValue.ToString() + deviceInfo.Adjustment.ToString() + " = "
+					+ (fValue + deviceInfo.Adjustment).ToString());
+				// 上报给服务器
+				Report2Server(insertStr, deviceInfo.DeviceName);
             }
             catch (Exception ex)
             {
@@ -138,6 +140,8 @@ namespace ServiceAreaClientLib
 
 			// 然后还要除以量纲得到浮点型小数值
 			fValue = value / deviceInfo.Magnitude;
+			// 加上校正值进行校正调整得到最终的用电量
+			float realVal = fValue + deviceInfo.Adjustment;
 
 			// 电表的设备种类编码是001
 			string deviceTypeStr = "001";
@@ -147,7 +151,7 @@ namespace ServiceAreaClientLib
 								+ deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
 
 			string insertStr = @"INSERT INTO " + deviceInfo.DbTableName + @"(time_stamp, device_number, value_01, total_flg, group_id" + @") VALUES('" + inquiryResult.TimeStamp + @"'" + @", '"
-								+ deviceSnStr + @"'," + fValue.ToString() + ", " + total_flg.ToString() + ", " + deviceInfo.GroupId.ToString() + @")";
+								+ deviceSnStr + @"'," + realVal.ToString() + ", " + total_flg.ToString() + ", " + deviceInfo.GroupId.ToString() + @")";
 
 			return insertStr;
 		}

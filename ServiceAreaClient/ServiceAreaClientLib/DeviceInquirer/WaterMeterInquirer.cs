@@ -84,11 +84,12 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				// 首先读数要乘以放大倍率
 				float waterVolumeVal = iWaterVolumeVal * deviceInfo.Magnification;
 				// 然后除以量纲得到实际小数值
-				float fWaterVolumeVal = waterVolumeVal / deviceInfo.Magnitude;
+				float fValue = waterVolumeVal / deviceInfo.Magnitude;
+				float fWaterVolumeVal = fValue + deviceInfo.Adjustment;
 
 				// 上报给服务器
 				string insertStr = GetReportString(dateTimeStr, fWaterVolumeVal, deviceInfo);
-                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fWaterVolumeVal.ToString());
+                AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString() + deviceInfo.Adjustment.ToString() + " = " + fWaterVolumeVal.ToString());
 				Report2Server(insertStr, deviceInfo.DeviceName);
 			}
 			catch (Exception ex)

@@ -524,6 +524,11 @@ namespace ServiceAreaClient
 				{
 					deviceInfo.GroupId = value;
 				}
+				float fAdjustment = 0;
+				if (float.TryParse(paraArr[7], out fAdjustment))
+				{
+					deviceInfo.Adjustment = fAdjustment;
+				}
 				deviceInfo.DbTableName = Db_table_list[0];
 
 				// 电表的量纲默认是100
@@ -671,6 +676,11 @@ namespace ServiceAreaClient
 				if (int.TryParse(paraArr[6], out value))
 				{
 					deviceInfo.GroupId = value;
+				}
+				float fAdjustment = 0;
+				if (float.TryParse(paraArr[7], out fAdjustment))
+				{
+					deviceInfo.Adjustment = fAdjustment;
 				}
 				// 数据库中对应的表名
 				deviceInfo.DbTableName = Db_table_list[3];
