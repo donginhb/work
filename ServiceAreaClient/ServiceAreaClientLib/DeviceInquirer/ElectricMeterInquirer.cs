@@ -73,7 +73,7 @@ namespace ServiceAreaClientLib
 					return;
 				}
                 AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = "
-					+ fValue.ToString() + deviceInfo.Adjustment.ToString() + " = "
+					+ fValue.ToString() + " + " + deviceInfo.Adjustment.ToString() + " = "
 					+ (fValue + deviceInfo.Adjustment).ToString());
 				// 上报给服务器
 				Report2Server(insertStr, deviceInfo.DeviceName);
