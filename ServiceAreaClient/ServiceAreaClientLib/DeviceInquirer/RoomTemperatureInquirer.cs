@@ -93,6 +93,12 @@ namespace ServiceAreaClientLib
 				string insertStr = GetReportString(dateTimeStr, fValue, deviceInfo);
                 AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
 				Report2Server(insertStr, deviceInfo.DeviceName);
+
+				// 判断温度值是否在正常区间内
+				if (IsTemperatureAbnormal(fValue))
+				{
+					AddTemperatureAlarmRecord(deviceInfo);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -115,6 +121,28 @@ namespace ServiceAreaClientLib
 									+ dateTimeStr + @"'," + deviceSnStr + @", " + reportStr + @")";
 
 			return insertStr;
+		}
+
+		bool IsTemperatureAbnormal(float temperatureVal)
+		{
+			if ((temperatureVal < 12)
+				|| (temperatureVal > 28))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 追加室温异常警报记录
+		/// </summary>
+		/// <param name="deviceInfo"></param>
+		void AddTemperatureAlarmRecord(ModbusDeviceInfo deviceInfo)
+		{
+			// 服务区号, 采集点(部门)号, 设备号, 异常id, 开始时间
 		}
 	}
 }
