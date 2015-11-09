@@ -1,0 +1,9 @@
+ID:			lgfwqftp
+PWD:		Minkosoft1!
+HOST:		lgfwqftp.gotoftp5.com
+DB name:	lgfwqftp
+
+URL:		http://lgfwqftp.gotoip55.com/serviceArea/login/init
+
+TaoBao URL:	https://item.taobao.com/item.htm?spm=a1z09.2.0.0.XZcCr2&id=41586744112&_u=94o34gf1836
+
