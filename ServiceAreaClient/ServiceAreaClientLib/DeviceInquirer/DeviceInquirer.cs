@@ -11,27 +11,27 @@ namespace ServiceAreaClientLib.DeviceInquirer
 {
     public class DeviceInquirer
     {
-        private E_DB_CONNECT_MODE _db_connect_mode;
+        private static E_DB_CONNECT_MODE _db_connect_mode;
 
-        public E_DB_CONNECT_MODE Db_connect_mode
+        public static E_DB_CONNECT_MODE Db_connect_mode
         {
             get { return _db_connect_mode; }
             set { _db_connect_mode = value; }
         }
 
         // 数据库服务器情报
-        protected ServerInfo _dbServerInfo;
+        protected static ServerInfo _dbServerInfo;
 
-        public ServerInfo DbServerInfo
+        public static ServerInfo DbServerInfo
         {
             get { return _dbServerInfo; }
             set { _dbServerInfo = value; }
         }
 
         // 中继服务器情报
-        private ServerInfo _relayServerInfo;
+        private static ServerInfo _relayServerInfo;
 
-        protected ServerInfo RelayServerInfo
+        protected static ServerInfo RelayServerInfo
         {
             get { return _relayServerInfo; }
             set { _relayServerInfo = value; }
@@ -58,106 +58,118 @@ namespace ServiceAreaClientLib.DeviceInquirer
         protected System.Timers.Timer _timer;
 
 		// 断网时, 临时缓存数据用的本地文件
-        const string _localBufFileName = "DisconnectBuffer.txt";
+        static string _localBufFileName = "DisconnectBuffer.txt";
 
-        public string LocalBufFileName
+        public static string LocalBufFileName
         {
             get { return _localBufFileName; }
         }
 
-        // 读写本地缓存文件时, 用的lock对象
-        protected static object bufferLock = new object();
+		// 用以缓存(因断网)写入DB失败的数据
+		static List<string> _bufferList = null;
 
-		// 标记与数据库的连接状态
-		private static bool _dataBaseConnected = false;
-
-		protected static bool DataBaseConnected
+		public static List<string> BufferList
 		{
-			get { return DeviceInquirer._dataBaseConnected; }
-			set { DeviceInquirer._dataBaseConnected = value; }
+			get { return DeviceInquirer._bufferList; }
+			set { DeviceInquirer._bufferList = value; }
 		}
-
-        protected void SaveToLocalBuffer(string cmdStr)
-        {
-            lock (bufferLock)
-            {
-				try
-				{
-					StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-					sw.WriteLine(cmdStr);
-					sw.Close();
-				}
-				catch (Exception ex)
-				{
-					System.Diagnostics.Trace.WriteLine(ex.ToString());
-				}
-            }
-        }
 
 		/// <summary>
 		/// 在断网时检查本地缓存文件, 尝试补发缓存的数据
 		/// </summary>
-        protected void CheckLocalBuffer()
+		public static void CheckBufferList()
+		{
+			// 从本地缓存文件载入缓存数据列表
+			LoadLocalBufferList();
+			// 尝试重新发送缓存列表中的数据
+			ReissueBufferList();
+		}
+        public static void LoadLocalBufferList()
         {
-			if (DataBaseConnected)
+			if (!IsBufferListEmpty())
 			{
-				// 只有在前一次数据库连接为切断状态时才进行处理
+				// 如果不为空, 说明已经load过了, 就不用再重新load了
 				return;
 			}
-			if (File.Exists(LocalBufFileName))
+			else
 			{
-				lock (bufferLock)
+				// 否则如果为空, 检查是否存在本地缓存文件, 存在的话load进缓存数据列表里
+				if (File.Exists(LocalBufFileName))
 				{
 					try
 					{
+						BufferList = new List<string>();
+						// 读入缓存文件中被缓存的数据
 						StreamReader sr = new StreamReader(LocalBufFileName);
 						string rdLine = "";
-						List<string> cmdList = new List<string>();
 						while (null != (rdLine = sr.ReadLine()))
 						{
 							if (string.Empty != rdLine.Trim())
 							{
-								cmdList.Add(rdLine);
+								BufferList.Add(rdLine);
 							}
 						}
 						sr.Close();
-						List<string> failList = new List<string>();
-						int idx = 0;
-						foreach (string cmd in cmdList)
-						{
-							if (!WriteToDB(cmd))
-							{
-								if (0 == idx)
-								{
-									// 第一个就失败, 表明仍然断网, 网络没有恢复, 接下来没有必要挨个试了
-									return;
-								}
-								failList.Add(cmd);
-							}
-							idx++;
-						}
-						// 能走到这说明至少有补发成功的了, 删掉原来的文件, 如果有失败的, 写回本地缓存文件里
-						File.Delete(LocalBufFileName);
-						if (0 != failList.Count)
-						{
-							StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-							foreach (string cmd in failList)
-							{
-								sw.WriteLine(cmd);
-							}
-							sw.Close();
-						}
-						Thread.Sleep(200);
 					}
 					catch (Exception ex)
 					{
 						System.Diagnostics.Trace.WriteLine(ex.ToString());
 					}
-                }
-            }
+				}
+			}
         }
 
-		protected bool WriteToDB(string cmdStr)
+		/// <summary>
+		/// 补发缓存数据列表
+		/// </summary>
+		public static void ReissueBufferList()
+		{
+			try
+			{
+				// 补发失败数据列表
+				List<string> failList = new List<string>();
+				int count = 0;
+				foreach (string cmd in BufferList)
+				{
+					if (!WriteToDB(cmd))
+					{
+						// 如果补发失败(写入DB失败)就加入补发失败数据列表
+						failList.Add(cmd);
+					}
+					else
+					{
+						// 补发成功计数
+						count++;
+					}
+				}
+				if (0 != count)
+				{
+					// 如果有补发成功的要删掉原来的缓存文件
+					File.Delete(LocalBufFileName);
+					// 清空缓存列表
+					BufferList.Clear();
+					// 如果还有补发失败的, 要新建缓存文件并把补发失败的记录写回去
+					// 并更新缓存列表
+					if (0 != failList.Count)
+					{
+						StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+						foreach (string cmd in failList)
+						{
+							BufferList.Add(cmd);
+							sw.WriteLine(cmd);
+						}
+						sw.Close();
+					}
+				}
+				Thread.Sleep(200);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.ToString());
+			}
+		}
+
+		protected static bool WriteToDB(string cmdStr)
 		{
 			try
 			{
@@ -184,31 +196,64 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			return true;
 		}
 
-        protected bool Report2Server(string insertStr, string deviceName)
+        protected bool ReportToDBServer(string insertStr, string deviceName)
         {
-            if (WriteToDB(insertStr))
+			if (!IsBufferListEmpty())
 			{
-				// 数据库保存成功
-				lock (this)
+				AppendToBufferList(insertStr);
+				AppendUITextBox("	" + deviceName + " : 追加到数据缓存列表!");
+				return false;
+			}
+			else
+			{
+				if (WriteToDB(insertStr))
 				{
-					DataBaseConnected = true;
+					AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+					return true;
 				}
-				AppendUITextBox("	" + deviceName + " : 数据库保存成功!");
+				else
+				{
+					AppendToBufferList(insertStr);
+					AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
+					return false;
+				}
+			}
+        }
+
+		protected void AppendToBufferList(string cmdStr)
+		{
+			lock (BufferList)
+			{
+				if (null == BufferList)
+				{
+					BufferList = new List<string>();
+				}
+				BufferList.Add(cmdStr);
+				try
+				{
+					StreamWriter sw = new StreamWriter(LocalBufFileName, true);
+					sw.WriteLine(cmdStr);
+					sw.Close();
+				}
+				catch (Exception ex)
+				{
+					System.Diagnostics.Trace.WriteLine(ex.ToString());
+				}
+			}
+		}
+
+		protected static bool IsBufferListEmpty()
+		{
+			if (	(null != BufferList)
+				&&	(0 != BufferList.Count)	)
+			{
+				return false;
+			}
+			else
+			{
 				return true;
 			}
-            else
-            {
-				// 数据库保存失败
-				lock (this)
-				{
-					DataBaseConnected = false;
-				}
-				AppendUITextBox("	" + deviceName + " : 数据库保存失败!");
-				Thread th = new Thread(delegate() { SaveToLocalBuffer(insertStr); });
-				th.Start();
-				return false;
-            }
-        }
+		}
 
 		public delegate void UiUpdateDelegate(string txtStr);
 

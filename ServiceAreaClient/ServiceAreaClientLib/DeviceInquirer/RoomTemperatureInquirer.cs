@@ -92,7 +92,7 @@ namespace ServiceAreaClientLib
 				// 上报给服务器
 				string insertStr = GetReportString(dateTimeStr, fValue, deviceInfo);
                 AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + fValue.ToString());
-				Report2Server(insertStr, deviceInfo.DeviceName);
+				ReportToDBServer(insertStr, deviceInfo.DeviceName);
 
 				// 判断温度值是否在正常区间内
 				if (IsTemperatureAbnormal(fValue))

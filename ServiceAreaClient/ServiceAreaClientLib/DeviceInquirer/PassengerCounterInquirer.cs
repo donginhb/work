@@ -43,11 +43,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
                 // 对列表中的各个设备, 逐一进行查询
                 for (int i = 0; i < DeviceList.Count; i++)
                 {
-					if (0 == i)
-					{
-						// 检查有没有缓存数据
-						CheckLocalBuffer();
-					}
                     PassengerCounterInfo di = DeviceList[i];
 					AppendUITextBox("开始查询 " + di.DeviceName);
 					Thread inquiryThread = new Thread(delegate() { InquiryTask(di); });
@@ -76,7 +71,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					&&	string.Empty != pc1Str	)
 				{
 					string insertStr = GetInsertString(dateTimeStr, pc0Str, pc1Str, deviceInfo);
-					Report2Server(insertStr, deviceInfo.DeviceName);
+					ReportToDBServer(insertStr, deviceInfo.DeviceName);
 				}
 			}
 			catch (Exception ex)

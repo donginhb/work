@@ -354,6 +354,9 @@ namespace ServiceAreaClient
 
 		void InquiryStart()
 		{
+			// 0.首先检查有无缓存数据, 有的话要先尝试将缓存数据写入DB
+			DeviceInquirer.CheckBufferList();
+
 			// 1.生成查询设备列表
 			List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
 			// 2.查询开始

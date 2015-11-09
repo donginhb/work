@@ -97,7 +97,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				// 上报给服务器
 				string insertStr = GetReportString(dateTimeStr, waterTemperatureVal, deviceInfo);
                 AppendUITextBox("	" + deviceInfo.DeviceName + " : 读数值 = " + waterTemperatureVal.ToString());
-				Report2Server(insertStr, deviceInfo.DeviceName);
+				ReportToDBServer(insertStr, deviceInfo.DeviceName);
 			}
 			catch (Exception ex)
 			{

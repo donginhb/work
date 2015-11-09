@@ -76,7 +76,7 @@ namespace ServiceAreaClientLib
 					+ fValue.ToString() + " + " + deviceInfo.Adjustment.ToString() + " = "
 					+ (fValue + deviceInfo.Adjustment).ToString());
 				// 上报给服务器
-				Report2Server(insertStr, deviceInfo.DeviceName);
+				ReportToDBServer(insertStr, deviceInfo.DeviceName);
             }
             catch (Exception ex)
             {
