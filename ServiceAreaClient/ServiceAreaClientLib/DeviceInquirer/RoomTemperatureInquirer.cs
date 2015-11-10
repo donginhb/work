@@ -12,13 +12,27 @@ namespace ServiceAreaClientLib
 {
 	public class RoomTemperatureInquirer : ModbusDeviceInquirer
 	{
-		public RoomTemperatureInquirer(	List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
-										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
+		// 室温上限值
+		static float _temperatureValMax = 28;
+
+		public static float TemperatureValMax
+		{
+			get { return RoomTemperatureInquirer._temperatureValMax; }
+			set { RoomTemperatureInquirer._temperatureValMax = value; }
+		}
+
+		// 室温下限值
+		static float _temperatureValMin = 12;
+
+		public static float TemperatureValMin
+		{
+			get { return RoomTemperatureInquirer._temperatureValMin; }
+			set { RoomTemperatureInquirer._temperatureValMin = value; }
+		}
+
+		public RoomTemperatureInquirer(	List<ModbusDeviceInfo> deviceInfoList)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = dbServer;
-			RelayServerInfo = relayServer;
-			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>
@@ -95,9 +109,10 @@ namespace ServiceAreaClientLib
 				ReportToDBServer(insertStr, deviceInfo.DeviceName);
 
 				// 判断温度值是否在正常区间内
-				if (IsTemperatureAbnormal(fValue))
+				int alarmType = 0;
+				if (0 != (alarmType = IsTemperatureAbnormal(fValue)))
 				{
-					AddTemperatureAlarmRecord(deviceInfo);
+					AddTemperatureAlarmRecord(deviceInfo, alarmType, fValue);
 				}
 			}
 			catch (Exception ex)
@@ -123,16 +138,19 @@ namespace ServiceAreaClientLib
 			return insertStr;
 		}
 
-		bool IsTemperatureAbnormal(float temperatureVal)
+		int IsTemperatureAbnormal(float temperatureVal)
 		{
-			if ((temperatureVal < 12)
-				|| (temperatureVal > 28))
+			if (temperatureVal < TemperatureValMin)
 			{
-				return true;
+				return -1;
+			}
+			else if (temperatureVal > TemperatureValMax)
+			{
+				return 1;
 			}
 			else
 			{
-				return false;
+				return 0;
 			}
 		}
 
@@ -140,9 +158,36 @@ namespace ServiceAreaClientLib
 		/// 追加室温异常警报记录
 		/// </summary>
 		/// <param name="deviceInfo"></param>
-		void AddTemperatureAlarmRecord(ModbusDeviceInfo deviceInfo)
+		void AddTemperatureAlarmRecord(ModbusDeviceInfo deviceInfo, int alarmType, float alarmValue)
 		{
-			// 服务区号, 采集点(部门)号, 设备号, 异常id, 开始时间
+			// date_time
+			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			// sarea_id
+			string sareaIdStr = deviceInfo.ServiceArea.ToString().PadLeft(3, '0');
+			// spot_id
+			string spotIdStr = deviceInfo.SpotNumber.ToString().PadLeft(3, '0');
+			// device_type 室温固定是"004"
+			string deviceTypeStr = "004";
+			// device_id
+			string deviceIdStr = deviceInfo.DeviceAddr.ToString().PadLeft(3, '0');
+			string alarmTypeStr = string.Empty;
+			if (alarmType > 0)
+			{
+				alarmTypeStr = @"高于上限";
+			}
+			else
+			{
+				alarmTypeStr = @"低于下限";
+			}
+			// alart_message
+			string alarmMsgStr = Service_area_name + " " + deviceInfo.DeviceName + " 室温异常(" + alarmTypeStr + ")";
+			// value_01 = alarmValue
+
+			string insertStr = @"INSERT INTO " + "temperature_alarm_record"
+								+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
+								+ @") VALUES('" + dateTimeStr + @"'," + sareaIdStr + @", " + spotIdStr + @", "
+								+ deviceTypeStr + @", " + deviceIdStr + @", " + alarmMsgStr + @", " + alarmValue.ToString() + @")";
+			WriteToDB(insertStr);
 		}
 	}
 }

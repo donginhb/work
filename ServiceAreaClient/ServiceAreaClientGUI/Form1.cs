@@ -37,7 +37,7 @@ namespace ServiceAreaClient
 
 		ElectricMeterInquirer _electricMeterInquirer = null;
 
-		public ElectricMeterInquirer ElectricMeterInquirer
+		public ElectricMeterInquirer _ElectricMeterInquirer
 		{
 			get { return _electricMeterInquirer; }
 			set { _electricMeterInquirer = value; }
@@ -45,7 +45,7 @@ namespace ServiceAreaClient
 
 		PassengerCounterInquirer _passengerCounterInquirer = null;
 
-		public PassengerCounterInquirer PassengerCounterInquirer
+		public PassengerCounterInquirer _PassengerCounterInquirer
 		{
 			get { return _passengerCounterInquirer; }
 			set { _passengerCounterInquirer = value; }
@@ -53,7 +53,7 @@ namespace ServiceAreaClient
 
 		RoomTemperatureInquirer _roomTemperatureInquirer = null;
 
-		public RoomTemperatureInquirer RoomTemperatureInquirer
+		public RoomTemperatureInquirer _RoomTemperatureInquirer
 		{
 			get { return _roomTemperatureInquirer; }
 			set { _roomTemperatureInquirer = value; }
@@ -61,20 +61,20 @@ namespace ServiceAreaClient
 
 		WaterMeterInquirer _waterMeterInquirer = null;
 
-		public WaterMeterInquirer WaterMeterInquirer
+		public WaterMeterInquirer _WaterMeterInquirer
 		{
 			get { return _waterMeterInquirer; }
 			set { _waterMeterInquirer = value; }
 		}
 		WaterTemperatureInquirer _waterTemperatureInquirer = null;
 
-		public WaterTemperatureInquirer WaterTemperatureInquirer
+		public WaterTemperatureInquirer _WaterTemperatureInquirer
 		{
 			get { return _waterTemperatureInquirer; }
 			set { _waterTemperatureInquirer = value; }
 		}
 
-		private ServerInfo _db_server;		// 数据库服务器信息
+		private ServerInfo _db_server;				// 数据库服务器信息
 
 		public ServerInfo Db_server
 		{
@@ -82,7 +82,7 @@ namespace ServiceAreaClient
 			set { _db_server = value; }
 		}
 
-		private ServerInfo _relay_server;	// 中继服务器信息
+		private ServerInfo _relay_server;			// 中继服务器信息
 
 		public ServerInfo Relay_server
 		{
@@ -90,7 +90,7 @@ namespace ServiceAreaClient
 			set { _relay_server = value; }
 		}
 
-		private int _service_area_num;		// 服务区编号
+		private int _service_area_num;				// 服务区编号
 
 		public int Service_area_num
 		{
@@ -98,7 +98,15 @@ namespace ServiceAreaClient
 			set { _service_area_num = value; }
 		}
 
-		private int _update_period;			// 更新周期(分钟)
+		string _service_area_name = string.Empty;	// 服务区名称
+
+		public string Service_area_name
+		{
+			get { return _service_area_name; }
+			set { _service_area_name = value; }
+		}
+
+		private int _update_period;					// 更新周期(分钟)
 
 		public int Update_period
 		{
@@ -354,38 +362,45 @@ namespace ServiceAreaClient
 
 		void InquiryStart()
 		{
+			// 初始化查询的各种配置信息
+			DeviceInquirer.Service_area_id = Service_area_num;					// 服务区编号
+			DeviceInquirer.Service_area_name = Service_area_name;				// 服务区名称
+			DeviceInquirer.DbServerInfo = Db_server;							// DB服务器信息
+			DeviceInquirer.RelayServerInfo = Relay_server;						// 中继服务器信息
+			DeviceInquirer.Db_connect_mode = Db_connect_mode;					// DB连接模式(直接连接或者通过中继服务器中转)
+
 			// 0.首先检查有无缓存数据, 有的话要先尝试将缓存数据写入DB
 			DeviceInquirer.CheckBufferList();
 
 			// 1.生成查询设备列表
 			List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
 			// 2.查询开始
-			ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
+			_ElectricMeterInquirer = ElectricMeterInquiryStart(electricMeterList);
 			System.Threading.Thread.Sleep(100);
 
 			List<PassengerCounterInfo> passengerCounterList = CreatePassengerCounterList();
-			PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
+			_PassengerCounterInquirer = PassengerCounterInquiryStart(passengerCounterList);
 			System.Threading.Thread.Sleep(100);
 
 			List<ModbusDeviceInfo> roomThermometerList = CreateRoomThermometerList();
-			RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
+			_RoomTemperatureInquirer = RoomTemperatureInquiryStart(roomThermometerList);
 			System.Threading.Thread.Sleep(100);
 
 			List<ModbusDeviceInfo> waterMeterList = CreateWaterMeterList();
-			WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
+			_WaterMeterInquirer = WaterMeterInquiryStart(waterMeterList);
 			System.Threading.Thread.Sleep(100);
 
 			List<ModbusDeviceInfo> waterTemperatureList = CreateWaterTemperatureList();
-			WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
+			_WaterTemperatureInquirer = WaterTemperatureInquiryStart(waterTemperatureList);
 			System.Threading.Thread.Sleep(100);
 		}
 		void InquiryStop()
 		{
-			ElectricMeterInquiryStop(ElectricMeterInquirer);
-			PassengerCounterInquiryStop(PassengerCounterInquirer);
-			RoomTemperatureInquiryStop(RoomTemperatureInquirer);
-			WaterMeterInquiryStop(WaterMeterInquirer);
-			WaterTemperatureInquiryStop(WaterTemperatureInquirer);
+			ElectricMeterInquiryStop(_ElectricMeterInquirer);
+			PassengerCounterInquiryStop(_PassengerCounterInquirer);
+			RoomTemperatureInquiryStop(_RoomTemperatureInquirer);
+			WaterMeterInquiryStop(_WaterMeterInquirer);
+			WaterTemperatureInquiryStop(_WaterTemperatureInquirer);
 
 		}
 
@@ -752,7 +767,7 @@ namespace ServiceAreaClient
 		/// </summary>
 		private ElectricMeterInquirer ElectricMeterInquiryStart(List<ModbusDeviceInfo> electricMeterList)
 		{
-			ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList, Db_server, Relay_server, Db_connect_mode);
+			ElectricMeterInquirer inquirer = new ElectricMeterInquirer(electricMeterList);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox1;
 			inquirer.StartInquiry();
@@ -771,7 +786,7 @@ namespace ServiceAreaClient
 
 		private PassengerCounterInquirer PassengerCounterInquiryStart(List<PassengerCounterInfo> passengerCounterList)
 		{
-			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList, Db_server, Relay_server, Db_connect_mode);
+			PassengerCounterInquirer inquirer = new PassengerCounterInquirer(passengerCounterList);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox2;
 			inquirer.StartInquiry();
@@ -790,7 +805,7 @@ namespace ServiceAreaClient
 
 		private RoomTemperatureInquirer RoomTemperatureInquiryStart(List<ModbusDeviceInfo> roomThermometerList)
 		{
-			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList, Db_server, Relay_server, Db_connect_mode);
+			RoomTemperatureInquirer inquirer = new RoomTemperatureInquirer(roomThermometerList);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox3;
 			inquirer.StartInquiry();
@@ -808,7 +823,7 @@ namespace ServiceAreaClient
 
 		private WaterMeterInquirer WaterMeterInquiryStart(List<ModbusDeviceInfo> waterMeterList)
 		{
-			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList, Db_server, Relay_server, Db_connect_mode);
+			WaterMeterInquirer inquirer = new WaterMeterInquirer(waterMeterList);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox4;
 			inquirer.StartInquiry();
@@ -826,7 +841,7 @@ namespace ServiceAreaClient
 
 		private WaterTemperatureInquirer WaterTemperatureInquiryStart(List<ModbusDeviceInfo> waterTemperatureList)
 		{
-			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList, Db_server, Relay_server, Db_connect_mode);
+			WaterTemperatureInquirer inquirer = new WaterTemperatureInquirer(waterTemperatureList);
 			inquirer.CyclePeriod = Update_period;
 			inquirer.TbxControl = textBox5;
 			inquirer.StartInquiry();
@@ -871,6 +886,7 @@ namespace ServiceAreaClient
 			{
 				Service_area_num = value;
 			}
+			Service_area_name = IniFile.IniReadValue("SERVICE_AREA_INFO", "SERVICE_AREA_NAME");
 			readStr = IniFile.IniReadValue("SETTING", "UPDATE_PERIOD");
 			if (int.TryParse(readStr, out value))
 			{
@@ -922,6 +938,18 @@ namespace ServiceAreaClient
 			else
 			{
 				cbxAutoStart.Checked = false;
+			}
+
+			readStr = IniFile.IniReadValue("ROOM_TEMPERATURE_LIMITS", "MAX_VALUE");
+			float fVal;
+			if (float.TryParse(readStr, out fVal))
+			{
+				RoomTemperatureInquirer.TemperatureValMax = fVal;
+			}
+			readStr = IniFile.IniReadValue("ROOM_TEMPERATURE_LIMITS", "MIN_VALUE");
+			if (float.TryParse(readStr, out fVal))
+			{
+				RoomTemperatureInquirer.TemperatureValMin = fVal;
 			}
 		}
 

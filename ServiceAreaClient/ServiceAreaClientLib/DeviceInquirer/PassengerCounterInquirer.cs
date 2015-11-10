@@ -21,13 +21,9 @@ namespace ServiceAreaClientLib.DeviceInquirer
             set { _deviceList = value; }
         }
 
-		public PassengerCounterInquirer(List<PassengerCounterInfo> deviceInfoList, ServerInfo dbServer,
-										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
+		public PassengerCounterInquirer(List<PassengerCounterInfo> deviceInfoList)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = dbServer;
-			RelayServerInfo = relayServer;
-			Db_connect_mode = dbConnectMode;
         }
 
         /// <summary>

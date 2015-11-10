@@ -13,13 +13,9 @@ namespace ServiceAreaClientLib
 {
 	public class ElectricMeterInquirer : ModbusDeviceInquirer
     {
-		public ElectricMeterInquirer(	List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
-										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
+		public ElectricMeterInquirer(	List<ModbusDeviceInfo> deviceInfoList)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = dbServer;
-			RelayServerInfo = relayServer;
-			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>

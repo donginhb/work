@@ -11,13 +11,9 @@ namespace ServiceAreaClientLib.DeviceInquirer
 {
 	public class WaterTemperatureInquirer : ModbusDeviceInquirer
 	{
-		public WaterTemperatureInquirer(List<ModbusDeviceInfo> deviceInfoList, ServerInfo dbServer,
-										ServerInfo relayServer, E_DB_CONNECT_MODE dbConnectMode)
+		public WaterTemperatureInquirer(List<ModbusDeviceInfo> deviceInfoList)
         {
             DeviceList = deviceInfoList;
-			DbServerInfo = dbServer;
-			RelayServerInfo = relayServer;
-			Db_connect_mode = dbConnectMode;
         }
 
 		/// <summary>

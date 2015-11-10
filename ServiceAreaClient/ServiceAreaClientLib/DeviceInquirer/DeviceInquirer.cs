@@ -11,7 +11,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 {
     public class DeviceInquirer
     {
-        private static E_DB_CONNECT_MODE _db_connect_mode;
+        private static E_DB_CONNECT_MODE _db_connect_mode = E_DB_CONNECT_MODE.DIRECT;
 
         public static E_DB_CONNECT_MODE Db_connect_mode
         {
@@ -31,7 +31,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
         // 中继服务器情报
         private static ServerInfo _relayServerInfo;
 
-        protected static ServerInfo RelayServerInfo
+		public static ServerInfo RelayServerInfo
         {
             get { return _relayServerInfo; }
             set { _relayServerInfo = value; }
@@ -74,6 +74,23 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			set { DeviceInquirer._bufferList = value; }
 		}
 
+		private static int _service_area_id;
+
+		public static int Service_area_id
+		{
+			get { return DeviceInquirer._service_area_id; }
+			set	{ DeviceInquirer._service_area_id = value; }
+		}
+
+		// 所在服务区的名称
+		static string _service_area_name = string.Empty;
+
+		public static string Service_area_name
+		{
+			get { return DeviceInquirer._service_area_name; }
+			set { DeviceInquirer._service_area_name = value; }
+		}
+
 		/// <summary>
 		/// 在断网时检查本地缓存文件, 尝试补发缓存的数据
 		/// </summary>
@@ -84,6 +101,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			// 尝试重新发送缓存列表中的数据
 			ReissueBufferList();
 		}
+
+
+		/// <summary>
+		/// 从本地缓存文件加载缓存数据
+		/// </summary>
         public static void LoadLocalBufferList()
         {
 			if (!IsBufferListEmpty())
@@ -169,6 +191,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
 		}
 
+		/// <summary>
+		/// 写入数据库
+		/// </summary>
+		/// <param name="cmdStr"></param>
+		/// <returns></returns>
 		protected static bool WriteToDB(string cmdStr)
 		{
 			try
@@ -196,6 +223,12 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			return true;
 		}
 
+		/// <summary>
+		/// 上报查询结果给DB服务器
+		/// </summary>
+		/// <param name="insertStr"></param>
+		/// <param name="deviceName"></param>
+		/// <returns></returns>
         protected bool ReportToDBServer(string insertStr, string deviceName)
         {
 			if (!IsBufferListEmpty())
@@ -220,6 +253,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			}
         }
 
+		/// <summary>
+		/// 将字串追加到缓存列表的末尾
+		/// </summary>
+		/// <param name="cmdStr"></param>
 		protected void AppendToBufferList(string cmdStr)
 		{
 			lock (BufferList)
