@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace ConnectTest
 {
@@ -14,7 +16,27 @@ namespace ConnectTest
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Console.WriteLine(@"Hello World!");
+			Console.ReadLine();
+
+			try
+			{
+				string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+				string insertStr = @"INSERT INTO " + "temperature_alarm_record"
+									+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
+									+ @") VALUES('" + dateTimeStr + @"'," + "888" + @", " + "123" + @", '"
+									+ @"004" + @"', '" + @"001" + @"', '" + @"中文字符串" + @"', " + "17" + @")";
+				DBConnectMySQL mysql_object = new DBConnectMySQL();
+				mysql_object.ExecuteMySqlCommand(insertStr);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+			Console.WriteLine(@"End!");
+			Console.ReadLine();
+
+			return;
 			string requestStr = @"http://10.62.72.116/nvc-cgi/admin/vca.cgi?action=list&amp;group=VCA.Ch0.Ct0.count";
 			int idx = requestStr.LastIndexOf("=");
 			if (-1 == idx)
@@ -131,4 +153,37 @@ namespace ConnectTest
         }
 
 	}
+
+	public class DBConnectMySQL
+	{
+		public MySqlConnection GetMySqlConnection()
+		{
+			string M_str_sqlcon = "server=" + "lgfwqftp.gotoftp5.com" + ";user id=" + "lgfwqftp"
+				+ ";password=" + "Minkosoft1!" + ";database=" + "lgfwqftp";
+			MySqlConnection myCon = new MySqlConnection(M_str_sqlcon);
+			return myCon;
+		}
+
+		public void ExecuteMySqlCommand(string cmdStr)
+		{
+			MySqlConnection mysqlcon = this.GetMySqlConnection();
+			mysqlcon.Open();
+			MySqlCommand mysqlcom = new MySqlCommand(cmdStr, mysqlcon);
+			mysqlcom.ExecuteNonQuery();
+			mysqlcom.Dispose();
+			mysqlcon.Close();
+			mysqlcon.Dispose();
+		}
+
+		public MySqlDataReader GetMySqlReader(string sqlStr)
+		{
+			MySqlConnection mysqlcon = this.GetMySqlConnection();
+			MySqlCommand mysqlcom = new MySqlCommand(sqlStr, mysqlcon);
+			mysqlcon.Open();
+			MySqlDataReader mysqlreader = mysqlcom.ExecuteReader(CommandBehavior.CloseConnection);
+			return mysqlreader;
+		}
+
+	}
+
 }

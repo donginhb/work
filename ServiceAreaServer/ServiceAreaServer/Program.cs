@@ -54,7 +54,7 @@ namespace ServiceAreaServer
 
 		static Queue<string> bufferQueue = new Queue<string>();
 
-		// 用于定期想磁盘文件(断网时缓冲数据用)写入的timer
+		// 用于定期向磁盘文件(断网时缓冲数据用)写入的timer
 		static System.Timers.Timer bufferTimer;
 
 		static void Main(string[] args)
@@ -83,7 +83,7 @@ namespace ServiceAreaServer
 					byte[] recvBytes = new byte[1024];
 					int bytes;
 					bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
-					recvStr += Encoding.ASCII.GetString(recvBytes, 0, bytes);
+					recvStr += Encoding.UTF8.GetString(recvBytes, 0, bytes);
 					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
 
 					// 处理客户端发来的消息
@@ -230,6 +230,7 @@ namespace ServiceAreaServer
 					string dataStr = bufferQueue.Dequeue();
 					SaveToLocalFile(dataStr);
 				}
+				bufferTimer.Stop();
 			}
 		}
 
