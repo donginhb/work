@@ -66,7 +66,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
         }
 
 		// 用以缓存(因断网)写入DB失败的数据
-		static List<string> _bufferList = null;
+		static List<string> _bufferList = new List<string>();
 
 		public static List<string> BufferList
 		{
@@ -108,7 +108,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// </summary>
         public static void LoadLocalBufferList()
         {
-			if (!IsBufferListEmpty())
+			if (0 != BufferList.Count)
 			{
 				// 如果不为空, 说明已经load过了, 就不用再重新load了
 				return;
@@ -120,7 +120,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				{
 					try
 					{
-						BufferList = new List<string>();
 						// 读入缓存文件中被缓存的数据
 						StreamReader sr = new StreamReader(LocalBufFileName);
 						string rdLine = "";
@@ -231,7 +230,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// <returns></returns>
         protected bool ReportToDBServer(string insertStr, string deviceName)
         {
-			if (!IsBufferListEmpty())
+			if (0 != BufferList.Count)
 			{
 				AppendToBufferList(insertStr);
 				AppendUITextBox("	" + deviceName + " : 追加到数据缓存列表!");
@@ -276,19 +275,6 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				{
 					System.Diagnostics.Trace.WriteLine(ex.ToString());
 				}
-			}
-		}
-
-		protected static bool IsBufferListEmpty()
-		{
-			if (	(null != BufferList)
-				&&	(0 != BufferList.Count)	)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
 			}
 		}
 
