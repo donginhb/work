@@ -96,10 +96,13 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// </summary>
 		public static void CheckBufferList()
 		{
-			// 从本地缓存文件载入缓存数据列表
-			LoadLocalBufferList();
-			// 尝试重新发送缓存列表中的数据
-			ReissueBufferList();
+            lock (BufferList)
+            {
+                // 从本地缓存文件载入缓存数据列表
+                LoadLocalBufferList();
+                // 尝试重新发送缓存列表中的数据
+                ReissueBufferList();
+            }
 		}
 
 
@@ -147,40 +150,29 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		{
 			try
 			{
-				// 补发失败数据列表
-				List<string> failList = new List<string>();
-				int count = 0;
-				foreach (string cmd in BufferList)
-				{
-					if (!WriteToDB(cmd))
-					{
-						// 如果补发失败(写入DB失败)就加入补发失败数据列表
-						failList.Add(cmd);
-					}
-					else
-					{
-						// 补发成功计数
-						count++;
-					}
-				}
-				if (0 != count)
+                int idx = 0;
+                for (idx = 0; idx < BufferList.Count; idx++)
+                {
+                    if (!WriteToDB(BufferList[idx]))
+                    {
+                        break;
+                    }
+                }
+				if (0 != idx)
 				{
 					// 如果有补发成功的要删掉原来的缓存文件
 					File.Delete(LocalBufFileName);
+                    StreamWriter sw = new StreamWriter(LocalBufFileName, false);
+                    List<string> tempList = new List<string>();
+                    for (; idx < BufferList.Count; idx++)
+                    {
+                        tempList.Add(BufferList[idx]);
+                        sw.WriteLine(BufferList[idx]);
+                    }
+                    sw.Close();
 					// 清空缓存列表
 					BufferList.Clear();
-					// 如果还有补发失败的, 要新建缓存文件并把补发失败的记录写回去
-					// 并更新缓存列表
-					if (0 != failList.Count)
-					{
-						StreamWriter sw = new StreamWriter(LocalBufFileName, true);
-						foreach (string cmd in failList)
-						{
-							BufferList.Add(cmd);
-							sw.WriteLine(cmd);
-						}
-						sw.Close();
-					}
+                    BufferList = tempList;
 				}
 				Thread.Sleep(200);
 			}
@@ -311,6 +303,8 @@ namespace ServiceAreaClientLib.DeviceInquirer
 
 		protected void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
+            CheckBufferList();
+
 			_timer.Start();
 			DoInquiry();
 		}
@@ -320,6 +314,9 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// </summary>
 		public void StartInquiry()
 		{
+            // 0.首先检查有无缓存数据, 有的话要先尝试将缓存数据写入DB
+            CheckBufferList();
+
 			// 启动timer
 			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
 			_timer.AutoReset = false;

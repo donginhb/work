@@ -369,9 +369,6 @@ namespace ServiceAreaClient
 			DeviceInquirer.RelayServerInfo = Relay_server;						// 中继服务器信息
 			DeviceInquirer.Db_connect_mode = Db_connect_mode;					// DB连接模式(直接连接或者通过中继服务器中转)
 
-			// 0.首先检查有无缓存数据, 有的话要先尝试将缓存数据写入DB
-			DeviceInquirer.CheckBufferList();
-
 			// 1.生成查询设备列表
 			List<ModbusDeviceInfo> electricMeterList = CreateElectricMeterList();
 			// 2.查询开始
