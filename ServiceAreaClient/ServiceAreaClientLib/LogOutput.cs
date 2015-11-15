@@ -35,7 +35,7 @@ namespace ServiceAreaClientLib
 			}
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			StreamWriter sw = new StreamWriter(LogName, true);
-			sw.WriteLine(dateTimeStr + ":\t\t" + logText);
+			sw.WriteLine(dateTimeStr + ":\t" + logText);
 			sw.Close();
 		}
 	}

@@ -148,16 +148,19 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				{
 					try
 					{
-						TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-						reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 10000);
+                        string dataStr = string.Empty;
 						for (int i = 0; i < bufferCount; i++)
 						{
-							string dataStr = SendBufferQueue.Dequeue();
+                            dataStr = SendBufferQueue.Dequeue();
+
+                            TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+                            reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
 							reporter.Send(Encoding.UTF8.GetBytes(dataStr));
-							LogOutput.LogAppend("SendTimer_Elapsed Send : " + dataStr);
+                            reporter.Close();
+
+                            //LogOutput.LogAppend("SendTimer_Elapsed Send : " + dataStr);
 							Thread.Sleep(10);
 						}
-						reporter.Close();
 					}
 					catch (Exception ex)
 					{
@@ -268,7 +271,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					lock (SendBufferQueue)
 					{
 						SendBufferQueue.Enqueue(cmdStr);
-						LogOutput.LogAppend("WriteToDB  SendBufferQueue.Enqueue : " + cmdStr);
+						//LogOutput.LogAppend("WriteToDB  SendBufferQueue.Enqueue : " + cmdStr);
 					}
 				}
 			}

@@ -76,7 +76,7 @@ namespace ServiceAreaServer
 					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
 					Console.WriteLine("Connect with client:" + clientip.Address + " at port:" + clientip.Port);
 
-                    LogOutput.LogAppend("");
+                    //LogOutput.LogAppend("");
 
 					// 第二层循环, 接收某个客户端连接的全部数据
 					while (true)
@@ -93,7 +93,7 @@ namespace ServiceAreaServer
 							lock (SendBufferQueue)
 							{
 								SendBufferQueue.Enqueue(recvStr);
-                                LogOutput.LogAppend("Enqueue : " + recvStr);
+                                //LogOutput.LogAppend("Enqueue : " + recvStr);
 							}
 						}
 						else
@@ -143,14 +143,14 @@ namespace ServiceAreaServer
 			{
 				// 数据库保存成功
 				Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
-                LogOutput.LogAppend("SendClientData2DB Success : " + clientDataStr);
+                //LogOutput.LogAppend("SendClientData2DB Success : " + clientDataStr);
                 return true;
 			}
 			else
 			{
 				// 数据库保存失败
 				Console.WriteLine("※※※ Save To DB Fail! ※※※");
-                LogOutput.LogAppend("SendClientData2DB Fail : " + clientDataStr);
+                //LogOutput.LogAppend("SendClientData2DB Fail : " + clientDataStr);
 				return false;
 			}
 		}

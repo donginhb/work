@@ -951,6 +951,13 @@ namespace ServiceAreaClient
 			{
 				RoomTemperatureInquirer.TemperatureValMin = fVal;
 			}
+
+            string logOutputEnableStr = IniFile.IniReadValue("LOG_OUTPUT", "ENABLE");
+            bool logOutputEnable = false;
+            if (bool.TryParse(logOutputEnableStr, out logOutputEnable))
+            {
+                LogOutput.Enabled = logOutputEnable;
+            }
 		}
 
 		void AddListViewColumns(ListView ctrl, string nameStr, string widthStr)
