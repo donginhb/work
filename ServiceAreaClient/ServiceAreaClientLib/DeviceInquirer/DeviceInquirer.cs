@@ -210,7 +210,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					// 通过中继服务器
 					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
 					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-					reporter.Send(Encoding.ASCII.GetBytes(cmdStr));
+					reporter.Send(Encoding.UTF8.GetBytes(cmdStr));
 					reporter.Close();
 				}
 			}

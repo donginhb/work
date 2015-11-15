@@ -22,10 +22,22 @@ namespace ConnectTest
 			try
 			{
 				string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+				string deviceTypeStr = "004";
+				string sareaIdStr = "145";
+				string spotIdStr = "001";
+				string deviceIdStr = "002";
+				float alarmValue = 11.2F;
+				string alarmMsgStr = "凤城服务区 服务大厅 温度异常(低于下限)";
+				//string insertStr = @"INSERT INTO " + "temperature_alarm_record"
+				//					+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
+				//					+ @") VALUES('" + dateTimeStr + @"'," + "888" + @", " + "123" + @", '"
+				//					+ @"004" + @"', '" + @"001" + @"', '" + @"中文字符串" + @"', " + "17" + @")";
+
 				string insertStr = @"INSERT INTO " + "temperature_alarm_record"
-									+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
-									+ @") VALUES('" + dateTimeStr + @"'," + "888" + @", " + "123" + @", '"
-									+ @"004" + @"', '" + @"001" + @"', '" + @"中文字符串" + @"', " + "17" + @")";
+								+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
+								+ @") VALUES('" + dateTimeStr + @"','" + sareaIdStr + @"', '" + spotIdStr + @"', '"
+								+ deviceTypeStr + @"', '" + deviceIdStr + @"', '" + alarmMsgStr + @"', " + alarmValue.ToString() + @")";
+
 				DBConnectMySQL mysql_object = new DBConnectMySQL();
 				mysql_object.ExecuteMySqlCommand(insertStr);
 			}

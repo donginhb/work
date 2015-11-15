@@ -34,22 +34,22 @@ namespace ServiceAreaServer
         }
 
 		// 标记与数据库的连接状态
-		private static bool _dataBaseConnected = false;
+		private static bool _isDBConnected = false;
 
-		public static bool DataBaseConnected
+		public static bool IsDBConnected
 		{
-			get { return Program._dataBaseConnected; }
-			set { Program._dataBaseConnected = value; }
+			get { return Program._isDBConnected; }
+			set { Program._isDBConnected = value; }
 		}
 
 		// 当某次写入数据库失败时, 以后用来尝试写入数据库, 检查连接是否恢复的数据内容
 		// 一般是断网时第一条被缓存的数据
-		private static string _attemptDataStr = string.Empty;
+		private static string _reissueDataStr = string.Empty;
 
-		public static string AttemptDataStr
+		public static string ReissueDataStr
 		{
-			get { return Program._attemptDataStr; }
-			set { Program._attemptDataStr = value; }
+			get { return Program._reissueDataStr; }
+			set { Program._reissueDataStr = value; }
 		}
 
 		static Queue<string> bufferQueue = new Queue<string>();
@@ -109,22 +109,22 @@ namespace ServiceAreaServer
 		/// <returns></returns>
 		private static bool ClientMsgProcess(string clientMsg)
 		{
-			if (false == DataBaseConnected)
+			if (false == IsDBConnected)
 			{																	// 如果处于DB未连接状态
-				if (string.Empty == AttemptDataStr)
+				if (string.Empty == ReissueDataStr)
 				{																// 检查当前有无尝试写入字串
 					string str = CheckLocalBuffer();							// 没有的话从缓存文件中load第一条
 					if (string.Empty != str)
 					{
-						AttemptDataStr = str;
+						ReissueDataStr = str;
 					}
 					else
 					{															// 缓存文件也没有就用新收到的数据
-						AttemptDataStr = clientMsg;
+						ReissueDataStr = clientMsg;
 					}
 				}
 				// 用尝试字串去尝试写入DB
-				if (WriteToDB(AttemptDataStr))
+				if (WriteToDB(ReissueDataStr))
 				{
 					// 如果成功, 说明与DB的连接成功或者断网后恢复了, load所有之前缓存的数据, 准备送出去
 					// 先送缓存数据(去掉第一条已送出的)
@@ -132,7 +132,7 @@ namespace ServiceAreaServer
 					List<string> failList = new List<string>();					// 送失败的列表
 					foreach (string dataStr in bufferList)
 					{
-						if (dataStr.Equals(AttemptDataStr))
+						if (dataStr.Equals(ReissueDataStr))
 						{
 							continue;
 						}
@@ -155,17 +155,17 @@ namespace ServiceAreaServer
 						}
 					}
 					// 最后发新收到的数据, 如果新收到的数据以作为尝试字串发出去了就不要再发了
-					if ((AttemptDataStr != clientMsg)
+					if ((ReissueDataStr != clientMsg)
 						&& !WriteToDB(clientMsg)	)
 					{
 						failList.Add(clientMsg);
 					}
-					AttemptDataStr = string.Empty;
+					ReissueDataStr = string.Empty;
 					// 最后迁入连接状态
 					if (0 == failList.Count)
 					{
 						// 都成功送出去了说明DB连接恢复了
-						DataBaseConnected = true;
+						IsDBConnected = true;
 						// 清除缓存文件
 						DeleteLocalFile();
 						return true;
@@ -212,7 +212,7 @@ namespace ServiceAreaServer
 				else
 				{
 					// 数据库保存失败
-					DataBaseConnected = false;
+					IsDBConnected = false;
 					bufferQueue.Enqueue(clientMsg);
 					Console.WriteLine("※※※ Save To DB Fail! ※※※");
 					return false;
@@ -222,15 +222,22 @@ namespace ServiceAreaServer
 
 		static void bufferTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
-			lock (bufferQueue)
+			try
 			{
-				int count = bufferQueue.Count;
-				for (int i = 0; i < count; i++)
+				lock (bufferQueue)
 				{
-					string dataStr = bufferQueue.Dequeue();
-					SaveToLocalFile(dataStr);
+					int count = bufferQueue.Count;
+					for (int i = 0; i < count; i++)
+					{
+						string dataStr = bufferQueue.Dequeue();
+						SaveToLocalFile(dataStr);
+					}
+					bufferTimer.Stop();
 				}
-				bufferTimer.Stop();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
 			}
 		}
 

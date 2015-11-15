@@ -180,13 +180,13 @@ namespace ServiceAreaClientLib
 				alarmTypeStr = @"低于下限";
 			}
 			// alart_message
-			string alarmMsgStr = @"'" + Service_area_name + " " + deviceInfo.DeviceName + " 室温异常(" + alarmTypeStr + ")" + @"'";
+			string alarmMsgStr = Service_area_name + " " + deviceInfo.DeviceName + " 室温异常 : " + alarmTypeStr;
 			// value_01 = alarmValue
 
 			string insertStr = @"INSERT INTO " + "temperature_alarm_record"
 								+ @"(date_time, sarea_id, spot_id, device_type, device_id, alarm_message, value_01"
 								+ @") VALUES('" + dateTimeStr + @"','" + sareaIdStr + @"', '" + spotIdStr + @"', '"
-								+ deviceTypeStr + @"', " + deviceIdStr + @"', " + alarmMsgStr + @", " + alarmValue.ToString() + @")";
+								+ deviceTypeStr + @"', '" + deviceIdStr + @"', '" + alarmMsgStr + @"', " + alarmValue.ToString() + @")";
 			WriteToDB(insertStr);
 		}
 	}
