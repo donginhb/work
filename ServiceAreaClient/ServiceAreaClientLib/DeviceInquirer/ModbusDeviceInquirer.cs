@@ -26,7 +26,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
         /// </summary>
         override public void DoInquiry()
         {
-			if (	(null != DeviceList)
+            if ((null != DeviceList)
 				&&	(0 != DeviceList.Count))
 			{
 				AppendUITextBox("\r\n>------------------------------->");
