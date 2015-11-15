@@ -10,60 +10,68 @@ using System.Threading;
 namespace ServiceAreaClientLib.DeviceInquirer
 {
     public class DeviceInquirer
-    {
-        private static E_DB_CONNECT_MODE _db_connect_mode = E_DB_CONNECT_MODE.DIRECT;
+	{
+		#region 全部字段
+		private static E_DB_CONNECT_MODE _db_connect_mode = E_DB_CONNECT_MODE.DIRECT;
 
-        public static E_DB_CONNECT_MODE Db_connect_mode
-        {
-            get { return _db_connect_mode; }
-            set { _db_connect_mode = value; }
-        }
+		public static E_DB_CONNECT_MODE Db_connect_mode
+		{
+			get { return _db_connect_mode; }
+			set { _db_connect_mode = value; }
+		}
 
-        // 数据库服务器情报
-        protected static ServerInfo _dbServerInfo;
+		// 数据库服务器情报
+		protected static ServerInfo _dbServerInfo;
 
-        public static ServerInfo DbServerInfo
-        {
-            get { return _dbServerInfo; }
-            set { _dbServerInfo = value; }
-        }
+		public static ServerInfo DbServerInfo
+		{
+			get { return _dbServerInfo; }
+			set { _dbServerInfo = value; }
+		}
 
-        // 中继服务器情报
-        private static ServerInfo _relayServerInfo;
+		// 中继服务器情报
+		private static ServerInfo _relayServerInfo;
 
 		public static ServerInfo RelayServerInfo
-        {
-            get { return _relayServerInfo; }
-            set { _relayServerInfo = value; }
-        }
+		{
+			get { return _relayServerInfo; }
+			set { _relayServerInfo = value; }
+		}
 
-        // 要更新的UI textBox控件
-        protected System.Windows.Forms.TextBox _tbxControl = null;
+		// 要更新的UI textBox控件
+		protected System.Windows.Forms.TextBox _tbxControl = null;
 
-        public System.Windows.Forms.TextBox TbxControl
-        {
-            get { return _tbxControl; }
-            set { _tbxControl = value; }
-        }
+		public System.Windows.Forms.TextBox TbxControl
+		{
+			get { return _tbxControl; }
+			set { _tbxControl = value; }
+		}
 
-        // 循环查询周期(单位为分钟)
-        protected int _cyclePeriod = 10;
+		// 循环查询周期(单位为分钟)
+		protected int _cyclePeriod = 10;
 
-        public int CyclePeriod
-        {
-            get { return _cyclePeriod; }
-            set { _cyclePeriod = value; }
-        }
+		public int CyclePeriod
+		{
+			get { return _cyclePeriod; }
+			set { _cyclePeriod = value; }
+		}
 
-        protected System.Timers.Timer _timer;
+		// 查询Timer
+		private System.Timers.Timer _inquiryTimer;
+
+		protected System.Timers.Timer InquiryTimer
+		{
+			get { return _inquiryTimer; }
+			set { _inquiryTimer = value; }
+		}
 
 		// 断网时, 临时缓存数据用的本地文件
-        static string _localBufFileName = "DisconnectBuffer.txt";
+		static string _localBufFileName = "DisconnectBuffer.txt";
 
-        public static string LocalBufFileName
-        {
-            get { return _localBufFileName; }
-        }
+		public static string LocalBufFileName
+		{
+			get { return _localBufFileName; }
+		}
 
 		// 用以缓存(因断网)写入DB失败的数据
 		static List<string> _bufferList = new List<string>();
@@ -79,7 +87,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		public static int Service_area_id
 		{
 			get { return DeviceInquirer._service_area_id; }
-			set	{ DeviceInquirer._service_area_id = value; }
+			set { DeviceInquirer._service_area_id = value; }
 		}
 
 		// 所在服务区的名称
@@ -90,6 +98,24 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			get { return DeviceInquirer._service_area_name; }
 			set { DeviceInquirer._service_area_name = value; }
 		}
+
+		static Queue<string> _sendBufferQueue = new Queue<string>();
+
+		public static Queue<string> SendBufferQueue
+		{
+			get { return DeviceInquirer._sendBufferQueue; }
+			set { DeviceInquirer._sendBufferQueue = value; }
+		}
+
+		static System.Timers.Timer _sendTimer;
+
+		public static System.Timers.Timer SendTimer
+		{
+			get { return DeviceInquirer._sendTimer; }
+			set { DeviceInquirer._sendTimer = value; }
+		}
+
+		#endregion
 
 		/// <summary>
 		/// 在断网时检查本地缓存文件, 尝试补发缓存的数据
@@ -105,6 +131,43 @@ namespace ServiceAreaClientLib.DeviceInquirer
             }
 		}
 
+		public static void SendTimerInit()
+		{
+			SendTimer = new System.Timers.Timer(1000);
+			SendTimer.AutoReset = false;
+			SendTimer.Elapsed += SendTimer_Elapsed;
+			SendTimer.Start();
+		}
+
+		static void SendTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			lock (SendBufferQueue)
+			{
+				int bufferCount = SendBufferQueue.Count;
+				if (0 != bufferCount)
+				{
+					try
+					{
+						TcpSocketCommunicator reporter = new TcpSocketCommunicator();
+						reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 10000);
+						for (int i = 0; i < bufferCount; i++)
+						{
+							string dataStr = SendBufferQueue.Dequeue();
+							reporter.Send(Encoding.UTF8.GetBytes(dataStr));
+							Thread.Sleep(10);
+						}
+						reporter.Close();
+					}
+					catch (Exception ex)
+					{
+						System.Diagnostics.Trace.WriteLine(ex.ToString());
+					}
+				}
+				//
+			}
+
+			SendTimer.Start();
+		}
 
 		/// <summary>
 		/// 从本地缓存文件加载缓存数据
@@ -134,6 +197,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 							}
 						}
 						sr.Close();
+						File.Delete(LocalBufFileName);
 					}
 					catch (Exception ex)
 					{
@@ -200,10 +264,10 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				else if (E_DB_CONNECT_MODE.RELAY == Db_connect_mode)
 				{
 					// 通过中继服务器
-					TcpSocketCommunicator reporter = new TcpSocketCommunicator();
-					reporter.Connect(RelayServerInfo.Host_name, RelayServerInfo.Port_num, 5000);
-					reporter.Send(Encoding.UTF8.GetBytes(cmdStr));
-					reporter.Close();
+					lock (SendBufferQueue)
+					{
+						SendBufferQueue.Enqueue(cmdStr);
+					}
 				}
 			}
 			catch (Exception ex)
@@ -305,7 +369,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		{
             CheckBufferList();
 
-			_timer.Start();
+			InquiryTimer.Start();
 			DoInquiry();
 		}
 
@@ -318,19 +382,19 @@ namespace ServiceAreaClientLib.DeviceInquirer
             CheckBufferList();
 
 			// 启动timer
-			_timer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
-			_timer.AutoReset = false;
-			_timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
-			_timer.Start();
+			InquiryTimer = new System.Timers.Timer(CyclePeriod * 60 * 1000);
+			InquiryTimer.AutoReset = false;
+			InquiryTimer.Elapsed += new System.Timers.ElapsedEventHandler(TimerElapsed);
+			InquiryTimer.Start();
 			// 开始第一次查询
 			DoInquiry();
 		}
 
 		public void StopInquiry()
 		{
-			if (null != _timer)
+			if (null != InquiryTimer)
 			{
-				_timer.Stop();
+				InquiryTimer.Stop();
 				_tbxControl = null;
 			}
 		}
