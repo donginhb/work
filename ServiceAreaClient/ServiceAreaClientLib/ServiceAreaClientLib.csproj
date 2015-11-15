@@ -55,7 +55,7 @@
     <Compile Include="DeviceInquirer\PassengerCounterInquirer.cs" />
     <Compile Include="DeviceInquirer\ElectricMeterInquirer.cs" />
     <Compile Include="ElectricMeterDataSetting.cs" />
-    <Compile Include="ErrorLog.cs" />
+    <Compile Include="LogOutput.cs" />
     <Compile Include="InquiryResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerInfo.cs" />

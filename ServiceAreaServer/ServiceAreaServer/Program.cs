@@ -76,21 +76,24 @@ namespace ServiceAreaServer
 					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
 					Console.WriteLine("Connect with client:" + clientip.Address + " at port:" + clientip.Port);
 
+                    LogOutput.LogAppend("");
+
 					// 第二层循环, 接收某个客户端连接的全部数据
 					while (true)
 					{
 						string recvStr = string.Empty;
 						byte[] recvBytes = new byte[1024];
 						int bytes;
-						bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
+						bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);// 从客户端接受消息
 						if (bytes > 0)
 						{
 							recvStr += Encoding.UTF8.GetString(recvBytes, 0, bytes);
-							Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
+							Console.WriteLine("Server get message:{0}", recvStr);// 把客户端传来的信息显示出来
 							// 加入到发送队列里
 							lock (SendBufferQueue)
 							{
 								SendBufferQueue.Enqueue(recvStr);
+                                LogOutput.LogAppend("Enqueue : " + recvStr);
 							}
 						}
 						else
@@ -121,7 +124,7 @@ namespace ServiceAreaServer
 						break;
 					}
 					string dataStr = SendBufferQueue.Dequeue();
-					ClientMsgProcess(dataStr);
+					SendClientData2DB(dataStr);
 				}
 			}
 			SendTimer.Start();
@@ -130,22 +133,24 @@ namespace ServiceAreaServer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="clientMsg"></param>
+		/// <param name="clientDataStr"></param>
 		/// <param name="isReSend">标识是否是重发</param>
 		/// <returns></returns>
-		private static bool ClientMsgProcess(string clientMsg)
+		private static bool SendClientData2DB(string clientDataStr)
 		{
 			// 执行MySQL命令
-			if (WriteToDB(clientMsg))
+			if (WriteToDB(clientDataStr))
 			{
 				// 数据库保存成功
 				Console.WriteLine("☆☆☆ Save To DB Success! ☆☆☆");
-				return true;
+                LogOutput.LogAppend("SendClientData2DB Success : " + clientDataStr);
+                return true;
 			}
 			else
 			{
 				// 数据库保存失败
 				Console.WriteLine("※※※ Save To DB Fail! ※※※");
+                LogOutput.LogAppend("SendClientData2DB Fail : " + clientDataStr);
 				return false;
 			}
 		}
@@ -161,6 +166,7 @@ namespace ServiceAreaServer
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
+                LogOutput.LogAppend(ex.ToString());
 				return false;
 			}
 			return true;
@@ -187,6 +193,13 @@ namespace ServiceAreaServer
                 return;
             }
             Port = port;
+
+            string logOutputEnableStr = IniFile.IniReadValue("LOG_OUTPUT", "ENABLE");
+            bool logOutputEnable = false;
+            if (bool.TryParse(logOutputEnableStr, out logOutputEnable))
+            {
+                LogOutput.Enabled = logOutputEnable;
+            }
 		}
 
 	}

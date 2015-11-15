@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using System.IO;
 
-namespace ServiceAreaClientLib
+namespace ServiceAreaServer
 {
-	public class LogFileOutput
+	public class LogOutput
 	{
 		static string _logName = "log.txt";
 
@@ -22,8 +22,8 @@ namespace ServiceAreaClientLib
 
 		public static bool Enabled
 		{
-			get { return LogFileOutput._enabled; }
-			set { LogFileOutput._enabled = value; }
+			get { return LogOutput._enabled; }
+			set { LogOutput._enabled = value; }
 		}
 
 
@@ -35,7 +35,7 @@ namespace ServiceAreaClientLib
 			}
 			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			StreamWriter sw = new StreamWriter(LogName, true);
-			sw.WriteLine(dateTimeStr + ":\t\t" + logText);
+			sw.WriteLine(dateTimeStr + ":\t" + logText);
 			sw.Close();
 		}
 	}
