@@ -154,6 +154,7 @@ namespace ServiceAreaClientLib.DeviceInquirer
 						{
 							string dataStr = SendBufferQueue.Dequeue();
 							reporter.Send(Encoding.UTF8.GetBytes(dataStr));
+							LogFileOutput.LogAppend("SendTimer_Elapsed Send : " + dataStr);
 							Thread.Sleep(10);
 						}
 						reporter.Close();
@@ -161,9 +162,9 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					catch (Exception ex)
 					{
 						System.Diagnostics.Trace.WriteLine(ex.ToString());
+						LogFileOutput.LogAppend(ex.ToString());
 					}
 				}
-				//
 			}
 
 			SendTimer.Start();
@@ -267,12 +268,14 @@ namespace ServiceAreaClientLib.DeviceInquirer
 					lock (SendBufferQueue)
 					{
 						SendBufferQueue.Enqueue(cmdStr);
+						LogFileOutput.LogAppend("WriteToDB  SendBufferQueue.Enqueue : " + cmdStr);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
 				System.Diagnostics.Trace.WriteLine(ex.ToString());
+				LogFileOutput.LogAppend(ex.ToString());
 				return false;
 			}
 			return true;

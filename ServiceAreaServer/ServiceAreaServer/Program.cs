@@ -76,19 +76,29 @@ namespace ServiceAreaServer
 					IPEndPoint clientip = (IPEndPoint)cSocket.RemoteEndPoint;
 					Console.WriteLine("Connect with client:" + clientip.Address + " at port:" + clientip.Port);
 
-					string recvStr = "";
-					byte[] recvBytes = new byte[1024];
-					int bytes;
-					bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
-					recvStr += Encoding.UTF8.GetString(recvBytes, 0, bytes);
-					Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
-					cSocket.Close();
-
-					// 加入到发送队列里
-					lock (SendBufferQueue)
+					// 第二层循环, 接收某个客户端连接的全部数据
+					while (true)
 					{
-						SendBufferQueue.Enqueue(recvStr);
+						string recvStr = string.Empty;
+						byte[] recvBytes = new byte[1024];
+						int bytes;
+						bytes = cSocket.Receive(recvBytes, recvBytes.Length, 0);	// 从客户端接受消息
+						if (bytes > 0)
+						{
+							recvStr += Encoding.UTF8.GetString(recvBytes, 0, bytes);
+							Console.WriteLine("Server get message:{0}", recvStr);		// 把客户端传来的信息显示出来
+							// 加入到发送队列里
+							lock (SendBufferQueue)
+							{
+								SendBufferQueue.Enqueue(recvStr);
+							}
+						}
+						else
+						{
+							break;
+						}
 					}
+					cSocket.Close();
 				}
 				catch (Exception ex)
 				{

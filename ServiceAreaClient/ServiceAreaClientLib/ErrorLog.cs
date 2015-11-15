@@ -8,31 +8,34 @@ using System.IO;
 
 namespace ServiceAreaClientLib
 {
-	class ErrorLog
+	public class LogFileOutput
 	{
-		string _logPath = "";
+		static string _logName = "log.txt";
 
-		public string LogPath
+		public static string LogName
 		{
-			get { return _logPath; }
-			set { _logPath = value; }
+			get { return _logName; }
+			set { _logName = value; }
 		}
 
-		public ErrorLog(string path)
+		static bool _enabled = false;
+
+		public static bool Enabled
 		{
-			LogPath = path;
+			get { return LogFileOutput._enabled; }
+			set { LogFileOutput._enabled = value; }
 		}
 
-		public void LogAppend(string logText)
+
+		public static void LogAppend(string logText)
 		{
-			if (!Directory.Exists(LogPath))
+			if (false == Enabled)
 			{
 				return;
 			}
-			string logName = LogPath + "\\" + DateTime.Now.Year.ToString()
-				+ DateTime.Now.Month.ToString().PadLeft(2, '0') + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log";
-			StreamWriter sw = new StreamWriter(logName, true);
-			sw.WriteLine(logText);
+			string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			StreamWriter sw = new StreamWriter(LogName, true);
+			sw.WriteLine(dateTimeStr + ":\t\t" + logText);
 			sw.Close();
 		}
 	}
