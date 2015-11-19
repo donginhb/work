@@ -12,24 +12,6 @@ namespace ServiceAreaClientLib
 {
 	public class RoomTemperatureInquirer : ModbusDeviceInquirer
 	{
-		// 室温上限值
-		static float _temperatureValMax = 28;
-
-		public static float TemperatureValMax
-		{
-			get { return RoomTemperatureInquirer._temperatureValMax; }
-			set { RoomTemperatureInquirer._temperatureValMax = value; }
-		}
-
-		// 室温下限值
-		static float _temperatureValMin = 12;
-
-		public static float TemperatureValMin
-		{
-			get { return RoomTemperatureInquirer._temperatureValMin; }
-			set { RoomTemperatureInquirer._temperatureValMin = value; }
-		}
-
 		public RoomTemperatureInquirer(	List<ModbusDeviceInfo> deviceInfoList)
         {
             DeviceList = deviceInfoList;
@@ -110,7 +92,7 @@ namespace ServiceAreaClientLib
 
 				// 判断温度值是否在正常区间内
 				int alarmType = 0;
-				if (0 != (alarmType = IsTemperatureAbnormal(fValue)))
+				if (0 != (alarmType = IsTemperatureOutOfRange(fValue)))
 				{
 					AddTemperatureAlarmRecord(deviceInfo, alarmType, fValue);
 				}
@@ -138,8 +120,84 @@ namespace ServiceAreaClientLib
 			return insertStr;
 		}
 
-		int IsTemperatureAbnormal(float temperatureVal)
+		/// <summary>
+		/// 判断室温温度值是否在规定的范围内
+		/// </summary>
+		/// <param name="temperatureVal"></param>
+		/// <returns></returns>
+		int IsTemperatureOutOfRange(float temperatureVal)
 		{
+			float TemperatureValMin = 12;
+			float TemperatureValMax = 28;
+			// 根据季节, 时间段, 确定室温的上下限
+			DateTime now = DateTime.Now;
+			int year = DateTime.Now.Year;
+			int month = DateTime.Now.Month;
+			int day = DateTime.Now.Day;
+			int hour = DateTime.Now.Hour;
+			int minute = DateTime.Now.Minute;
+			int second = DateTime.Now.Second;
+			if (	month == 6
+				||	month == 7
+				||	month == 8)
+			{
+				// 夏季, 以下三个时间段: 6时至8时; 11时至14时; 16时至20时;
+				DateTime dt11 = new DateTime(year, month, day, 6, 0, 0);
+				DateTime dt12 = new DateTime(year, month, day, 8, 0, 0);
+				DateTime dt21 = new DateTime(year, month, day, 11, 0, 0);
+				DateTime dt22 = new DateTime(year, month, day, 14, 0, 0);
+				DateTime dt31 = new DateTime(year, month, day, 16, 0, 0);
+				DateTime dt32 = new DateTime(year, month, day, 20, 0, 0);
+				if (
+						(now >= dt11 && now <= dt12)
+					||	(now >= dt21 && now <= dt22)
+					||	(now >= dt31 && now <= dt32)
+					)
+				{
+				// 最高温度不高于26度
+					TemperatureValMax = 26;
+				}
+				else
+				{
+				// 其它时间段不高于28度
+					TemperatureValMax = 28;
+				}
+			}
+			else if (	month == 12
+					 ||	month == 1
+					 ||	month == 2)
+			{
+				// 冬季, 以下四个时间段:
+				DateTime dt11 = new DateTime(year, month, day,  6,  0, 0);		// 6时至8时30分
+				DateTime dt12 = new DateTime(year, month, day,  8, 30, 0);
+				DateTime dt21 = new DateTime(year, month, day, 11, 30, 0);		// 11时30到14时
+				DateTime dt22 = new DateTime(year, month, day, 14,  0, 0);
+				DateTime dt31 = new DateTime(year, month, day, 17,  0, 0);		// 17时至19时30分
+				DateTime dt32 = new DateTime(year, month, day, 19, 30, 0);
+				DateTime dt41 = new DateTime(year, month, day, 21,  0, 0);		// 21时至23时30分
+				DateTime dt42 = new DateTime(year, month, day, 23, 30, 0);
+				// 最低温度不低于16度
+				if (
+						(now >= dt11 && now <= dt12)
+					||	(now >= dt21 && now <= dt22)
+					||	(now >= dt31 && now <= dt32)
+					||	(now >= dt41 && now <= dt42)
+					)
+				{
+					TemperatureValMin = 16;
+				}
+				else
+				{
+					TemperatureValMin = 12;
+				}
+			}
+			else
+			{
+				// 其它(春秋)
+				TemperatureValMax = 28;
+				TemperatureValMin = 12;
+			}
+
 			if (temperatureVal < TemperatureValMin)
 			{
 				return -1;

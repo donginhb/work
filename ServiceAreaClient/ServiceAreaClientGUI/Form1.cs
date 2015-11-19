@@ -940,18 +940,6 @@ namespace ServiceAreaClient
 				cbxAutoStart.Checked = false;
 			}
 
-			readStr = IniFile.IniReadValue("ROOM_TEMPERATURE_LIMITS", "MAX_VALUE");
-			float fVal;
-			if (float.TryParse(readStr, out fVal))
-			{
-				RoomTemperatureInquirer.TemperatureValMax = fVal;
-			}
-			readStr = IniFile.IniReadValue("ROOM_TEMPERATURE_LIMITS", "MIN_VALUE");
-			if (float.TryParse(readStr, out fVal))
-			{
-				RoomTemperatureInquirer.TemperatureValMin = fVal;
-			}
-
             string logOutputEnableStr = IniFile.IniReadValue("LOG_OUTPUT", "ENABLE");
             bool logOutputEnable = false;
             if (bool.TryParse(logOutputEnableStr, out logOutputEnable))
