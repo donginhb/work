@@ -1,6 +1,0 @@
-// Microsoft Developer Studio generated Help ID include file.
-// Used by eLearning.rc
-//
-#define HIDC_STATIC                     0x80d0ffff    // IDD_DIALOG_BACKUP_FILE_DUP
-#define HIDC_STATIC_EXIST               0x80d2045c    // IDD_DIALOG_COURSE_DUP
-#define HID_STATIC                      0x80d2ffff    // IDD_DIALOG_COURSE_DUP
