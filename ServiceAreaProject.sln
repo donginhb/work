@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterClient", "UpdaterCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterServer", "UpdaterServer\UpdaterServer\UpdaterServer.csproj", "{E810A933-914E-4310-8A80-C1E6F850EE76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceAreaUnitTestProject", "ServiceAreaUnitTestProject\ServiceAreaUnitTestProject.csproj", "{F2D1BA38-0408-40F2-A595-F6AB7F061FD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{E810A933-914E-4310-8A80-C1E6F850EE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E810A933-914E-4310-8A80-C1E6F850EE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E810A933-914E-4310-8A80-C1E6F850EE76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2D1BA38-0408-40F2-A595-F6AB7F061FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2D1BA38-0408-40F2-A595-F6AB7F061FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2D1BA38-0408-40F2-A595-F6AB7F061FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2D1BA38-0408-40F2-A595-F6AB7F061FD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

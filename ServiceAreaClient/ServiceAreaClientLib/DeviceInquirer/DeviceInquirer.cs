@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using System.IO;
 using System.Threading;
 
@@ -292,6 +291,11 @@ namespace ServiceAreaClientLib.DeviceInquirer
 		/// <returns></returns>
         protected bool ReportToDBServer(string insertStr, string deviceName)
         {
+			// 保存数据到本地历史记录文件
+			if (!SaveToLocalFile(insertStr))
+			{
+				AppendUITextBox("	" + deviceName + " : 保存本地记录文件失败!");
+			}
 			if (0 != BufferList.Count)
 			{
 				AppendToBufferList(insertStr);
@@ -313,6 +317,32 @@ namespace ServiceAreaClientLib.DeviceInquirer
 				}
 			}
         }
+
+		public bool SaveToLocalFile(string insertStr)
+		{
+			// 取得当前的 "年", "月", "日"
+			string yearStr = DateTime.Now.Year.ToString();
+			string monthStr = DateTime.Now.Month.ToString().PadLeft(2, '0');
+			string dayStr = DateTime.Now.Day.ToString().PadLeft(2, '0');
+			// 取得保存本地文件的路径名: "HistoryDataRecords\年\月"
+			string modulPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+			int idx = -1;
+			if (-1 != (idx = modulPath.LastIndexOf(@"\")))
+			{
+				modulPath = modulPath.Remove(idx);
+			}
+			string full_path = modulPath + "\\HistoryDataRecords\\" + yearStr + "\\" + monthStr + "\\";
+			if (!Directory.Exists(full_path))
+			{
+				Directory.CreateDirectory(full_path);
+			}
+			string full_name = full_path + "\\" + dayStr + ".log";
+			StreamWriter sw = new StreamWriter(full_name, true);
+			sw.WriteLine(insertStr);
+			sw.Close();
+
+			return true;
+		}
 
 		/// <summary>
 		/// 将字串追加到缓存列表的末尾
