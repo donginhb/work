@@ -324,24 +324,32 @@ namespace ServiceAreaClientLib.DeviceInquirer
 			string yearStr = DateTime.Now.Year.ToString();
 			string monthStr = DateTime.Now.Month.ToString().PadLeft(2, '0');
 			string dayStr = DateTime.Now.Day.ToString().PadLeft(2, '0');
-			// 取得保存本地文件的路径名: "HistoryDataRecords\年\月"
-			string modulPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-			int idx = -1;
-			if (-1 != (idx = modulPath.LastIndexOf(@"\")))
+			try
 			{
-				modulPath = modulPath.Remove(idx);
-			}
-			string full_path = modulPath + "\\HistoryDataRecords\\" + yearStr + "\\" + monthStr + "\\";
-			if (!Directory.Exists(full_path))
-			{
-				Directory.CreateDirectory(full_path);
-			}
-			string full_name = full_path + "\\" + dayStr + ".log";
-			StreamWriter sw = new StreamWriter(full_name, true);
-			sw.WriteLine(insertStr);
-			sw.Close();
+				// 取得保存本地文件的路径名: "HistoryDataRecords\年\月"
+				string modulPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+				int idx = -1;
+				if (-1 != (idx = modulPath.LastIndexOf(@"\")))
+				{
+					modulPath = modulPath.Remove(idx);
+				}
+				string full_path = modulPath + "\\HistoryDataRecords\\" + yearStr + "\\" + monthStr + "\\";
+				if (!Directory.Exists(full_path))
+				{
+					Directory.CreateDirectory(full_path);
+				}
+				string full_name = full_path + "\\" + dayStr + ".log";
+				StreamWriter sw = new StreamWriter(full_name, true);
+				sw.WriteLine(insertStr);
+				sw.Close();
 
-			return true;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogOutput.LogAppend(ex.ToString());
+				return false;
+			}
 		}
 
 		/// <summary>

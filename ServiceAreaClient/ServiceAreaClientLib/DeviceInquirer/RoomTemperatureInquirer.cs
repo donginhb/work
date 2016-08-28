@@ -246,6 +246,10 @@ namespace ServiceAreaClientLib
 								+ @") VALUES('" + dateTimeStr + @"','" + sareaIdStr + @"', '" + spotIdStr + @"', '"
 								+ deviceTypeStr + @"', '" + deviceIdStr + @"', '" + alarmMsgStr + @"', " + alarmValue.ToString() + @")";
 			WriteToDB(insertStr);
+			if (!SaveToLocalFile(insertStr))
+			{
+				AppendUITextBox("	" + deviceInfo.DeviceName + " 室温异常" + " : 保存本地记录文件失败!");
+			}
 		}
 	}
 }
